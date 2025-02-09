@@ -216,52 +216,52 @@ public class CategoryDao {
     public static void main(String[] args) {
         CategoryDao categoryDao = new CategoryDao();
 
-//    // Test thêm danh mục - Done
-//    Category newCategory = new Category();
-//    newCategory.setCategoryName("Test Category");
-//    newCategory.setDescription("Mô tả danh mục test");
-//    newCategory.setCreatedAt(LocalDateTime.now());
-//    newCategory.setStatus(1);
-//    boolean insertResult = categoryDao.insert(newCategory);
-//    System.out.println("Thêm danh mục: " + insertResult);
-        // Test lấy danh mục theo ID - Done
-//        Category category = categoryDao.getById(1);
-//        System.out.println("Lấy danh mục ID 1: " + (category != null ? category.getCategoryName() : "Không tìm thấy"));
-//
-//    // Test cập nhật danh mục - Done
-//    if (category != null) {
-//        category.setCategoryName("Updated Category");
-//        category.setUpdatedAt(LocalDateTime.now());
-//        category.setUpdatedBy(1);
-//        boolean updateResult = categoryDao.update(category);
-//        System.out.println("Cập nhật danh mục: " + updateResult);
-//    }
-//
-//    // Test lấy tất cả danh mục - Done
-//    List<Category> categories = categoryDao.getAll();
-//    System.out.println("Tổng số danh mục: " + categories.size());
-//
-//    // Test tìm kiếm danh mục theo từ khóa
-//    List<Category> searchResults = categoryDao.search("Test");
-//    System.out.println("Tìm kiếm 'Test': " + searchResults.size() + " kết quả");
-//
-//    // Test xóa mềm danh mục
-//    boolean deleteResult = categoryDao.delete(1);
-//    System.out.println("Xóa mềm danh mục ID 1: " + deleteResult);
-//
-//    // Test phục hồi danh mục
-//    boolean restoreResult = categoryDao.restore(1);
-//    System.out.println("Phục hồi danh mục ID 1: " + restoreResult);
-//
-//    // Test xóa vĩnh viễn danh mục
-//    boolean hardDeleteResult = categoryDao.hardDelete(2);
-//    System.out.println("Xóa vĩnh viễn danh mục ID 2: " + hardDeleteResult);
-//
-//    // Test lấy danh mục theo trạng thái
-//    List<Category> activeCategories = categoryDao.getByStatus(1);
-//    System.out.println("Danh mục hoạt động: " + activeCategories.size());
-//
-    // Test phân trang danh mục
+    // Test thêm danh mục - Done
+    Category newCategory = new Category();
+    newCategory.setCategoryName("Test Category");
+    newCategory.setDescription("Mô tả danh mục test");
+    newCategory.setCreatedAt(LocalDateTime.now());
+    newCategory.setStatus(1);
+    boolean insertResult = categoryDao.insert(newCategory);
+    System.out.println("Thêm danh mục: " + insertResult);
+    //Test lấy danh mục theo ID - Done
+        Category category = categoryDao.getById(1);
+        System.out.println("Lấy danh mục ID 1: " + (category != null ? category.getCategoryName() : "Không tìm thấy"));
+
+    // Test cập nhật danh mục - Done
+    if (category != null) {
+        category.setCategoryName("Updated Category");
+        category.setUpdatedAt(LocalDateTime.now());
+        category.setUpdatedBy(1);
+        boolean updateResult = categoryDao.update(category);
+        System.out.println("Cập nhật danh mục: " + updateResult);
+    }
+
+    // Test lấy tất cả danh mục - Done
+    List<Category> categories = categoryDao.getAll();
+    System.out.println("Tổng số danh mục: " + categories.size());
+
+    // Test tìm kiếm danh mục theo từ khóa - Done
+    List<Category> searchResults = categoryDao.search("Test");
+    System.out.println("Tìm kiếm 'Test': " + searchResults.size() + " kết quả");
+
+    // Test xóa mềm danh mục - Done
+    boolean deleteResult = categoryDao.delete(1);
+    System.out.println("Xóa mềm danh mục ID 1: " + deleteResult);
+
+    // Test phục hồi danh mục - Done
+    boolean restoreResult = categoryDao.restore(1);
+    System.out.println("Phục hồi danh mục ID 1: " + restoreResult);
+
+    // Test xóa vĩnh viễn danh mục - Done
+    boolean hardDeleteResult = categoryDao.hardDelete(2);
+    System.out.println("Xóa vĩnh viễn danh mục ID 2: " + hardDeleteResult);
+
+    // Test lấy danh mục theo trạng thái - Done
+    List<Category> activeCategories = categoryDao.getByStatus(1);
+    System.out.println("Danh mục hoạt động: " + activeCategories.size());
+
+    //Test phân trang danh mục
     List<Category> paginatedCategories = categoryDao.getAll(1, 5);
     System.out.println("Danh mục trang 1 (tối đa 5): " + paginatedCategories.size());
     }
