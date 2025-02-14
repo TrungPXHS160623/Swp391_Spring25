@@ -19,7 +19,7 @@ public class DatabaseUtil {
     private final String portNumber = "1433";
     private final String instance = ""; // Nếu không có instance, để trống
     private final String userID = "sa";
-    private final String password = "123";
+    private final String password = "sa";
 
     public static Connection getConnection() throws Exception {
         String url = "jdbc:sqlserver://" + "localhost" + ":" + "1433";
@@ -30,7 +30,7 @@ public class DatabaseUtil {
 
         // Tải driver SQL Server
         Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-        return DriverManager.getConnection(url, "sa", "123"); // Sử dụng tài khoản `sa` và mật khẩu là `123`
+        return DriverManager.getConnection(url, "sa", "sa"); // Sử dụng tài khoản `sa` và mật khẩu là `123`
     }
 
     public static void main(String[] args) {
