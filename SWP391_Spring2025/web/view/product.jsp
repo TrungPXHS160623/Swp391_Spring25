@@ -31,7 +31,19 @@
                 <td>Status</td>
                 <td>Action</td>
             </tr>
-
+            <tr>
+                <c:forEach var="product" items="${products}">
+                <td>${products.getProduct_id()}</td>
+                <td>${products.getImage_url()}</td>
+                <td>${products.getProduct_name()}</td>
+                <td>${products.getSubcategory_id()}</td>
+                <td>${products.getList_price()}</td>
+                <td>${products.getSale_price()}</td>
+                <td>${products.getFeatured()}</td>
+                <td>${products.getStatus()}</td>
+                <td></td>
+                </c:forEach>
+            </tr>
         </table>
         <div>
             <c:forEach begin="1" end="${noOfPages}" var="pageNumber">
