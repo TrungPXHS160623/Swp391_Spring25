@@ -23,7 +23,15 @@
             <tr>
                 <td>Id</td>
                 <td>Thumbnail</td>
-                <td>Title</td>
+                <td>Title
+                    <c:choose>
+                        <c:when test="${param.sort == 'desc'}">
+                            <a href="ProductController?sort=asc&search=${param.search}" title="Sắp xếp tên sản phẩm (Tăng dần)">▲</a>
+                        </c:when>
+                        <c:otherwise>
+                            <a href="ProductController?sort=desc&search=${param.search}" title="Sắp xếp tên sản phẩm (Giảm dần)">▼</a>
+                        </c:otherwise>
+                    </c:choose>
                 <td>Category</td>
                 <td>List Price</td>
                 <td>Sale Price</td>
@@ -41,13 +49,14 @@
                     <td>${ProductController.getSale_price()}</td>
                     <td>${ProductController.getFeatured()}</td>
                     <td>${ProductController.getStatus()}</td>
-                    <td></td>
+                    <td><a href="ProductController">View</a>
+                        <a href="ProductController">Edit</a></td>
                 </tr>
             </c:forEach>
         </table>
         <div>
             <c:forEach begin="1" end="${noOfPages}" var="pageNumber">
-                <a href="customers?page=${pageNumber}&status=${param.status}&search=${param.search}&sort=${param.sort}">${pageNumber}</a>
+                <a href="ProductController?page=${pageNumber}&search=${param.search}&sort=${param.sort}">${pageNumber}</a>
             </c:forEach>
         </div>
     </body>
