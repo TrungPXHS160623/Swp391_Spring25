@@ -15,6 +15,8 @@
 <body>
     <h1>Welcome to Home Page</h1>
     <p>This is a test page after login.</p>
+    <!-- Nút chuyển đến trang đổi mật khẩu -->
+    <a href="ChangePassword.jsp" class="btn">Change Password</a>
 </body>
 </html>
 

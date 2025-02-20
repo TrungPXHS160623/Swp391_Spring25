@@ -199,6 +199,23 @@ public class User {
     }
 
     
-    
+ /*
+user_id (int, PK, Identity) – Mã định danh duy nhất của người dùng.
+full_name (nvarchar) – Họ và tên đầy đủ của người dùng.
+gender (bit hoặc nvarchar) – Giới tính của người dùng (ví dụ: 0 - Nam, 1 - Nữ hoặc lưu chuỗi "Nam"/"Nữ").
+email (nvarchar, unique) – Địa chỉ email của người dùng, dùng để đăng nhập và xác thực.
+password_hash (nvarchar) – Mật khẩu đã được mã hóa của người dùng để bảo mật.
+phone_number (nvarchar) – Số điện thoại của người dùng.
+address (nvarchar) – Địa chỉ liên lạc của người dùng.
+avatar_url (nvarchar) – Đường dẫn đến ảnh đại diện của người dùng.
+role_id (int, FK -> Roles) – Mã định danh của vai trò người dùng trong hệ thống (Admin, Giảng viên, Khảo thí,...).
+is_active (bit) – Trạng thái hoạt động của tài khoản (1 - Hoạt động, 0 - Bị vô hiệu hóa).
+is_verified (bit) – Trạng thái xác minh tài khoản (1 - Đã xác minh, 0 - Chưa xác minh).
+reset_token (nvarchar, nullable) – Mã thông báo dùng để đặt lại mật khẩu khi quên mật khẩu.
+reset_token_expiry (datetime, nullable) – Thời điểm hết hạn của mã đặt lại mật khẩu.
+created_at (datetime, default GETDATE()) – Thời điểm tài khoản được tạo.
+updated_at (datetime, nullable) – Thời điểm tài khoản được cập nhật lần cuối.
+last_login (datetime, nullable) – Thời điểm người dùng đăng nhập lần cuối.
+    */   
     
 }
