@@ -31,19 +31,19 @@
                 <td>Status</td>
                 <td>Action</td>
             </tr>
-            <tr>
-                <c:forEach var="ProductController" items="${products}">
-                <td>${products.getProduct_id()}</td>
-                <td>${products.getImage_url()}</td>
-                <td>${products.getProduct_name()}</td>
-                <td>${products.getSubcategory_id()}</td>
-                <td>${products.getList_price()}</td>
-                <td>${products.getSale_price()}</td>
-                <td>${products.getFeatured()}</td>
-                <td>${products.getStatus()}</td>
-                <td></td>
-                </c:forEach>
-            </tr>
+            <c:forEach var="ProductController" items="${ProductController}">
+                <tr>
+                    <td>${ProductController.getProduct_id()}</td>
+                    <td><img src="${ProductController.getImage_url()}" alt="Product Image" style="width: 120px; height: auto;"/></td>
+                    <td>${ProductController.getProduct_name()}</td>
+                    <td>${ProductController.getSubcategory_id()}</td>
+                    <td>${ProductController.getList_price()}</td>
+                    <td>${ProductController.getSale_price()}</td>
+                    <td>${ProductController.getFeatured()}</td>
+                    <td>${ProductController.getStatus()}</td>
+                    <td></td>
+                </tr>
+            </c:forEach>
         </table>
         <div>
             <c:forEach begin="1" end="${noOfPages}" var="pageNumber">
