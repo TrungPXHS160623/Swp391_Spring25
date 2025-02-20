@@ -5,20 +5,24 @@
 
 package Controller;
 
+import Dao.UserDao;
+import Entity.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 /**
  *
  * @author Acer
  */
-@WebServlet(name="NewServlet", urlPatterns={"/newservlet"})
-public class NewServlet extends HttpServlet {
+@WebServlet(name="LoginController", urlPatterns={"/logincontroller"})
+public class LoginController extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -35,10 +39,10 @@ public class NewServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet NewServlet</title>");  
+            out.println("<title>Servlet LoginController</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet NewServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet LoginController at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -68,7 +72,48 @@ public class NewServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+    String email = request.getParameter("username");
+    String password = request.getParameter("password");
+    String rememberMe = request.getParameter("rememberMe");
+
+    // Validate: Kiểm tra email có đúng định dạng không
+    if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+        request.setAttribute("errorMessage", "Invalid email format.");
+        request.getRequestDispatcher("/UserPage/Login.jsp").forward(request, response);
+        return;
+    }
+
+    // Validate: Mật khẩu không được để trống
+    if (password == null || password.trim().isEmpty()) {
+        request.setAttribute("errorMessage", "Password cannot be empty.");
+        request.getRequestDispatcher("/UserPage/Login.jsp").forward(request, response);
+        return;
+    }
+
+    UserDao userDAO = new UserDao();
+    User user = userDAO.login(email, password);
+
+    // Kiểm tra user có tồn tại không
+    if (user != null) {
+        HttpSession session = request.getSession();
+        session.setAttribute("user", user);
+
+        // Nếu chọn "Remember Me", lưu email vào cookie
+        if ("on".equals(rememberMe)) {
+            Cookie cookie = new Cookie("rememberedEmail", email);
+            cookie.setMaxAge(7 * 24 * 60 * 60); // 7 ngày
+            response.addCookie(cookie);
+        } else {
+            Cookie cookie = new Cookie("rememberedEmail", "");
+            cookie.setMaxAge(0);
+            response.addCookie(cookie);
+        }
+
+        response.sendRedirect(request.getContextPath() + "/UserPage/Home.jsp");
+    } else {
+        request.setAttribute("errorMessage", "Invalid email or password.");
+        request.getRequestDispatcher("/UserPage/Login.jsp").forward(request, response);
+    }
     }
 
     /** 

@@ -32,6 +32,13 @@ public class Category {
         this.updatedBy = updatedBy;
         this.deletedAt = deletedAt;
     }
+
+    public Category(String categoryName, String description, LocalDateTime createdAt, int status) {
+        this.categoryName = categoryName;
+        this.description = description;
+        this.createdAt = createdAt;
+        this.status = status;
+    }
    
 
     public Category() {
@@ -106,8 +113,4 @@ public class Category {
     public String toString() {
         return "Category{" + "categoryId=" + categoryId + ", categoryName=" + categoryName + ", description=" + description + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", status=" + status + ", updatedBy=" + updatedBy + ", deletedAt=" + deletedAt + '}';
     }
-
-   
-   
-   
 }

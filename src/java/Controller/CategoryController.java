@@ -9,17 +9,22 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
-@WebServlet(name="CategoryController", urlPatterns={"/categorycontroller"})
+@WebServlet(name = "CategoryController", urlPatterns = {"/categorycontroller"})
 public class CategoryController extends HttpServlet {
+
     private CategoryDao categoryDao = new CategoryDao();
-    
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         String action = request.getParameter("action");
-        if (action == null) action = "list";
-        
+        if (action == null) {
+            action = "list";
+        }
+
         switch (action) {
             case "list":
                 listCategories(request, response);
@@ -37,12 +42,12 @@ public class CategoryController extends HttpServlet {
                 listCategories(request, response);
         }
     }
-    
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         String action = request.getParameter("action");
-        
+
         switch (action) {
             case "add":
                 addCategory(request, response);
@@ -57,53 +62,69 @@ public class CategoryController extends HttpServlet {
                 listCategories(request, response);
         }
     }
-    
+
     private void listCategories(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         List<Category> categories = categoryDao.getAll();
         request.setAttribute("categories", categories);
         request.getRequestDispatcher("category_list.jsp").forward(request, response);
     }
-    
+
     private void addCategory(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         String name = request.getParameter("name");
+        String description = request.getParameter("description");
+        String dateStr = request.getParameter("date");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime date = (dateStr != null && !dateStr.isEmpty()) ? LocalDateTime.parse(dateStr, formatter) : null;
+        int status = 0; // Giá trị mặc định
+        String statusStr = request.getParameter("status");
+        try {
+            if (statusStr != null && !statusStr.isEmpty()) {
+                status = Integer.parseInt(statusStr);
+            }
+        } catch (NumberFormatException e) {
+            e.printStackTrace(); // Hoặc xử lý lỗi theo logic của bạn
+        }
+
         //categoryDao.insert(new Category(name));
+        categoryDao.insert(new Category(name, description, date, status));
         response.sendRedirect("category?action=list");
     }
-    
+
     private void deleteCategory(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
         categoryDao.hardDelete(id);
         response.sendRedirect("category?action=list");
     }
-    
+
     private void restoreCategory(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
         categoryDao.restore(id);
         response.sendRedirect("category?action=list");
     }
-    
+
     private void showEditForm(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
         Category category = categoryDao.getById(id);
         request.setAttribute("category", category);
+        
         request.getRequestDispatcher("category_form.jsp").forward(request, response);
     }
-    
+
     private void updateCategory(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
         String name = request.getParameter("name");
         //categoryDao.update(new Category(id, name));
         response.sendRedirect("category?action=list");
     }
-    
+
     private void searchCategory(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         String keyword = request.getParameter("keyword");
         List<Category> categories = categoryDao.search(keyword);
         request.setAttribute("categories", categories);
