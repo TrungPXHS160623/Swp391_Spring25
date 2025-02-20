@@ -38,7 +38,7 @@ public class ProductDAO {
         return products;
     }
 
-    public List<Product> getAllProduct(int page, int limit) {
+    public List<Product> getAllProduct2(int page, int limit) {
         List<Product> products = new ArrayList<>();
         String sql = "SELECT * FROM Products ORDER BY product_id DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
         try (Connection conn = new DBContext().getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -92,7 +92,7 @@ public class ProductDAO {
         }
 
         //Test phân trang danh mục (Kiểm tra tối đa 5)
-        List<Product> paginatedCategories = pDAO.getAllProduct(1, 5);
+        List<Product> paginatedCategories = pDAO.getAllProduct2(1, 5);
         System.out.println("////////////////////////////////////////////////////////");
         System.out.println("Danh mục trang 1 (tối đa 5): " + paginatedCategories.size());
     }
