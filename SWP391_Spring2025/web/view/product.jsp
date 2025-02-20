@@ -14,7 +14,7 @@
     </head>
     <body>
         <h2>Danh sách Sản Phẩm</h2>
-        <form action="products" method="get">
+        <form action="ProductController" method="get">
             <label for="search">Search: </label>
             <input type="text" name="search" value=""/>             
             <input type="submit" value="Search" />
@@ -32,7 +32,7 @@
                 <td>Action</td>
             </tr>
             <tr>
-                <c:forEach var="product" items="${products}">
+                <c:forEach var="ProductController" items="${products}">
                 <td>${products.getProduct_id()}</td>
                 <td>${products.getImage_url()}</td>
                 <td>${products.getProduct_name()}</td>
