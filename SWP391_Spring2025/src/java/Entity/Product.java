@@ -15,7 +15,7 @@ public class Product {
     private int product_id;
     private String image_url;
     private String product_name;
-    private int subcategory_id;
+    private String subcategory_name; // Chuyển từ subcategory_id sang
     private Date created_at;
     private Date updated_at;
     private int status;
@@ -26,11 +26,11 @@ public class Product {
     public Product() {
     }
 
-    public Product(int product_id, String image_url, String product_name, int subcategory_id, Date created_at, Date updated_at, int status, float list_price, float sale_price, int featured) {
+    public Product(int product_id, String image_url, String product_name, String subcategory_name, Date created_at, Date updated_at, int status, float list_price, float sale_price, int featured) {
         this.product_id = product_id;
         this.image_url = image_url;
         this.product_name = product_name;
-        this.subcategory_id = subcategory_id;
+        this.subcategory_name = subcategory_name;
         this.created_at = created_at;
         this.updated_at = updated_at;
         this.status = status;
@@ -63,12 +63,12 @@ public class Product {
         this.product_name = product_name;
     }
 
-    public int getSubcategory_id() {
-        return subcategory_id;
+    public String getSubcategory_name() {
+        return subcategory_name;
     }
 
-    public void setSubcategory_id(int subcategory_id) {
-        this.subcategory_id = subcategory_id;
+    public void setSubcategory_name(String subcategory_name) {
+        this.subcategory_name = subcategory_name;
     }
 
     public Date getCreated_at() {

@@ -25,18 +25,58 @@
                 <td>Thumbnail</td>
                 <td>Title
                     <c:choose>
-                        <c:when test="${param.sort == 'desc'}">
-                            <a href="ProductController?sort=asc&search=${param.search}" title="Sắp xếp tên sản phẩm (Tăng dần)">▲</a>
+                        <c:when test="${param.name_sort == 'desc'}">
+                            <a href="ProductController?name_sort=asc&search=${param.search}" title="Sắp xếp tên sản phẩm (Tăng dần)">▲</a>
                         </c:when>
                         <c:otherwise>
-                            <a href="ProductController?sort=desc&search=${param.search}" title="Sắp xếp tên sản phẩm (Giảm dần)">▼</a>
+                            <a href="ProductController?name_sort=desc&search=${param.search}" title="Sắp xếp tên sản phẩm (Giảm dần)">▼</a>
                         </c:otherwise>
                     </c:choose>
-                <td>Category</td>
-                <td>List Price</td>
-                <td>Sale Price</td>
-                <td>Featured</td>
-                <td>Status</td>
+                <td>Category
+                <c:choose>
+                        <c:when test="${param.caterogy_sort == 'desc'}">
+                            <a href="ProductController?caterogy_sort=asc&search=${param.search}" title="Sắp xếp tên sản phẩm (Tăng dần)">▲</a>
+                        </c:when>
+                        <c:otherwise>
+                            <a href="ProductController?caterogy_sort=desc&search=${param.search}" title="Sắp xếp tên sản phẩm (Giảm dần)">▼</a>
+                        </c:otherwise>
+                    </c:choose></td>
+                <td>List Price
+                <c:choose>
+                        <c:when test="${param.listprice_sort == 'desc'}">
+                            <a href="ProductController?listprice_sort=asc&search=${param.search}" title="Sắp xếp tên sản phẩm (Tăng dần)">▲</a>
+                        </c:when>
+                        <c:otherwise>
+                            <a href="ProductController?listprice_sort=desc&search=${param.search}" title="Sắp xếp tên sản phẩm (Giảm dần)">▼</a>
+                        </c:otherwise>
+                    </c:choose></td>
+                <td>Sale Price
+                <c:choose>
+                        <c:when test="${param.saleprice_sort == 'desc'}">
+                            <a href="ProductController?saleprice_sort=asc&search=${param.search}" title="Sắp xếp tên sản phẩm (Tăng dần)">▲</a>
+                        </c:when>
+                        <c:otherwise>
+                            <a href="ProductController?saleprice_sort=desc&search=${param.search}" title="Sắp xếp tên sản phẩm (Giảm dần)">▼</a>
+                        </c:otherwise>
+                    </c:choose></td>
+                <td>Featured
+                <c:choose>
+                        <c:when test="${param.featured_sort == 'desc'}">
+                            <a href="ProductController?featured_sort=asc&search=${param.search}" title="Sắp xếp tên sản phẩm (Tăng dần)">▲</a>
+                        </c:when>
+                        <c:otherwise>
+                            <a href="ProductController?featured_sort=desc&search=${param.search}" title="Sắp xếp tên sản phẩm (Giảm dần)">▼</a>
+                        </c:otherwise>
+                    </c:choose></td>
+                <td>Status
+                <c:choose>
+                        <c:when test="${param.status_sort == 'desc'}">
+                            <a href="ProductController?status_sort=asc&search=${param.search}" title="Sắp xếp tên sản phẩm (Tăng dần)">▲</a>
+                        </c:when>
+                        <c:otherwise>
+                            <a href="ProductController?status_sort=desc&search=${param.search}" title="Sắp xếp tên sản phẩm (Giảm dần)">▼</a>
+                        </c:otherwise>
+                    </c:choose></td>
                 <td>Action</td>
             </tr>
             <c:forEach var="ProductController" items="${ProductController}">
@@ -44,7 +84,7 @@
                     <td>${ProductController.getProduct_id()}</td>
                     <td><img src="${ProductController.getImage_url()}" alt="Product Image" style="width: 120px; height: auto;"/></td>
                     <td>${ProductController.getProduct_name()}</td>
-                    <td>${ProductController.getSubcategory_id()}</td>
+                    <td>${ProductController.getSubcategory_name()}</td>
                     <td>${ProductController.getList_price()}</td>
                     <td>${ProductController.getSale_price()}</td>
                     <td>${ProductController.getFeatured()}</td>

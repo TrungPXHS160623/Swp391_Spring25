@@ -61,13 +61,38 @@ public class ProductController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String searchKeyword = request.getParameter("search");
-        String sort = request.getParameter("sort");
+        String name_sort = request.getParameter("name_sort");
+        String category_sort = request.getParameter("caterogy_sort");
+        String listprice_sort = request.getParameter("listprice_sort");
+        String saleprice_sort = request.getParameter("saleprice_sort");
+        String featured_sort = request.getParameter("featured_sort");
+        String status_sort = request.getParameter("status_sort");
         List<Product> products;
 
-        if (sort != null) {
+        if (name_sort != null) {
             // Kiểm tra sắp xếp theo tên sản phẩm
-            boolean ascending = "asc".equals(sort);
-            products = pDao.getAllProductSortedByName(ascending);
+            boolean name_ascending = "asc".equals(name_sort);
+            products = pDao.getAllProductSortedByName(name_ascending);
+        } // Xử lý sắp xếp theo category
+        else if (category_sort != null) {
+            boolean category_ascending = "asc".equals(category_sort);
+            products = pDao.getAllProductSortedByCategory(category_ascending);
+        } // Xử lý sắp xếp theo giá list
+        else if (listprice_sort != null) {
+            boolean listprice_ascending = "asc".equals(listprice_sort);
+            products = pDao.getAllProductSortedByListPrice(listprice_ascending);
+        } // Xử lý sắp xếp theo giá sale
+        else if (saleprice_sort != null) {
+            boolean saleprice_ascending = "asc".equals(saleprice_sort);
+            products = pDao.getAllProductSortedBySalePrice(saleprice_ascending);
+        } // Xử lý sắp xếp theo featured
+        else if (featured_sort != null) {
+            boolean featured_ascending = "asc".equals(featured_sort);
+            products = pDao.getAllProductSortedByFeatured(featured_ascending);
+        } // Xử lý sắp xếp theo status
+        else if (status_sort != null) {
+            boolean status_ascending = "asc".equals(status_sort);
+            products = pDao.getAllProductSortedByStatus(status_ascending);
         } else if (searchKeyword != null && !searchKeyword.isEmpty()) {
             // Tìm kiếm sản phẩm theo từ khóa
             products = pDao.searchProduct(searchKeyword);
