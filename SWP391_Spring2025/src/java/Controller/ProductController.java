@@ -67,12 +67,22 @@ public class ProductController extends HttpServlet {
         String saleprice_sort = request.getParameter("saleprice_sort");
         String featured_sort = request.getParameter("featured_sort");
         String status_sort = request.getParameter("status_sort");
+        String categoryName = request.getParameter("category");
         List<Product> products;
 
-        if (name_sort != null) {
+        List<String> categories = pDao.getAllCategories(); // Gọi DAO để lấy danh sách category
+        request.setAttribute("categories", categories);
+        // Lọc sản phẩm theo category nếu có
+        if (categoryName != null && !categoryName.isEmpty()) {
+            // Lọc theo category và từ khóa tìm kiếm nếu có
+            products = pDao.getFilteredProducts(categoryName, searchKeyword);
+        } else if (name_sort != null) {
             // Kiểm tra sắp xếp theo tên sản phẩm
             boolean name_ascending = "asc".equals(name_sort);
             products = pDao.getAllProductSortedByName(name_ascending);
+        } else if (categoryName != null && !categoryName.isEmpty()) {
+            // Lọc sản phẩm theo category và từ khóa tìm kiếm (nếu có)
+            products = pDao.getFilteredProducts(categoryName, searchKeyword);
         } // Xử lý sắp xếp theo category
         else if (category_sort != null) {
             boolean category_ascending = "asc".equals(category_sort);

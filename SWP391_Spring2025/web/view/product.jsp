@@ -15,10 +15,21 @@
     <body>
         <h2>Danh sách Sản Phẩm</h2>
         <form action="ProductController" method="get">
+            <select name="category" id="category" onchange="this.form.submit()">
+                <option value="">All Categories</option>
+                <c:forEach var="category" items="${categories}">
+                    <option value="${category}" ${category == param.category ? 'selected' : ''}>${category}</option>
+                </c:forEach>
+            </select>   
+        </form>
+
+        <!-- Form tìm kiếm riêng biệt -->
+        <form action="ProductController" method="get">
             <label for="search">Search: </label>
-            <input type="text" name="search" value=""/>             
+            <input type="text" name="search" value="${param.search}"/>             
             <input type="submit" value="Search" />
         </form>
+
         <table border="1">
             <tr>
                 <td>Id</td>
@@ -33,7 +44,7 @@
                         </c:otherwise>
                     </c:choose>
                 <td>Category
-                <c:choose>
+                    <c:choose>
                         <c:when test="${param.caterogy_sort == 'desc'}">
                             <a href="ProductController?caterogy_sort=asc&search=${param.search}" title="Sắp xếp tên sản phẩm (Tăng dần)">▲</a>
                         </c:when>
@@ -42,7 +53,7 @@
                         </c:otherwise>
                     </c:choose></td>
                 <td>List Price
-                <c:choose>
+                    <c:choose>
                         <c:when test="${param.listprice_sort == 'desc'}">
                             <a href="ProductController?listprice_sort=asc&search=${param.search}" title="Sắp xếp tên sản phẩm (Tăng dần)">▲</a>
                         </c:when>
@@ -51,7 +62,7 @@
                         </c:otherwise>
                     </c:choose></td>
                 <td>Sale Price
-                <c:choose>
+                    <c:choose>
                         <c:when test="${param.saleprice_sort == 'desc'}">
                             <a href="ProductController?saleprice_sort=asc&search=${param.search}" title="Sắp xếp tên sản phẩm (Tăng dần)">▲</a>
                         </c:when>
@@ -60,7 +71,7 @@
                         </c:otherwise>
                     </c:choose></td>
                 <td>Featured
-                <c:choose>
+                    <c:choose>
                         <c:when test="${param.featured_sort == 'desc'}">
                             <a href="ProductController?featured_sort=asc&search=${param.search}" title="Sắp xếp tên sản phẩm (Tăng dần)">▲</a>
                         </c:when>
@@ -69,7 +80,7 @@
                         </c:otherwise>
                     </c:choose></td>
                 <td>Status
-                <c:choose>
+                    <c:choose>
                         <c:when test="${param.status_sort == 'desc'}">
                             <a href="ProductController?status_sort=asc&search=${param.search}" title="Sắp xếp tên sản phẩm (Tăng dần)">▲</a>
                         </c:when>

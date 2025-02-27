@@ -216,6 +216,47 @@ public class ProductDAO {
         return products;
     }
 
+    public List<String> getAllCategories() {
+        List<String> products = new ArrayList<>();
+        String sql = "SELECT DISTINCT category_name FROM Categories"; // Truy vấn lấy các category từ bảng Categories
+        try (Connection conn = new DBContext().getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                products.add(rs.getString("category_name"));
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Lỗi SQL khi lấy danh sách category", e);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Lỗi SQL khi lấy danh sách category", e);
+        }
+        return products;
+    }
+
+    // Phương thức trong ProductDAO để lọc sản phẩm theo category
+    public List<Product> getFilteredProducts(String categoryName, String searchKeyword) {
+        List<Product> products = new ArrayList<>();
+        String sql = "SELECT p.product_id, p.image_url, p.product_name, s.subcategory_name, "
+                + "p.listPrice, p.salePrice, p.status, p.featured "
+                + "FROM Products p "
+                + "JOIN SubCategories s ON p.subcategory_id = s.subcategory_id "
+                + "WHERE s.subcategory_name LIKE ?";
+
+        try (Connection conn = new DBContext().getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            // Set parameters: category and search keyword
+            stmt.setString(1, "%" + categoryName + "%"); // Lọc theo tên danh mục
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    products.add(mapResultSetToProduct(rs));
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Lỗi khi lọc sản phẩm theo category và từ khóa", e);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Lỗi không mong muốn khi lọc sản phẩm", e);
+        }
+        return products;
+    }
+
     public static void main(String[] args) {
         ProductDAO pDAO = new ProductDAO();
 
@@ -243,6 +284,7 @@ public class ProductDAO {
 
         // Test tìm kiểm 1 sản phẩm theo tên
         List<Product> searchResults = pDAO.searchProduct("1");
+        System.out.println("------------------------------------");
         System.out.println("Tìm kiếm 'Test': " + searchResults.size() + " kết quả");
 
         // Kiểm tra sắp xếp tăng dần theo tên sản phẩm
