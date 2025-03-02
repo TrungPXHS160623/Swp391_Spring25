@@ -224,23 +224,50 @@ public class UserDao {
         return user;
     }
 
-    public void updateUserProfile(User user) {
-        String sql = "UPDATE Users SET full_name = ?, gender = ?, email = ?, phone_number = ?, address = ?, avatar_url = ? WHERE user_id = ?";
-        try (Connection conn = new DBContext().getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+    public boolean updateUserProfile(User user) {
+        String sql = "UPDATE Users SET full_name = ?, gender = ?, phone_number = ?, address = ? WHERE user_id = ?";
+        try (Connection conn = new DBContext().getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
             stmt.setString(1, user.getFull_name());
             stmt.setString(2, user.getGender());
-            stmt.setString(3, user.getEmail());
-            stmt.setString(4, user.getPhone_number());
-            stmt.setString(5, user.getAddress());
-            stmt.setString(6, user.getAvatar_url());
-            stmt.setInt(7, user.getUser_id());
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, "Lỗi SQL khi cập nhật hồ sơ người dùng", e);
-        } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Lỗi kết nối CSDL", e);
+            stmt.setString(3, user.getPhone_number());
+            stmt.setString(4, user.getAddress());
+            stmt.setInt(5, user.getUser_id());
+
+            int rowsUpdated = stmt.executeUpdate();
+            return rowsUpdated > 0; // Trả về true nếu có ít nhất 1 dòng bị ảnh hưởng
+        } 
+        catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Lỗi SQL", e);
+            return false;
+        } 
+        catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Lỗi chung", e);
+            return false;
         }
     }
+    
+    public boolean updateUserAvatar(int userId, String avatarPath) {
+    String sql = "UPDATE Users SET avatar_url = ? WHERE user_id = ?";
+    try (Connection conn = new DBContext().getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+        stmt.setString(1, avatarPath);
+        stmt.setInt(2, userId);
+
+        int rowsUpdated = stmt.executeUpdate();
+        return rowsUpdated > 0; // Trả về true nếu cập nhật thành công
+    } 
+    catch (SQLException e) {
+        LOGGER.log(Level.SEVERE, "Lỗi SQL khi cập nhật avatar", e);
+        return false;
+    } 
+    catch (Exception e) {
+        LOGGER.log(Level.SEVERE, "Lỗi chung khi cập nhật avatar", e);
+        return false;
+    }
+}
 
     // Hàm hỗ trợ: Chuyển ResultSet thành User
     private User extractUser(ResultSet rs) throws SQLException {
@@ -265,27 +292,41 @@ public class UserDao {
     }
 
     public static void main(String[] args) {
-        // Tạo một đối tượng User để kiểm thử
-        User testUser = new User();
-        testUser.setFull_name("Nguyen Van A");
-        testUser.setGender("Male");
-        testUser.setEmail("testuser@example.com");
-        testUser.setPassword_hash("hashedpassword123"); // Giả sử đã mã hóa
-        testUser.setPhone_number("0123456789");
-        testUser.setAddress("123 Đường ABC, TP.HCM");
-        testUser.setRole_id(2); // Vai trò mặc định của user bình thường
+//        // Tạo một đối tượng User để kiểm thử
+//        User testUser = new User();
+//        testUser.setFull_name("Nguyen Van A");
+//        testUser.setGender("Male");
+//        testUser.setEmail("testuser@example.com");
+//        testUser.setPassword_hash("hashedpassword123"); // Giả sử đã mã hóa
+//        testUser.setPhone_number("0123456789");
+//        testUser.setAddress("123 Đường ABC, TP.HCM");
+//        testUser.setRole_id(2); // Vai trò mặc định của user bình thường
+//
+//        // Khởi tạo đối tượng chứa phương thức register
+//        UserDao userService = new UserDao();
+//
+//        // Kiểm tra đăng ký
+//        boolean isRegistered = userService.register(testUser);
+//
+//        // In kết quả ra console
+//        if (isRegistered) {
+//            System.out.println("Đăng ký thành công!");
+//        } else {
+//            System.out.println("Đăng ký thất bại!");
+//        }
+        
+        //testupdate
+        UserDao userDAO = new UserDao();
 
-        // Khởi tạo đối tượng chứa phương thức register
-        UserDao userService = new UserDao();
+        // Giả sử userId là 1, bạn cần kiểm tra ID này có trong DB không
+        int userId = 3;
+        User testUser = new User(userId, "Nguyễn Văn A", "Male", "0123456789", "Hà Nội");
 
-        // Kiểm tra đăng ký
-        boolean isRegistered = userService.register(testUser);
-
-        // In kết quả ra console
-        if (isRegistered) {
-            System.out.println("Đăng ký thành công!");
+        boolean result = userDAO.updateUserProfile(testUser);
+        if (result) {
+            System.out.println("✅ Cập nhật thông tin thành công!");
         } else {
-            System.out.println("Đăng ký thất bại!");
+            System.out.println("❌ Cập nhật thông tin thất bại!");
         }
     }
 }

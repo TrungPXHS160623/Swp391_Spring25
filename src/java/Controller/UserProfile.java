@@ -1,83 +1,102 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
-
 package Controller;
 
-import java.io.IOException;
-import java.io.PrintWriter;
+import Dao.UserDao;
+import Entity.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import java.io.IOException;
 
-/**
- *
- * @author Acer
- */
-@WebServlet(name="UserProfile", urlPatterns={"/userprofile"})
+@WebServlet(name = "UserProfile", urlPatterns = {"/userprofile"})
 public class UserProfile extends HttpServlet {
-   
-    /** 
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet UserProfile</title>");  
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet UserProfile at " + request.getContextPath () + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
-    } 
-
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /** 
-     * Handles the HTTP <code>GET</code> method.
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+    
+    private final UserDao userDAO = new UserDao();
+    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        processRequest(request, response);
-    } 
+            throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        Integer userId = (Integer) session.getAttribute("userId");
 
-    /** 
-     * Handles the HTTP <code>POST</code> method.
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+        // Ghi log kiểm tra session
+        System.out.println("UserProfile: userId from session = " + userId);
+        
+        if (userId == null) {
+            response.sendRedirect(request.getContextPath() + "/UserPage/Login.jsp");
+            return;
+        }
+        
+        User user = userDAO.getUserById(userId);
+        request.setAttribute("user", user);
+        request.getRequestDispatcher("/UserPage/UserProfile.jsp").forward(request, response);
+    }
+    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        processRequest(request, response);
-    }
+            throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        Integer userId = (Integer) session.getAttribute("userId");
+        
+        if (userId == null) {
+            response.sendRedirect(request.getContextPath() + "/UserPage/Login.jsp");
+            return;
+        }
+        
+        String fullName = request.getParameter("full_name");
+        String gender = request.getParameter("gender");
+        String phoneNumber = request.getParameter("phone_number");
+        String address = request.getParameter("address");
+        String email = request.getParameter("email");
 
-    /** 
-     * Returns a short description of the servlet.
-     * @return a String containing servlet description
-     */
+        // Regex kiểm tra dữ liệu nhập vào
+        //String emailRegex = "^[a-zA-Z0-9]+@(fpt\\.edu\\.vn|gmail\\.com)$";
+        String phoneRegex = "^(0|\\+84)[3-9][0-9]{8}$";
+        String addressRegex = "^.{5,}$";
+        String fullNameRegex = "^[A-Za-zÀ-Ỹà-ỹ\\s]{1,50}$";
+
+//        // Kiểm tra hợp lệ
+//        if (!email.matches(emailRegex)) {
+//            session.setAttribute("updateMessage", "❌ Email không hợp lệ! Chỉ chấp nhận email FPT hoặc Gmail.");
+//            response.sendRedirect("userprofile");
+//            return;
+//        }
+        if (!fullName.matches(fullNameRegex)) {
+            session.setAttribute("updateMessage", "❌ Tên chứa số, ký tự đặc biệt hoặc quá dài!");
+            response.sendRedirect("userprofile");
+            return;
+        }
+        
+        if (!phoneNumber.matches(phoneRegex)) {
+            session.setAttribute("updateMessage", "❌ Số điện thoại không hợp lệ!");
+            response.sendRedirect("userprofile");
+            return;
+        }
+        
+        if (!address.matches(addressRegex)) {
+            session.setAttribute("updateMessage", "❌ Địa chỉ phải có ít nhất 5 ký tự!");
+            response.sendRedirect("userprofile");
+            return;
+        }
+        
+        User updatedUser = new User(userId, fullName, gender, phoneNumber, address);
+        boolean updateSuccess = userDAO.updateUserProfile(updatedUser);
+        
+        if (updateSuccess) {
+            // Cập nhật session với thông tin mới
+            session.setAttribute("user", updatedUser);
+            session.setAttribute("updateMessage", "Cập nhật thông tin thành công!");
+        } else {
+            session.setAttribute("updateMessage", "Cập nhật thất bại, vui lòng thử lại!");
+        }
+        
+        response.sendRedirect("userprofile");
+    }
+    
     @Override
     public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
+        return "Servlet xử lý hiển thị và cập nhật thông tin người dùng";
+    }
 }

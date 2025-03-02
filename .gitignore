@@ -25,3 +25,4 @@ replay_pid*
 
 # Thêm dòng này từ phiên bản mới
 /build/
+/dist/

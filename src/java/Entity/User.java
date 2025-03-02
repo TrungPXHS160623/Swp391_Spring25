@@ -64,6 +64,14 @@ public class User {
     this.is_verified = is_verified;
     this.created_at = new Timestamp(System.currentTimeMillis()); // Lưu thời gian hiện tại
 }
+    //for userprofile
+    public User(int userId, String fullName, String gender, String phoneNumber, String address) {
+    this.user_id = userId;
+    this.full_name = fullName;
+    this.gender = gender;
+    this.phone_number = phoneNumber;
+    this.address = address;
+}
 
     public int getUser_id() {
         return user_id;

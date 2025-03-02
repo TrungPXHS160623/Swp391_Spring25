@@ -72,13 +72,77 @@
             .profile-container input[type="submit"]:hover {
                 background-color: #094ea1;
             }
+            .alert {
+                padding: 15px;
+                margin-bottom: 15px;
+                border-radius: 5px;
+                font-size: 16px;
+                text-align: center;
+                width: 100%;
+            }
+            .success {
+                background-color: #4CAF50;
+                color: white;
+            }
+            .error {
+                background-color: #f44336;
+                color: white;
+            }
+            input[type="file"] {
+                font-size: 16px;
+                color: #333; /* Màu chữ tối hơn */
+                background-color: #f8f9fa; /* Màu nền nhẹ giúp chữ dễ đọc */
+                padding: 8px;
+                border-radius: 5px;
+                border: 1px solid #ccc;
+            }
         </style>
     </head>
     <body>
+
         <div class="profile-container">
+            <% 
+        String updateMessage = (String) session.getAttribute("updateMessage");
+        if (updateMessage != null) {
+            %>
+            <div id="updateAlert" class="alert alert-info" style="display: flex; align-items: center; background-color: #d1ecf1; border-color: #bee5eb; color: #0c5460; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+                <i class="fas fa-info-circle" style="font-size: 24px; margin-right: 10px;"></i>
+                <div>
+                    <strong>Thông Báo:</strong> <%= updateMessage %>
+                </div>
+                <button type="button" onclick="this.parentElement.style.display = 'none';" style="background: transparent; border: none; color: #0c5460; cursor: pointer; margin-left: auto;">
+                    <i class="fas fa-times-circle" style="font-size: 24px;"></i>
+                </button>
+            </div>
+
+            <script>
+                // Tự động ẩn thông báo sau 4 giây
+                setTimeout(function () {
+                    document.getElementById('updateAlert').style.display = 'none';
+                }, 4000);
+            </script>
+            <%
+                session.removeAttribute("updateMessage"); // Xóa thông báo sau khi hiển thị
+                }
+            %>
             <h1>User Profile</h1>
-            <img src="${user.avatar_url}" alt="User Avatar">
-            <form action="${pageContext.request.contextPath}/updateProfile" method="post">
+            <form action="${pageContext.request.contextPath}/uploadavatarcontroller" method="post" enctype="multipart/form-data">
+                <div class="input-group">
+                    <label>Ảnh đại diện</label>
+                    <input type="file" name="avatar" accept="image/*" required>
+                </div>
+                <button type="submit" style="background-color: #ff6600; color: white; font-size: 18px; padding: 12px 24px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; margin-bottom: 20px;">
+                    Cập nhật ảnh
+                </button>
+
+            </form>
+
+            <img src="${user.avatar_url != null ? user.avatar_url : 'default-avatar.png'}" 
+                 alt="Avatar" style="width: 100px; height: 100px; border-radius: 50%;">
+
+
+
+            <form action="${pageContext.request.contextPath}/userprofile" method="post">
                 <div class="input-group">
                     <label>Full Name</label>
                     <input type="text" name="full_name" value="${user.full_name}" required>
@@ -93,7 +157,9 @@
                 </div>
                 <div class="input-group">
                     <label>Email</label>
-                    <input type="email" name="email" value="${user.email}" readonly>
+                    <input type="email" name="email" value="${user.email}" readonly 
+                           style="background-color: #e9ecef; cursor: not-allowed;"
+                           title="Email không thể thay đổi">
                 </div>
                 <div class="input-group">
                     <label>Phone Number</label>
