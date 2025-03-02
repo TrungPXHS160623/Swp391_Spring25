@@ -20,24 +20,23 @@ public class UserDao {
 
     //Kiểm tra đăng nhập
     public User login(String email, String password) {
-    String sql = "SELECT * FROM Users WHERE email = ? AND password_hash = ?";
-    try (Connection conn = new DBContext().getConnection(); 
-         PreparedStatement stmt = conn.prepareStatement(sql)) {
-        stmt.setString(1, email);
-        stmt.setString(2, password);
-        ResultSet rs = stmt.executeQuery();
-        if (rs.next()) {
-            User user = extractUser(rs);
-            updateLastLogin(user.getUser_id()); // Cập nhật last_login
-            return user;
+        String sql = "SELECT * FROM Users WHERE email = ? AND password_hash = ?";
+        try (Connection conn = new DBContext().getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, email);
+            stmt.setString(2, password);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                User user = extractUser(rs);
+                updateLastLogin(user.getUser_id()); // Cập nhật last_login
+                return user;
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Lỗi SQL khi đăng nhập", e);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Lỗi kết nối CSDL", e);
         }
-    } catch (SQLException e) {
-        LOGGER.log(Level.SEVERE, "Lỗi SQL khi đăng nhập", e);
-    } catch (Exception e) {
-        LOGGER.log(Level.SEVERE, "Lỗi kết nối CSDL", e);
+        return null;
     }
-    return null;
-}
 
     //kiểm tra email đã tồn tại chưa
     public boolean isEmailRegistered(String email) {
@@ -176,36 +175,73 @@ public class UserDao {
             LOGGER.log(Level.SEVERE, "Lỗi kết nối CSDL", e);
         }
     }
+
     //đăng kí tài khoản
     public boolean register(User user) {
-    if (isEmailRegistered(user.getEmail())) {
-        LOGGER.log(Level.WARNING, "Email đã tồn tại: {0}", user.getEmail());
-        return false; // Email đã tồn tại, không cho phép đăng ký
+        if (isEmailRegistered(user.getEmail())) {
+            LOGGER.log(Level.WARNING, "Email đã tồn tại: {0}", user.getEmail());
+            return false; // Email đã tồn tại, không cho phép đăng ký
+        }
+
+        String sql = "INSERT INTO Users (full_name, gender, email, password_hash, phone_number, address, avatar_url, role_id, is_active, is_verified, created_at) "
+                + "VALUES (?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?)";
+
+        try (Connection conn = new DBContext().getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, user.getFull_name());
+            stmt.setString(2, user.getGender());
+            stmt.setString(3, user.getEmail());
+            stmt.setString(4, user.getPassword_hash()); // Đã mã hóa trước khi truyền vào
+            stmt.setString(5, user.getPhone_number());
+            stmt.setString(6, user.getAddress());
+            stmt.setInt(7, user.getRole_id()); // Mặc định là 2 nếu user bình thường
+            stmt.setBoolean(8, true); // is_active (mặc định true)
+            stmt.setBoolean(9, false); // is_verified (mặc định false)
+            stmt.setTimestamp(10, new Timestamp(System.currentTimeMillis())); // created_at hiện tại
+
+            return stmt.executeUpdate() > 0; // Trả về true nếu thêm thành công
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Lỗi SQL khi đăng ký", e);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Lỗi kết nối CSDL", e);
+        }
+        return false;
     }
 
-    String sql = "INSERT INTO Users (full_name, gender, email, password_hash, phone_number, address, avatar_url, role_id, is_active, is_verified, created_at) "
-               + "VALUES (?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?)";
-
-    try (Connection conn = new DBContext().getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-        stmt.setString(1, user.getFull_name());
-        stmt.setString(2, user.getGender());
-        stmt.setString(3, user.getEmail());
-        stmt.setString(4, user.getPassword_hash()); // Đã mã hóa trước khi truyền vào
-        stmt.setString(5, user.getPhone_number());
-        stmt.setString(6, user.getAddress());
-        stmt.setInt(7, user.getRole_id()); // Mặc định là 2 nếu user bình thường
-        stmt.setBoolean(8, true); // is_active (mặc định true)
-        stmt.setBoolean(9, false); // is_verified (mặc định false)
-        stmt.setTimestamp(10, new Timestamp(System.currentTimeMillis())); // created_at hiện tại
-
-        return stmt.executeUpdate() > 0; // Trả về true nếu thêm thành công
-    } catch (SQLException e) {
-        LOGGER.log(Level.SEVERE, "Lỗi SQL khi đăng ký", e);
-    } catch (Exception e) {
-        LOGGER.log(Level.SEVERE, "Lỗi kết nối CSDL", e);
+    public User getUserById(int userId) {
+        User user = null;
+        String sql = "SELECT * FROM Users WHERE user_id = ?";
+        try (Connection conn = new DBContext().getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                user = extractUser(rs); // Tái sử dụng extractUser
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Lỗi SQL khi lấy User theo ID", e);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Lỗi kết nối CSDL", e);
+        }
+        return user;
     }
-    return false;
-}
+
+    public void updateUserProfile(User user) {
+        String sql = "UPDATE Users SET full_name = ?, gender = ?, email = ?, phone_number = ?, address = ?, avatar_url = ? WHERE user_id = ?";
+        try (Connection conn = new DBContext().getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, user.getFull_name());
+            stmt.setString(2, user.getGender());
+            stmt.setString(3, user.getEmail());
+            stmt.setString(4, user.getPhone_number());
+            stmt.setString(5, user.getAddress());
+            stmt.setString(6, user.getAvatar_url());
+            stmt.setInt(7, user.getUser_id());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Lỗi SQL khi cập nhật hồ sơ người dùng", e);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Lỗi kết nối CSDL", e);
+        }
+    }
+
     // Hàm hỗ trợ: Chuyển ResultSet thành User
     private User extractUser(ResultSet rs) throws SQLException {
         return new User(
@@ -227,6 +263,7 @@ public class UserDao {
                 rs.getTimestamp("last_login")
         );
     }
+
     public static void main(String[] args) {
         // Tạo một đối tượng User để kiểm thử
         User testUser = new User();
