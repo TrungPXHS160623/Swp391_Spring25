@@ -22,6 +22,22 @@
                 </c:forEach>
             </select>   
         </form>
+        <form action="ProductController" method="get">
+            <select name="featured" id="featured" onchange="this.form.submit()">
+                <option value="">All Featured</option>
+                <c:forEach var="featured" items="${featured2}">
+                    <option value="${featured}" ${featured == param.featured ? 'selected' : ''}>${featured}</option>
+                </c:forEach>
+            </select>   
+        </form>
+        <form action="ProductController" method="get">
+            <select name="status" id="status" onchange="this.form.submit()">
+                <option value="">All Status</option>
+                <c:forEach var="status" items="${status2}">
+                    <option value="${status}" ${status == param.status ? 'selected' : ''}>${status}</option>
+                </c:forEach>
+            </select>   
+        </form>
 
         <!-- Form tìm kiếm riêng biệt -->
         <form action="ProductController" method="get">

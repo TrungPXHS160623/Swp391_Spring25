@@ -68,21 +68,30 @@ public class ProductController extends HttpServlet {
         String featured_sort = request.getParameter("featured_sort");
         String status_sort = request.getParameter("status_sort");
         String categoryName = request.getParameter("category");
+        String featured = request.getParameter("featured");
+        String status = request.getParameter("status");
         List<Product> products;
 
         List<String> categories = pDao.getAllCategories(); // Gọi DAO để lấy danh sách category
+        List<String> featured2 = pDao.getAllFeatured(); // Gọi DAO để lấy danh sách featured
+        List<String> status2 = pDao.getAllStatus(); // Gọi DAO để lấy danh sách status
         request.setAttribute("categories", categories);
+        request.setAttribute("featured2", featured2);
+        request.setAttribute("status2", status2);
         // Lọc sản phẩm theo category nếu có
         if (categoryName != null && !categoryName.isEmpty()) {
             // Lọc theo category và từ khóa tìm kiếm nếu có
-            products = pDao.getFilteredProducts(categoryName, searchKeyword);
+            products = pDao.getFilteredProducts(categoryName);
+        } else if (featured != null && !featured.isEmpty()) {
+            // Lọc theo featured và từ khóa tìm kiếm nếu có
+            products = pDao.getFilteredProductsbyFeatured(featured);
+        } else if (status != null && !status.isEmpty()) {
+            // Lọc theo status và từ khóa tìm kiếm nếu có
+            products = pDao.getFilteredProductsbyStatus(status);
         } else if (name_sort != null) {
             // Kiểm tra sắp xếp theo tên sản phẩm
             boolean name_ascending = "asc".equals(name_sort);
             products = pDao.getAllProductSortedByName(name_ascending);
-        } else if (categoryName != null && !categoryName.isEmpty()) {
-            // Lọc sản phẩm theo category và từ khóa tìm kiếm (nếu có)
-            products = pDao.getFilteredProducts(categoryName, searchKeyword);
         } // Xử lý sắp xếp theo category
         else if (category_sort != null) {
             boolean category_ascending = "asc".equals(category_sort);

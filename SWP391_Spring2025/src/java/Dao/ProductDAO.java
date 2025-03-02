@@ -25,7 +25,7 @@ public class ProductDAO {
     public List<Product> getAllProduct() {
         List<Product> products = new ArrayList<>();
         String sql = "SELECT p.[product_id], p.[image_url], p.[product_name], s.[subcategory_name], "
-                + "p.[listPrice], p.[salePrice], p.[status], p.[featured] "
+                + "p.[list_price], p.[sale_price], p.[status], p.[featured] "
                 + "FROM [Products] p JOIN [SubCategories] s ON p.subcategory_id = s.subcategory_id";
         try (Connection conn = new DBContext().getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
@@ -43,7 +43,7 @@ public class ProductDAO {
     public List<Product> searchProduct(String keyword) {
         List<Product> products = new ArrayList<>();
         String sql = "SELECT p.[product_id], p.[image_url], p.[product_name], s.[subcategory_name], "
-                + "p.[listPrice], p.[salePrice], p.[status], p.[featured] "
+                + "p.[list_price], p.[sale_price], p.[status], p.[featured] "
                 + "FROM [Products] p JOIN [SubCategories] s ON p.subcategory_id = s.subcategory_id WHERE product_name LIKE ?";
         try (Connection conn = new DBContext().getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, "%" + keyword + "%");
@@ -64,7 +64,7 @@ public class ProductDAO {
     public List<Product> getAllProduct2(int page, int limit) {
         List<Product> products = new ArrayList<>();
         String sql = "SELECT p.[product_id], p.[image_url], p.[product_name], s.[subcategory_name], "
-                + "p.[listPrice], p.[salePrice], p.[status], p.[featured] "
+                + "p.[list_price], p.[sale_price], p.[status], p.[featured] "
                 + "FROM [Products] p JOIN [SubCategories] s ON p.subcategory_id = s.subcategory_id ORDER BY product_id DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
         try (Connection conn = new DBContext().getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, (page - 1) * limit);
@@ -90,8 +90,8 @@ public class ProductDAO {
         product.setProduct_name(rs.getString("product_name"));
         product.setSubcategory_name(rs.getString("subcategory_name"));
         product.setStatus(rs.getInt("status"));
-        product.setList_price(rs.getFloat("listPrice"));
-        product.setSale_price(rs.getFloat("salePrice"));
+        product.setList_price(rs.getFloat("list_price"));
+        product.setSale_price(rs.getFloat("sale_price"));
         product.setFeatured(rs.getInt("featured"));
         return product;
     }
@@ -100,7 +100,7 @@ public class ProductDAO {
     public List<Product> getAllProductSortedByName(boolean name_ascending) {
         List<Product> products = new ArrayList<>();
         String sql = "SELECT p.[product_id],p.[image_url],p.[product_name],s.[subcategory_name],"
-                + " p.[status],p.[listPrice],p.[salePrice],p.[featured] "
+                + " p.[status],p.[list_price], p.[sale_price],p.[featured] "
                 + "FROM [Products] p JOIN [SubCategories] s ON p.[subcategory_id] = s.[subcategory_id]"
                 + "ORDER BY p.product_name " + (name_ascending ? "ASC" : "DESC");
 
@@ -120,7 +120,7 @@ public class ProductDAO {
     public List<Product> getAllProductSortedByCategory(boolean category_ascending) {
         List<Product> products = new ArrayList<>();
         String sql = "SELECT p.[product_id],p.[image_url],p.[product_name],s.[subcategory_name],"
-                + " p.[status],p.[listPrice],p.[salePrice],p.[featured] "
+                + " p.[status],p.[list_price],p.[sale_price],p.[featured] "
                 + "FROM [Products] p JOIN [SubCategories] s ON p.[subcategory_id] = s.[subcategory_id]"
                 + "ORDER BY s.subcategory_name " + (category_ascending ? "ASC" : "DESC");
 
@@ -140,9 +140,9 @@ public class ProductDAO {
     public List<Product> getAllProductSortedByListPrice(boolean listprice_ascending) {
         List<Product> products = new ArrayList<>();
         String sql = "SELECT p.[product_id],p.[image_url],p.[product_name],s.[subcategory_name],"
-                + " p.[status],p.[listPrice],p.[salePrice],p.[featured] "
+                + " p.[status],p.[list_price],p.[sale_price],p.[featured] "
                 + "FROM [Products] p JOIN [SubCategories] s ON p.[subcategory_id] = s.[subcategory_id]"
-                + "ORDER BY p.listPrice " + (listprice_ascending ? "ASC" : "DESC");
+                + "ORDER BY p.list_price " + (listprice_ascending ? "ASC" : "DESC");
 
         try (Connection conn = new DBContext().getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
@@ -160,9 +160,9 @@ public class ProductDAO {
     public List<Product> getAllProductSortedBySalePrice(boolean saleprice_ascending) {
         List<Product> products = new ArrayList<>();
         String sql = "SELECT p.[product_id],p.[image_url],p.[product_name],s.[subcategory_name],"
-                + " p.[status],p.[listPrice],p.[salePrice],p.[featured] "
+                + " p.[status],p.[list_price],p.[sale_price],p.[featured] "
                 + "FROM [Products] p JOIN [SubCategories] s ON p.[subcategory_id] = s.[subcategory_id]"
-                + "ORDER BY p.salePrice " + (saleprice_ascending ? "ASC" : "DESC");
+                + "ORDER BY p.sale_price " + (saleprice_ascending ? "ASC" : "DESC");
 
         try (Connection conn = new DBContext().getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
@@ -180,7 +180,7 @@ public class ProductDAO {
     public List<Product> getAllProductSortedByFeatured(boolean featured_ascending) {
         List<Product> products = new ArrayList<>();
         String sql = "SELECT p.[product_id],p.[image_url],p.[product_name],s.[subcategory_name],"
-                + " p.[status],p.[listPrice],p.[salePrice],p.[featured] "
+                + " p.[status],p.[list_price], p.[sale_price],p.[featured] "
                 + "FROM [Products] p JOIN [SubCategories] s ON p.[subcategory_id] = s.[subcategory_id]"
                 + "ORDER BY p.featured " + (featured_ascending ? "ASC" : "DESC");
 
@@ -200,7 +200,7 @@ public class ProductDAO {
     public List<Product> getAllProductSortedByStatus(boolean status_ascending) {
         List<Product> products = new ArrayList<>();
         String sql = "SELECT p.[product_id],p.[image_url],p.[product_name],s.[subcategory_name],"
-                + " p.[status],p.[listPrice],p.[salePrice],p.[featured] "
+                + " p.[status],p.[list_price], p.[sale_price],p.[featured] "
                 + "FROM [Products] p JOIN [SubCategories] s ON p.[subcategory_id] = s.[subcategory_id]"
                 + "ORDER BY p.status " + (status_ascending ? "ASC" : "DESC");
 
@@ -216,6 +216,7 @@ public class ProductDAO {
         return products;
     }
 
+    // Phương thức gọi tất cả danh mục
     public List<String> getAllCategories() {
         List<String> products = new ArrayList<>();
         String sql = "SELECT DISTINCT category_name FROM Categories"; // Truy vấn lấy các category từ bảng Categories
@@ -231,11 +232,43 @@ public class ProductDAO {
         return products;
     }
 
+    // Phương thức gọi tất cả nổi bật
+    public List<String> getAllFeatured() {
+        List<String> products = new ArrayList<>();
+        String sql = "SELECT DISTINCT featured FROM Products";
+        try (Connection conn = new DBContext().getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                products.add(rs.getString("featured"));
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Lỗi SQL khi lấy danh sách Featured", e);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Lỗi SQL khi lấy danh sách Featured", e);
+        }
+        return products;
+    }
+
+    // Phương thức gọi tất cả trạng thái
+    public List<String> getAllStatus() {
+        List<String> products = new ArrayList<>();
+        String sql = "SELECT DISTINCT status FROM Products";
+        try (Connection conn = new DBContext().getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                products.add(rs.getString("status"));
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Lỗi SQL khi lấy danh sách Status", e);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Lỗi SQL khi lấy danh sách Status", e);
+        }
+        return products;
+    }
+
     // Phương thức trong ProductDAO để lọc sản phẩm theo category
-    public List<Product> getFilteredProducts(String categoryName, String searchKeyword) {
+    public List<Product> getFilteredProducts(String categoryName) {
         List<Product> products = new ArrayList<>();
         String sql = "SELECT p.product_id, p.image_url, p.product_name, s.subcategory_name, "
-                + "p.listPrice, p.salePrice, p.status, p.featured "
+                + "p.list_price, p.sale_price, p.status, p.featured "
                 + "FROM Products p "
                 + "JOIN SubCategories s ON p.subcategory_id = s.subcategory_id "
                 + "WHERE s.subcategory_name LIKE ?";
@@ -251,6 +284,58 @@ public class ProductDAO {
             }
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Lỗi khi lọc sản phẩm theo category và từ khóa", e);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Lỗi không mong muốn khi lọc sản phẩm", e);
+        }
+        return products;
+    }
+
+    // Phương thức trong ProductDAO để lọc sản phẩm theo nội dung
+    public List<Product> getFilteredProductsbyFeatured(String featured) {
+        List<Product> products = new ArrayList<>();
+        String sql = "SELECT p.product_id, p.image_url, p.product_name, s.subcategory_name, "
+                + "p.list_price, p.sale_price, p.status, p.featured "
+                + "FROM Products p "
+                + "JOIN SubCategories s ON p.subcategory_id = s.subcategory_id "
+                + "WHERE p.featured LIKE ?";
+
+        try (Connection conn = new DBContext().getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            // Set parameters: featured and search keyword
+            stmt.setString(1, "%" + featured + "%"); // Lọc theo tên nổi bật
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    products.add(mapResultSetToProduct(rs));
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Lỗi khi lọc sản phẩm theo featured và từ khóa", e);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Lỗi không mong muốn khi lọc sản phẩm", e);
+        }
+        return products;
+    }
+
+    // Phương thức trong ProductDAO để lọc sản phẩm theo trạng thái
+    public List<Product> getFilteredProductsbyStatus(String status) {
+        List<Product> products = new ArrayList<>();
+        String sql = "SELECT p.product_id, p.image_url, p.product_name, s.subcategory_name, "
+                + "p.list_price, p.sale_price, p.status, p.featured "
+                + "FROM Products p "
+                + "JOIN SubCategories s ON p.subcategory_id = s.subcategory_id "
+                + "WHERE p.status LIKE ?";
+
+        try (Connection conn = new DBContext().getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            // Set parameters: status and search keyword
+            stmt.setString(1, "%" + status + "%"); // Lọc theo tên trạng thái
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    products.add(mapResultSetToProduct(rs));
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Lỗi khi lọc sản phẩm theo status và từ khóa", e);
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Lỗi không mong muốn khi lọc sản phẩm", e);
         }
@@ -309,6 +394,48 @@ public class ProductDAO {
         System.out.println("Sắp xếp giảm dần theo tên sản phẩm:");
         for (Product product : sortedDescCategories) {
             System.out.println(product.getSubcategory_name());
+        }
+
+        // Kiểm tra lọc sản phẩm theo danh mục
+        String categoryName = "Laptop";
+        List<Product> filteredProducts = pDAO.getFilteredProducts(categoryName);
+        System.out.println("------------------------------------");
+        System.out.println("Sản phẩm thuộc danh mục '" + categoryName + "': " + filteredProducts.size() + " kết quả");
+        for (Product product : filteredProducts) {
+            System.out.println("ID sản phẩm: " + product.getProduct_id());
+            System.out.println("Tên sản phẩm: " + product.getProduct_name());
+            System.out.println("Danh mục: " + product.getSubcategory_name());
+            System.out.println("Giá bán: " + product.getSale_price());
+            System.out.println("Trạng thái: " + product.getStatus());
+            System.out.println("---------------------------------------------------");
+        }
+
+        // Kiểm tra lọc sản phẩm theo nổi bật
+        String featured = "1";
+        List<Product> filteredProducts2 = pDAO.getFilteredProductsbyFeatured(featured);
+        System.out.println("2------------------------------------2");
+        System.out.println("Sản phẩm thuộc nổi bật '" + featured + "': " + filteredProducts2.size() + " kết quả");
+        for (Product product : filteredProducts2) {
+            System.out.println("ID sản phẩm: " + product.getProduct_id());
+            System.out.println("Tên sản phẩm: " + product.getProduct_name());
+            System.out.println("Danh mục: " + product.getSubcategory_name());
+            System.out.println("Giá bán: " + product.getSale_price());
+            System.out.println("Trạng thái: " + product.getStatus());
+            System.out.println("---------------------------------------------------");
+        }
+
+        // Kiểm tra lọc sản phẩm theo trạng thái
+        String Status = "1";
+        List<Product> filteredProducts3 = pDAO.getFilteredProductsbyStatus(Status);
+        System.out.println("3------------------------------------3");
+        System.out.println("Sản phẩm thuộc Trạng thái '" + Status + "': " + filteredProducts3.size() + " kết quả");
+        for (Product product : filteredProducts3) {
+            System.out.println("ID sản phẩm: " + product.getProduct_id());
+            System.out.println("Tên sản phẩm: " + product.getProduct_name());
+            System.out.println("Danh mục: " + product.getSubcategory_name());
+            System.out.println("Giá bán: " + product.getSale_price());
+            System.out.println("Trạng thái: " + product.getStatus());
+            System.out.println("---------------------------------------------------");
         }
     }
 }
