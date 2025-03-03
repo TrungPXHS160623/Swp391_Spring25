@@ -8,6 +8,10 @@
         <servlet-name>UploadAvatarController</servlet-name>
         <servlet-class>Controller.UploadAvatarController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>MyOrdersController</servlet-name>
+        <servlet-class>Controller.MyOrdersController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginController</servlet-name>
         <url-pattern>/logincontroller</url-pattern>
@@ -55,5 +59,9 @@
     <servlet-mapping>
         <servlet-name>UploadAvatarController</servlet-name>
         <url-pattern>/uploadavatarcontroller</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>MyOrdersController</servlet-name>
+        <url-pattern>/myorderscontroller</url-pattern>
     </servlet-mapping>
 </web-app>

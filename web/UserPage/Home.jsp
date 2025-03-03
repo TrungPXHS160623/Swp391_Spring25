@@ -44,5 +44,7 @@
     Integer userId = (Integer) session.getAttribute("userId");
 %>
 <a href="<%= request.getContextPath() %>/userprofile">Go to Profile</a>
+<a href="<%= request.getContextPath() %>/userprofile">Go to Profile</a>
+<a href="<%= request.getContextPath() %>/userprofile">Go to Profile</a>
 </body>
 </html>
