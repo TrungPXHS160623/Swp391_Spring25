@@ -52,7 +52,49 @@ public class SliderDao {
         }
         return null;
     }
+     // Lọc slider theo title
+    public List<Slider> getSliderByTitle(String title) {
+        List<Slider> sliders = new ArrayList<>();
+        String query = "SELECT * FROM Slider WHERE title LIKE ?";
+        try (Connection conn = new DBContext().getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            
+            ps.setString(1, "%" + title + "%");
+            ResultSet rs = ps.executeQuery();
+            
+            while (rs.next()) {
+                sliders.add(extractSlider(rs));
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Lỗi SQL khi lọc slider theo status", e);
+        }
+        catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Lỗi kết nối CSDL", e);
+        }
+        return sliders;
+    }
 
+    // Lọc slider theo trạng thái (true = active, false = deactive)
+    public List<Slider> getSliderByStatus(boolean status) {
+        List<Slider> sliders = new ArrayList<>();
+        String query = "SELECT * FROM Slider WHERE status = ?";
+        try (Connection conn = new DBContext().getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            
+            ps.setBoolean(1, status);
+            ResultSet rs = ps.executeQuery();
+            
+            while (rs.next()) {
+                sliders.add(extractSlider(rs));
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Lỗi SQL khi tìm slider theo ID", e);
+        }
+        catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Lỗi kết nối CSDL", e);
+        }
+        return sliders;
+    }
     // Tìm slider theo BackLink
     public List<Slider> getSlidersByBackLink(String backLink) {
         List<Slider> sliders = new ArrayList<>();

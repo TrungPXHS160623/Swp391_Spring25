@@ -64,4 +64,12 @@
         <servlet-name>MyOrdersController</servlet-name>
         <url-pattern>/myorderscontroller</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>SliderListController</servlet-name>
+        <servlet-class>Controller.SliderListController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SliderListController</servlet-name>
+        <url-pattern>/sliderlistcontroller</url-pattern>
+    </servlet-mapping>
 </web-app>
