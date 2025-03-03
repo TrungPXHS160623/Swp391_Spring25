@@ -47,22 +47,40 @@
                 padding: 10px;
                 text-align: center;
             }
-            .action-btn {
-                padding: 5px 10px;
-                border: none;
-                cursor: pointer;
+            .button-group {
+                display: flex;
+                justify-content: space-between; /* Dàn đều 3 nút */
+                width: 100%; /* Đảm bảo full ô */
             }
+
+            .button-group form {
+                flex: 1; /* Mỗi form chiếm 1 phần bằng nhau */
+                display: flex;
+                justify-content: center; /* Căn giữa nút */
+            }
+
+            .action-btn {
+                padding: 10px 15px; /* Nút to hơn */
+                font-size: 16px; /* Chữ to hơn */
+                width: 90%; /* Đảm bảo nút rộng hơn */
+                max-width: 120px; /* Không quá to */
+            }
+
             .active {
                 background-color: yellow;
+                color: black;
             }
+
             .deactivate {
                 background-color: red;
                 color: white;
             }
+
             .update {
                 background-color: green;
                 color: white;
             }
+
             .pagination {
                 margin-top: 10px;
             }
@@ -70,6 +88,50 @@
                 background-color: orange;
                 padding: 5px 10px;
                 border: none;
+                cursor: pointer;
+            }
+            .modal {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            .modal-content {
+                background: white;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+                width: 400px;
+                text-align: center;
+            }
+            .customize-container {
+                background: #286090;
+                padding: 15px;
+                border-radius: 5px;
+                color: white;
+            }
+            .columns-container {
+                margin-top: 10px;
+            }
+            .checkbox-group {
+                display: flex;
+                justify-content: space-between;
+                flex-wrap: wrap;
+            }
+            button#applySettings {
+                background: #28a745;
+                color: white;
+                border: none;
+                padding: 10px;
+                width: 100%;
+                margin-top: 15px;
+                border-radius: 5px;
                 cursor: pointer;
             }
         </style>
@@ -93,6 +155,10 @@
 
                     <button type="submit">Search</button>
                 </form>
+                <!-- Add -->
+                <a href="${pageContext.request.contextPath}/AdminPage/AddSlider.jsp">
+                    <button class="action-btn update">Add</button>
+                </a>
             </div>
             <% 
 String updateMessage = (String) session.getAttribute("updateMessage");
@@ -106,8 +172,6 @@ if (updateMessage != null) {
                 <button type="button" onclick="this.parentElement.style.display = 'none';" style="background: transparent; border: none; color: #0c5460; cursor: pointer; margin-left: auto;">
                     <i class="fas fa-times-circle" style="font-size: 24px;"></i>
                 </button>
-                <!-- Nút Add Slider -->
-                <button onclick="window.location.href = 'AddSlider.jsp'" class="btn btn-success">Add Slider</button>
             </div>
 
             <script>
@@ -120,7 +184,9 @@ if (updateMessage != null) {
                 session.removeAttribute("updateMessage"); // Xóa thông báo sau khi hiển thị
                 }
             %>
-            <table border="1">
+
+
+            <table border="10">
                 <tr>
                     <th>Id</th>
                     <th>Title</th>
@@ -139,15 +205,28 @@ if (updateMessage != null) {
                             ${slider.status == 1 ? 'Active' : 'Inactive'}
                         </td>
                         <td>
-                            <a href="SliderServlet?action=activate&sliderId=${slider.id}">
-                                <button class="action-btn active">Active</button>
-                            </a>
-                            <a href="SliderServlet?action=deactivate&sliderId=${slider.id}">
-                                <button class="action-btn deactivate">Deactivate</button>
-                            </a>
-                            <a href="UpdateSlider.jsp?sliderId=${slider.id}">
-                                <button class="action-btn update">Update</button>
-                            </a>
+                            <div class="button-group">
+                                <!-- Active -->
+                                <form action="${pageContext.request.contextPath}/sliderlistcontroller" method="post">
+                                    <input type="hidden" name="action" value="activate">
+                                    <input type="hidden" name="sliderId" value="${slider.id}">
+                                    <button type="submit" class="action-btn active">Active</button>
+                                </form>
+
+                                <!-- Deactivate -->
+                                <form action="${pageContext.request.contextPath}/sliderlistcontroller" method="post">
+                                    <input type="hidden" name="action" value="deactivate">
+                                    <input type="hidden" name="sliderId" value="${slider.id}">
+                                    <button type="submit" class="action-btn deactivate">Deactivate</button>
+                                </form>
+
+                                <!-- Update -->
+                                <form action="${pageContext.request.contextPath}/sliderlistcontroller" method="post">
+                                    <input type="hidden" name="action" value="load">
+                                    <input type="hidden" name="sliderId" value="${slider.id}">
+                                    <button type="submit" class="action-btn update">Update</button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                 </c:forEach>
@@ -159,7 +238,54 @@ if (updateMessage != null) {
                 <button>...</button>
                 <button>></button>
             </div>
-            <button style="background-color: coral; margin-top: 10px;">Customize Table</button>
+            <button id="customizeTableBtn">Customize Table</button>
+
+
+        </div>
+        <!-- Popup Customize Table -->
+        <div id="customizeTableModal" class="modal">
+            <div class="modal-content">
+                <h2>Customize Table</h2>
+                <div class="customize-container">
+                    <label>Rows Per Table:</label>
+                    <input type="number" id="rowsPerTable" placeholder="Enter number of rows">
+
+                    <div class="columns-container">
+                        <label>Select Columns:</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" checked> Column A</label>
+                            <label><input type="checkbox"> Column B</label>
+                            <label><input type="checkbox"> Column C</label>
+                            <label><input type="checkbox"> Column ...</label>
+                        </div>
+                    </div>
+
+                    <button id="applySettings">Apply Settings</button>
+                </div>
+            </div>
         </div>
     </body>
+
 </html>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const customizeBtn = document.getElementById("customizeTableBtn"); // Nút mở popup
+    const popup = document.getElementById("customizeTableModal"); // Popup
+
+    // Đảm bảo popup ẩn khi trang tải lên
+    popup.style.display = "none";
+
+    // Mở popup khi ấn vào nút Customize Table
+    customizeBtn.addEventListener("click", function () {
+        popup.style.display = "flex"; 
+    });
+
+    // Đóng popup khi click ra ngoài
+    window.addEventListener("click", function (event) {
+        if (event.target === popup) {
+            popup.style.display = "none";
+        }
+    });
+});
+</script>

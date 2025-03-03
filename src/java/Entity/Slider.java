@@ -35,7 +35,25 @@ public class Slider {
         this.updatedDate = updatedDate;
         this.lastUpdatedBy = lastUpdatedBy;
     }
-
+    //for insert
+    public Slider(String imageUrl, String title, String backLink, int status, String notes, Integer lastUpdatedBy) {
+    this.imageUrl = imageUrl;
+    this.title = title;
+    this.backLink = backLink;
+    this.status = status;
+    this.notes = notes;
+    this.lastUpdatedBy = lastUpdatedBy;
+}
+    //for update
+    public Slider(int id, String imageUrl, String title, String backLink, int status, String notes, Integer lastUpdatedBy) {
+    this.id = id;
+    this.imageUrl = imageUrl;
+    this.title = title;
+    this.backLink = backLink;
+    this.status = status;
+    this.notes = notes;
+    this.lastUpdatedBy = lastUpdatedBy;
+}
     public int getId() {
         return id;
     }

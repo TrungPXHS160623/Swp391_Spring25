@@ -13,6 +13,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -110,7 +112,96 @@ public class SliderListController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String action = request.getParameter("action");
+        HttpSession session = request.getSession();
+        Integer userId = (Integer) session.getAttribute("userId"); // Lấy userId từ session
+
+        if (userId == null) {
+            response.sendRedirect("login.jsp"); // Nếu chưa đăng nhập, chuyển hướng về trang đăng nhập
+            return;
+        }
+
+        SliderDao sliderDao = new SliderDao();
+
+        if ("add".equals(action)) {
+            String title = request.getParameter("title");
+            String imageUrl = request.getParameter("imageUrl");
+            String backLink = request.getParameter("backlink");
+            String notes = request.getParameter("notes");
+            int status = Integer.parseInt(request.getParameter("status"));
+
+            List<String> errors = new ArrayList<>();
+
+//            // Validate độ dài title & notes
+//            if (title.length() > 255) {
+//                errors.add("Tiêu đề không được quá 255 ký tự.");
+//            }
+//            if (notes.length() > 500) {
+//                errors.add("Ghi chú không được quá 500 ký tự.");
+//            }
+//
+//            // Kiểm tra định dạng URL
+//            String urlPattern = "^(https?://)?([\\w\\-]+\\.)+[\\w\\-]+(/.*)?$";
+//            //http://sub.domain.vn
+//            //https://example.com
+//            
+//            //k hop le
+//            //ftp://example.com
+//            //www.example.com
+//            if (!imageUrl.matches(urlPattern)) {
+//                errors.add("URL hình ảnh không hợp lệ.");
+//            }
+//            if (!backLink.matches(urlPattern)) {
+//                errors.add("Backlink không hợp lệ.");
+//            }
+//
+//            // Nếu có lỗi thì lưu vào session và redirect
+//            if (!errors.isEmpty()) {
+//                session.setAttribute("updateErrors", errors);
+//                response.sendRedirect("userprofile");
+//                return;
+//            }
+
+            Slider newSlider = new Slider(imageUrl, title, backLink, status, notes, userId);
+
+            boolean success = sliderDao.addSlider(newSlider);
+            session.setAttribute("updateMessage", success ? "Thêm slider thành công!" : "Thêm slider thất bại!");
+
+        } else if ("update".equals(action)) {
+            int sliderId = Integer.parseInt(request.getParameter("sliderId"));
+            String title = request.getParameter("title");
+            String imageUrl = request.getParameter("imageUrl");
+            String backLink = request.getParameter("backlink");
+            String notes = request.getParameter("notes");
+            int status = Integer.parseInt(request.getParameter("status"));
+
+            Slider updatedSlider = new Slider(sliderId, imageUrl, title, backLink, status, notes, userId);
+            boolean success = sliderDao.updateSlider(updatedSlider);
+            session.setAttribute("updateMessage", success ? "Cập nhật slider thành công!" : "Cập nhật slider thất bại!");
+        } else if ("load".equals(action)) {
+            int sliderId = Integer.parseInt(request.getParameter("sliderId"));
+
+            // Lấy thông tin slider từ database
+            Slider slider = sliderDao.getSliderById(sliderId);
+
+            if (slider != null) {
+                request.setAttribute("slider", slider);
+                request.getRequestDispatcher("/AdminPage/SliderDetail.jsp").forward(request, response);
+            } else {
+                response.sendRedirect("sliderlist.jsp?error=Slider không tồn tại");
+            }
+        } else if ("activate".equals(action)) {
+            int sliderId = Integer.parseInt(request.getParameter("sliderId"));
+            sliderDao.activateSlider(sliderId);
+            session.setAttribute("updateMessage", "Slider đã được kích hoạt!");
+
+        } else if ("deactivate".equals(action)) {
+            int sliderId = Integer.parseInt(request.getParameter("sliderId"));
+            sliderDao.deactivateSlider(sliderId);
+            session.setAttribute("updateMessage", "Slider đã bị vô hiệu hóa!");
+        }
+
+        response.sendRedirect("sliderlistcontroller"); // Reload lại danh sách sliders
     }
 
     /**
