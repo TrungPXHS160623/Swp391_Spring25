@@ -58,7 +58,7 @@
                         <c:otherwise>
                             <a href="ProductController?name_sort=desc&search=${param.search}" title="Sắp xếp tên sản phẩm (Giảm dần)">▼</a>
                         </c:otherwise>
-                    </c:choose>
+                    </c:choose></td>
                 <td>Category
                     <c:choose>
                         <c:when test="${param.caterogy_sort == 'desc'}">
