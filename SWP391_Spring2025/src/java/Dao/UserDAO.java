@@ -284,11 +284,11 @@ public class UserDAO {
         String sql = "SELECT u.[user_id],u.[full_name],u.[gender],"
                 + "  u.[address],u.[email],u.[phone_number],r.[role_name],u.[is_active]"
                 + "  FROM [Users] u Join [Roles] r ON u.[role_id] = r.[role_id]"
-                + "  WHERE u.gender LIKE ?";
+                + "  WHERE u.gender = ?";
 
         try (Connection conn = new DBContext().getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             // Set parameters: category and search keyword
-            stmt.setString(1, "%" + gender + "%"); // Lọc theo tên danh mục
+            stmt.setString(1,gender); // Lọc theo tên danh mục
 
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
