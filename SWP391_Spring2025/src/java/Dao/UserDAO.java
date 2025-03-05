@@ -39,15 +39,22 @@ public class UserDAO {
         return user;
     }
 
-    // Liệt kê tất cả các người dùng
-    public List<User> getAllUser() {
+// Liệt kê tất cả các người dùng với phân trang
+    public List<User> getAllUser(int pageNumber, int pageSize) {
         List<User> users = new ArrayList<>();
-        String sql = "SELECT u.[user_id],u.[full_name],u.[gender],"
-                + "  u.[address],u.[email],u.[phone_number],r.[role_name],u.[is_active]"
-                + "  FROM [Users] u Join [Roles] r ON u.[role_id] = r.[role_id]";
-        try (Connection conn = new DBContext().getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
-            while (rs.next()) {
-                users.add(mapResultSetToUser(rs));
+        String sql = "SELECT u.[user_id], u.[full_name], u.[gender], "
+                + "u.[address], u.[email], u.[phone_number], r.[role_name], u.[is_active] "
+                + "FROM [Users] u JOIN [Roles] r ON u.[role_id] = r.[role_id] "
+                + "ORDER BY u.[user_id] "
+                + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";  // SQL Server pagination syntax
+
+        try (Connection conn = new DBContext().getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, (pageNumber - 1) * pageSize);  // OFFSET
+            stmt.setInt(2, pageSize);  // FETCH NEXT
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    users.add(mapResultSetToUser(rs));
+                }
             }
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Lỗi SQL khi lấy danh sách người dùng", e);
@@ -55,6 +62,21 @@ public class UserDAO {
             LOGGER.log(Level.SEVERE, "Lỗi không mong muốn khi lấy danh sách người dùng", e);
         }
         return users;
+    }
+
+    public int getTotalUserCount() {
+        int count = 0;
+        String sql = "SELECT COUNT(*) FROM [Users]";
+        try (Connection conn = new DBContext().getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Lỗi SQL khi lấy tổng số người dùng", e);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Lỗi SQL khi lấy tổng số người dùng", e);
+        }
+        return count;
     }
 
     // Tìm kiếm theo tên người dùng
@@ -288,7 +310,7 @@ public class UserDAO {
 
         try (Connection conn = new DBContext().getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             // Set parameters: category and search keyword
-            stmt.setString(1,gender); // Lọc theo tên danh mục
+            stmt.setString(1, gender); // Lọc theo tên danh mục
 
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
@@ -355,25 +377,25 @@ public class UserDAO {
 
     public static void main(String[] args) {
         UserDAO uDao = new UserDAO();
-        List<User> users = uDao.getAllUser();
-        // Test xem tất cả người dùng
-        for (User user : users) {
-            System.out.println("---------------------------------------------------");
-            System.out.println("Id: " + user.getUser_id());
-            System.out.println("Full name: " + user.getFull_name());
-            System.out.println("Gender: " + user.getGender());
-            System.out.println("Address: " + user.getAddress());
-            System.out.println("Email: " + user.getEmail());
-            System.out.println("Mobile: " + user.getPhone_number());
-            System.out.println("Role: " + user.getRole_name());
-            System.out.println("Status: " + user.getIs_active());
-        }
+//        List<User> users = uDao.getAllUser();
+//        // Test xem tất cả người dùng
+//        for (User user : users) {
+//            System.out.println("---------------------------------------------------");
+//            System.out.println("Id: " + user.getUser_id());
+//            System.out.println("Full name: " + user.getFull_name());
+//            System.out.println("Gender: " + user.getGender());
+//            System.out.println("Address: " + user.getAddress());
+//            System.out.println("Email: " + user.getEmail());
+//            System.out.println("Mobile: " + user.getPhone_number());
+//            System.out.println("Role: " + user.getRole_name());
+//            System.out.println("Status: " + user.getIs_active());
+//        }
 
         // Test tìm kiếm người dùng 
         List<User> searchResults = uDao.searchUser("Nguyen");
         System.out.println("------------------------------------");
         System.out.println("Tìm kiếm 'Nguyen': " + searchResults.size() + " kết quả");
-        
+
         // Test sắp xếp tên người dùng
         List<User> sortUserFullName = uDao.getAllUserSortedByName(true);
         System.out.println("------------------------------------");
@@ -381,7 +403,7 @@ public class UserDAO {
         for (User user : sortUserFullName) {
             System.out.println(user.getFull_name());
         }
-        
+
         //Test lọc theo giới tính
         String gender = "Male";
         List<User> filterGender = uDao.getFilteredUserGender(gender);

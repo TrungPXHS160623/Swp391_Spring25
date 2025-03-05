@@ -73,6 +73,18 @@ public class UserController extends HttpServlet {
         String userRole_filter = request.getParameter("userRole_filter");
         String userStatus_filter = request.getParameter("userStatus_filter");
 
+        int pageSize = 7;  // Số lượng người dùng mỗi trang
+        int pageNumber = 1;  // Mặc định là trang 1
+        // Lấy số trang từ request, nếu có
+        String pageParam = request.getParameter("page");
+        if (pageParam != null && !pageParam.isEmpty()) {
+            try {
+                pageNumber = Integer.parseInt(pageParam);
+            } catch (NumberFormatException e) {
+                pageNumber = 1;
+            }
+        }
+
         List<User> users;
         List<String> genders = uDao.getAllGenders();
         List<String> roles = uDao.getAllRoles();
@@ -128,8 +140,14 @@ public class UserController extends HttpServlet {
             users = uDao.getFilteredUserStatus(userStatus_filter);
         } else {
             // Lấy tất cả sản phẩm nếu không có từ khóa tìm kiếm
-            users = uDao.getAllUser();
+            users = uDao.getAllUser(pageNumber, pageSize);
         }
+
+        int totalUsers = uDao.getTotalUserCount();
+        int totalPages = (int) Math.ceil((double) totalUsers / pageSize);
+
+        request.setAttribute("currentPage", pageNumber);
+        request.setAttribute("totalPages", totalPages);
 
         request.setAttribute("UserController", users);
         request.getRequestDispatcher("view/user.jsp").forward(request, response);

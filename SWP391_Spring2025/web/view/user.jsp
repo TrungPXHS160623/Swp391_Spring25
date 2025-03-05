@@ -14,7 +14,7 @@
     </head>
     <body>
         <h2>Danh sách người Dùng</h2>
-        
+
         <form action="UserController" method="get">
             <select name="userGender_filter" id="userGender_filter" onchange="this.form.submit()">
                 <option value="">All Gender</option>
@@ -39,18 +39,18 @@
                 </c:forEach>
             </select>   
         </form>
-        
+
         <!-- Form tìm kiếm riêng biệt -->
         <form action="UserController" method="get">
             <label for="searchKeyword">Search: </label>
             <input type="text" name="searchKeyword" value="${param.search}"/>             
             <input type="submit" value="Search" />
         </form>
-            
+
         <table border="1">
             <tr>
                 <td>Id
-                <c:choose>
+                    <c:choose>
                         <c:when test="${param.Id_sort == 'desc'}">
                             <a href="UserController?Id_sort=asc&search=${param.search}" title="Sắp xếp tên người dùng (Tăng dần)">▲</a>
                         </c:when>
@@ -59,7 +59,7 @@
                         </c:otherwise>
                     </c:choose></td>
                 <td>Full Name
-                <c:choose>
+                    <c:choose>
                         <c:when test="${param.fullName_sort == 'desc'}">
                             <a href="UserController?fullName_sort=asc&search=${param.search}" title="Sắp xếp tên người dùng (Tăng dần)">▲</a>
                         </c:when>
@@ -68,7 +68,7 @@
                         </c:otherwise>
                     </c:choose></td>
                 <td>Gender
-                <c:choose>
+                    <c:choose>
                         <c:when test="${param.userGender_sort == 'desc'}">
                             <a href="UserController?userGender_sort=asc&search=${param.search}" title="Sắp xếp tên người dùng (Tăng dần)">▲</a>
                         </c:when>
@@ -77,7 +77,7 @@
                         </c:otherwise>
                     </c:choose></td>
                 <td>Address
-                <c:choose>
+                    <c:choose>
                         <c:when test="${param.address_sort == 'desc'}">
                             <a href="UserController?address_sort=asc&search=${param.search}" title="Sắp xếp tên người dùng (Tăng dần)">▲</a>
                         </c:when>
@@ -86,7 +86,7 @@
                         </c:otherwise>
                     </c:choose></td>
                 <td>Email
-                <c:choose>
+                    <c:choose>
                         <c:when test="${param.email_sort == 'desc'}">
                             <a href="UserController?email_sort=asc&search=${param.search}" title="Sắp xếp tên người dùng (Tăng dần)">▲</a>
                         </c:when>
@@ -95,7 +95,7 @@
                         </c:otherwise>
                     </c:choose></td>
                 <td>Mobile
-                <c:choose>
+                    <c:choose>
                         <c:when test="${param.phone_sort == 'desc'}">
                             <a href="UserController?phone_sort=asc&search=${param.search}" title="Sắp xếp tên người dùng (Tăng dần)">▲</a>
                         </c:when>
@@ -104,7 +104,7 @@
                         </c:otherwise>
                     </c:choose></td>
                 <td>Role
-                <c:choose>
+                    <c:choose>
                         <c:when test="${param.userRole_sort == 'desc'}">
                             <a href="UserController?userRole_sort=asc&search=${param.search}" title="Sắp xếp tên người dùng (Tăng dần)">▲</a>
                         </c:when>
@@ -113,7 +113,7 @@
                         </c:otherwise>
                     </c:choose></td>
                 <td>Status
-                <c:choose>
+                    <c:choose>
                         <c:when test="${param.userStatus_sort == 'desc'}">
                             <a href="UserController?userStatus_sort=asc&search=${param.search}" title="Sắp xếp tên người dùng (Tăng dần)">▲</a>
                         </c:when>
@@ -138,5 +138,25 @@
                 </tr>   
             </c:forEach>
         </table>
+
+        <!-- Phân trang -->
+        <c:if test="${totalPages > 1}">
+            <div class="pagination">
+                <c:if test="${currentPage > 1}">
+                    <a href="UserController?page=${currentPage - 1}">&laquo; Prev</a>
+                </c:if>
+                <c:forEach begin="1" end="${totalPages}" var="page">
+                    <c:if test="${page == currentPage}">
+                        <span class="current">${page}</span>
+                    </c:if>
+                    <c:if test="${page != currentPage}">
+                        <a href="UserController?page=${page}">${page}</a>
+                    </c:if>
+                </c:forEach>
+                <c:if test="${currentPage < totalPages}">
+                    <a href="UserController?page=${currentPage + 1}">Next &raquo;</a>
+                </c:if>
+            </div>
+        </c:if>
     </body>
 </html>
