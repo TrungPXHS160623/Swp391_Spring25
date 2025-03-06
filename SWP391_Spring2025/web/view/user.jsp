@@ -133,12 +133,15 @@
                     <td>${UserController.getPhone_number()}</td>
                     <td>${UserController.getRole_name()}</td>
                     <td>${UserController.getIs_active()}</td>
-                    <td><a href="UserController">View</a>
-                        <a href="UserController">Edit</a></td>
+                    <td>
+                        <a href="detail/userDetail.jsp?action=view&userId=${UserController.getUser_id()}">View</a>
+                        <a href="detail/userDetail.jsp?action=edit&userId=${UserController.getUser_id()}">Edit</a>
+                    </td>
+
                 </tr>   
             </c:forEach>
         </table>
-
+        <a href="detail/userDetail.jsp?action=add">Add User</a>
         <!-- Phân trang -->
         <c:if test="${totalPages > 1}">
             <div class="pagination">

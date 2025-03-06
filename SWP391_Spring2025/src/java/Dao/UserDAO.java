@@ -39,7 +39,7 @@ public class UserDAO {
         return user;
     }
 
-// Liệt kê tất cả các người dùng với phân trang
+    // Liệt kê tất cả các người dùng với phân trang
     public List<User> getAllUser(int pageNumber, int pageSize) {
         List<User> users = new ArrayList<>();
         String sql = "SELECT u.[user_id], u.[full_name], u.[gender], "
@@ -375,21 +375,75 @@ public class UserDAO {
         return users;
     }
 
+    public User getUserById(int userId) {
+        User user = null;
+        String sql = "SELECT u.[user_id], u.[avatar_url], u.[full_name], u.[gender], "
+                + "u.[address], u.[email], u.[phone_number], r.[role_name], u.[is_active] "
+                + "FROM [Users] u JOIN [Roles] r ON u.[role_id] = r.[role_id] "
+                + "WHERE u.[user_id] = ?";
+
+        try (Connection conn = new DBContext().getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, userId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    user = mapResultSetToUser(rs);
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Lỗi SQL khi lấy thông tin người dùng theo ID", e);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Lỗi không mong muốn khi lấy thông tin người dùng theo ID", e);
+        }
+        return user;
+    }
+
+    public boolean updateUser(User user) {
+        String sql = "UPDATE [Users] SET full_name = ?, gender = ?, address = ?, "
+                + "email = ?, phone_number = ?, role_id = (SELECT role_id FROM Roles WHERE role_name = ?), "
+                + "is_active = ? WHERE user_id = ?";
+
+        try (Connection conn = new DBContext().getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, user.getFull_name());
+            stmt.setString(2, user.getGender());
+            stmt.setString(3, user.getAddress());
+            stmt.setString(4, user.getEmail());
+            stmt.setString(5, user.getPhone_number());
+            stmt.setString(6, user.getRole_name());
+            stmt.setInt(7, user.getIs_active());
+            stmt.setInt(8, user.getUser_id());
+
+            int rowsUpdated = stmt.executeUpdate();
+            return rowsUpdated > 0;
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Lỗi SQL khi cập nhật thông tin người dùng", e);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Lỗi không mong muốn khi cập nhật thông tin người dùng", e);
+        }
+        return false;
+    }
+
     public static void main(String[] args) {
         UserDAO uDao = new UserDAO();
-//        List<User> users = uDao.getAllUser();
-//        // Test xem tất cả người dùng
-//        for (User user : users) {
-//            System.out.println("---------------------------------------------------");
-//            System.out.println("Id: " + user.getUser_id());
-//            System.out.println("Full name: " + user.getFull_name());
-//            System.out.println("Gender: " + user.getGender());
-//            System.out.println("Address: " + user.getAddress());
-//            System.out.println("Email: " + user.getEmail());
-//            System.out.println("Mobile: " + user.getPhone_number());
-//            System.out.println("Role: " + user.getRole_name());
-//            System.out.println("Status: " + user.getIs_active());
-//        }
+        // Thiết lập trang muốn lấy và kích thước mỗi trang
+        int pageNumber = 1;  // Trang 1
+        int pageSize = 7;   // Kích thước mỗi trang là 10 người dùng
+
+        // Lấy danh sách người dùng trang 1
+        List<User> users = uDao.getAllUser(pageNumber, pageSize);
+
+        // Hiển thị kết quả
+        if (users.isEmpty()) {
+            System.out.println("Không có người dùng nào.");
+        } else {
+            System.out.println("Danh sách người dùng trang " + pageNumber + ":");
+            for (User user : users) {
+                System.out.println("ID: " + user.getUser_id() + ", Tên: " + user.getFull_name() + ", Vai trò: " + user.getRole_name());
+            }
+        }
+
+        // Lấy tổng số người dùng và hiển thị
+        int totalUserCount = uDao.getTotalUserCount();
+        System.out.println("Tổng số người dùng: " + totalUserCount);
 
         // Test tìm kiếm người dùng 
         List<User> searchResults = uDao.searchUser("Nguyen");
