@@ -1,97 +1,163 @@
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
-<html>
-<head>
-    <title>My Orders</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #4A90E2;
-            text-align: center;
-        }
-        .container {
-            width: 80%;
-            margin: auto;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            border: 1px solid black;
-            padding: 10px;
-            text-align: center;
-        }
-        .search-section {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .search-section input, .search-section select {
-            padding: 8px;
-            margin-right: 10px;
-        }
-        .search-btn {
-            background-color: #00FF00;
-            color: black;
-            padding: 10px;
-            border: none;
-            cursor: pointer;
-        }
-        .pagination {
-            margin-top: 20px;
-        }
-        .pagination button {
-            padding: 10px;
-            background-color: orange;
-            border: none;
-            cursor: pointer;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h2>My Orders</h2>
-        <div class="search-section">
-            <input type="text" placeholder="Enter Order ID" />
-            <button class="search-btn">Search by Id</button>
-            <select>
-                <option>Order Status</option>
-            </select>
-            <input type="date" />
-            <input type="date" />
-            <button class="search-btn">Search by date</button>
-        </div>
-        <table>
-            <tr>
-                <th>Id</th>
-                <th>Order Date</th>
-                <th>Product Name</th>
-                <th>Total Cost</th>
-                <th>Status</th>
-                <th>Action</th>
-            </tr>
-            <tr>
-                <td>1</td>
-                <td>2024-03-03</td>
-                <td>Sample Product</td>
-                <td>$100</td>
-                <td>Pending</td>
-                <td><button class="search-btn">View Detail</button></td>
-            </tr>
-        </table>
-        <div class="pagination">
-            <button>&lt;</button>
-            <button>1</button>
-            <button>2</button>
-            <button>...</button>
-            <button>&gt;</button>
-        </div>
-        <button style="background-color: coral; margin-top: 10px;">Customize Table</button>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>My Orders</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #4A90E2;
+                text-align: center;
+                margin: 0;
+                padding: 0;
+            }
+            .container {
+                width: 80%;
+                margin: 30px auto;
+                background: white;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            }
+            h2 {
+                color: #333;
+            }
+            .search-section {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 20px;
+                padding: 10px;
+                background: #f8f8f8;
+                border-radius: 5px;
+            }
+            .search-section input, .search-section select {
+                padding: 8px;
+                width: 20%;
+            }
+            .search-btn {
+                background-color: #28a745;
+                color: white;
+                padding: 10px;
+                border: none;
+                cursor: pointer;
+                border-radius: 5px;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+            }
+            th, td {
+                border: 1px solid #ddd;
+                padding: 12px;
+                text-align: center;
+            }
+            th {
+                background-color: #007bff;
+                color: white;
+            }
+            tr:nth-child(even) {
+                background-color: #f2f2f2;
+            }
+            .pagination {
+                margin-top: 20px;
+            }
+            .pagination button {
+                padding: 10px;
+                background-color: orange;
+                border: none;
+                cursor: pointer;
+                border-radius: 5px;
+            }
+            .detail-btn {
+                background-color: #ff9800;
+                color: white;
+                padding: 8px;
+                border: none;
+                cursor: pointer;
+                border-radius: 5px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h2>My Orders</h2>
+
+            <!-- Search & Filter Section -->
+<!-- Search & Filter Section -->
+<form action="${pageContext.request.contextPath}/myordercontroller" method="GET" class="search-form">
+    <div class="search-container">
+        <!-- Search by Order ID -->
+        <input type="text" name="orderId" placeholder="Enter Order ID" value="${param.orderId}">
+        <button type="submit" class="search-btn">Search by ID</button>
+
+        <!-- Filter by Order Status (Auto Submit) -->
+        <select name="status" onchange="this.form.submit()">
+            <option value="">Order Status</option>
+            <c:forEach var="status" items="${orderStatuses}">
+                <option value="${status}" ${param.status == status ? 'selected' : ''}>${status}</option>
+            </c:forEach>
+        </select>
+
+        <!-- Search by Date Range -->
+        <input type="date" name="startDate" value="${param.startDate}">
+        <input type="date" name="endDate" value="${param.endDate}">
+        <button type="submit" class="search-btn">Search by Date</button>
     </div>
-</body>
+</form>
+
+
+
+            <!-- Orders Table -->
+            <table>
+                <tr>
+                    <th>Id</th>
+                    <th>Order Date</th>
+                    <th>Product Name</th>
+                    <th>Total Cost</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+
+                <c:choose>
+                    <c:when test="${empty orders}">
+                        <tr>
+                            <td colspan="6">No orders found</td>
+                        </tr>
+                    </c:when>
+                    <c:otherwise>
+                        <c:forEach var="order" items="${orders}">
+                            <tr>
+                                <td>${order.orderId}</td>
+                                <td>${order.orderDate}</td>
+                                <td>${order.productNames}</td>
+                                <td>${order.totalCost}</td>
+                                <td>${order.status}</td>
+                                <td>
+                                    <a href="OrderDetailsServlet?orderId=${order.orderId}">
+                                        <button class="detail-btn">View Details</button>
+                                    </a>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </c:otherwise>
+                </c:choose>
+            </table>
+
+            <!-- Pagination -->
+            <div class="pagination">
+                <button>&lt;</button>
+                <button>1</button>
+                <button>2</button>
+                <button>...</button>
+                <button>&gt;</button>
+            </div>
+
+            <!-- Customize Button -->
+            <button style="background-color: coral; margin-top: 10px;">Customize Table</button>
+        </div>
+    </body>
 </html>

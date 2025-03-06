@@ -46,6 +46,7 @@
 <a href="<%= request.getContextPath() %>/userprofile">Go to Profile</a>
 <br></br>
 <a href="<%= request.getContextPath() %>/sliderlistcontroller">Go to Management Slider</a>
-
+<br></br>
+<a href="<%= request.getContextPath() %>/myordercontroller" class="btn">My Orders</a>
 </body>
 </html>
