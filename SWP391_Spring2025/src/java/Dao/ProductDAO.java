@@ -342,6 +342,72 @@ public class ProductDAO {
         return products;
     }
 
+    // Lấy Sản phẩm theo Id
+    public Product getProductById(int productId) {
+        String sql = "SELECT p.product_id, p.image_url, p.product_name, s.subcategory_name, "
+                + "p.list_price, p.sale_price, p.stock, p.status, p.featured "
+                + "FROM Products p JOIN SubCategories s ON p.subcategory_id = s.subcategory_id "
+                + "WHERE p.product_id = ?";
+
+        try (Connection conn = new DBContext().getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, productId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return mapResultSetToProduct(rs);
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Lỗi SQL khi lấy thông tin sản phẩm theo ID", e);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Lỗi không mong muốn khi sản phẩm", e);
+        }
+        return null;
+    }
+
+    // Thêm 1 sản phẩm
+    public void addProduct(Product product) {
+        String sql = "INSERT INTO Products (image_url, product_name, subcategory_id, list_price, sale_price, stock, status, featured) "
+                + "VALUES (?, ?, (SELECT subcategory_id FROM SubCategories WHERE subcategory_name = ?), ?, ?, ?, ?, ?, ?)";
+
+        try (Connection conn = new DBContext().getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, product.getImage_url());
+            stmt.setString(2, product.getProduct_name());
+            stmt.setString(3, product.getSubcategory_name());
+            stmt.setFloat(4, product.getList_price());
+            stmt.setFloat(5, product.getSale_price());
+            stmt.setInt(6, product.getStock());
+            stmt.setInt(7, product.getStatus());
+            stmt.setInt(8, product.getFeatured());
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Cập nhật 1 sản phẩm
+    public void updateProduct(Product product) {
+        String sql = "UPDATE Products SET product_name = ?, list_price = ?, sale_price = ?, status = ?, featured = ?, image_url = ? WHERE product_id = ?";
+        try (Connection conn = new DBContext().getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, product.getProduct_name());
+            stmt.setFloat(2, product.getList_price());
+            stmt.setFloat(3, product.getSale_price());
+            stmt.setInt(4, product.getStatus());
+            stmt.setInt(5, product.getFeatured());
+            stmt.setString(6, product.getImage_url());
+            stmt.setInt(7, product.getProduct_id());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Lỗi SQL khi cập nhật sản phẩm", e);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Lỗi không mong muốn khi sản phẩm", e);
+        }
+    }
+
     public static void main(String[] args) {
         ProductDAO pDAO = new ProductDAO();
 

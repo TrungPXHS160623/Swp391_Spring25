@@ -22,11 +22,12 @@ public class Product {
     private float list_price;
     private float sale_price;
     private int featured;
+    private int stock;
 
     public Product() {
     }
 
-    public Product(int product_id, String image_url, String product_name, String subcategory_name, Date created_at, Date updated_at, int status, float list_price, float sale_price, int featured) {
+    public Product(int product_id, String image_url, String product_name, String subcategory_name, Date created_at, Date updated_at, int status, float list_price, float sale_price, int featured, int stock) {
         this.product_id = product_id;
         this.image_url = image_url;
         this.product_name = product_name;
@@ -37,6 +38,7 @@ public class Product {
         this.list_price = list_price;
         this.sale_price = sale_price;
         this.featured = featured;
+        this.stock = stock;
     }
 
     public int getProduct_id() {
@@ -119,4 +121,11 @@ public class Product {
         this.featured = featured;
     }
 
+    public int getStock() {
+        return stock;
+    }
+
+    public void setStock(int stock) {
+        this.stock = stock;
+    }
 }

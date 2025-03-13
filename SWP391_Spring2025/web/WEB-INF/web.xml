@@ -16,6 +16,14 @@
         <servlet-name>UserDetailController</servlet-name>
         <servlet-class>Controller.UserDetailController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ProductDetailController</servlet-name>
+        <servlet-class>Controller.ProductDetailController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ServletTest</servlet-name>
+        <servlet-class>Controller.ServletTest</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ProductController</servlet-name>
         <url-pattern>/ProductController</url-pattern>
@@ -31,5 +39,13 @@
     <servlet-mapping>
         <servlet-name>UserDetailController</servlet-name>
         <url-pattern>/UserDetailController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ProductDetailController</servlet-name>
+        <url-pattern>/ProductDetailController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ServletTest</servlet-name>
+        <url-pattern>/test</url-pattern>
     </servlet-mapping>
 </web-app>
