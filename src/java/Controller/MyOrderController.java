@@ -78,8 +78,8 @@ public class MyOrderController extends HttpServlet {
         String orderIdStr = request.getParameter("orderId"); // Tìm kiếm theo ID
         String status = request.getParameter("status"); // Lọc theo trạng thái
         // Lấy tham số từ request
-        String fromDateStr = request.getParameter("fromDate");
-        String toDateStr = request.getParameter("toDate");
+        String fromDateStr = request.getParameter("startDate");
+        String toDateStr = request.getParameter("endDate");
 
         LocalDate fromLocalDate = null;
         LocalDate toLocalDate = null;

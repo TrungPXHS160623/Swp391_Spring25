@@ -80,6 +80,50 @@
                 cursor: pointer;
                 border-radius: 5px;
             }
+            button#applySettings {
+                background: #28a745;
+                color: white;
+                border: none;
+                padding: 10px;
+                width: 100%;
+                margin-top: 15px;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+            .modal {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            .modal-content {
+                background: white;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+                width: 400px;
+                text-align: center;
+            }
+            .customize-container {
+                background: #286090;
+                padding: 15px;
+                border-radius: 5px;
+                color: white;
+            }
+            .columns-container {
+                margin-top: 10px;
+            }
+            .checkbox-group {
+                display: flex;
+                justify-content: space-between;
+                flex-wrap: wrap;
+            }
         </style>
     </head>
     <body>
@@ -87,27 +131,27 @@
             <h2>My Orders</h2>
 
             <!-- Search & Filter Section -->
-<!-- Search & Filter Section -->
-<form action="${pageContext.request.contextPath}/myordercontroller" method="GET" class="search-form">
-    <div class="search-container">
-        <!-- Search by Order ID -->
-        <input type="text" name="orderId" placeholder="Enter Order ID" value="${param.orderId}">
-        <button type="submit" class="search-btn">Search by ID</button>
+            <!-- Search & Filter Section -->
+            <form action="${pageContext.request.contextPath}/myordercontroller" method="GET" class="search-form">
+                <div class="search-container">
+                    <!-- Search by Order ID -->
+                    <input type="text" name="orderId" placeholder="Enter Order ID" value="${param.orderId}">
+                    <button type="submit" class="search-btn">Search by ID</button>
 
-        <!-- Filter by Order Status (Auto Submit) -->
-        <select name="status" onchange="this.form.submit()">
-            <option value="">Order Status</option>
-            <c:forEach var="status" items="${orderStatuses}">
-                <option value="${status}" ${param.status == status ? 'selected' : ''}>${status}</option>
-            </c:forEach>
-        </select>
+                    <!-- Filter by Order Status (Auto Submit) -->
+                    <select name="status" onchange="this.form.submit()">
+                        <option value="">Order Status</option>
+                        <c:forEach var="status" items="${orderStatuses}">
+                            <option value="${status}" ${param.status == status ? 'selected' : ''}>${status}</option>
+                        </c:forEach>
+                    </select>
 
-        <!-- Search by Date Range -->
-        <input type="date" name="startDate" value="${param.startDate}">
-        <input type="date" name="endDate" value="${param.endDate}">
-        <button type="submit" class="search-btn">Search by Date</button>
-    </div>
-</form>
+                    <!-- Search by Date Range -->
+                    <input type="date" name="startDate" value="${param.startDate}">
+                    <input type="date" name="endDate" value="${param.endDate}">
+                    <button type="submit" class="search-btn">Search by Date</button>
+                </div>
+            </form>
 
 
 
@@ -157,7 +201,51 @@
             </div>
 
             <!-- Customize Button -->
-            <button style="background-color: coral; margin-top: 10px;">Customize Table</button>
+            <button id="customizeTableBtn">Customize Table</button>
+        </div>
+                    </div>
+        <!-- Popup Customize Table -->
+        <div id="customizeTableModal" class="modal">
+            <div class="modal-content">
+                <h2>Customize Table</h2>
+                <div class="customize-container">
+                    <label>Rows Per Table:</label>
+                    <input type="number" id="rowsPerTable" placeholder="Enter number of rows">
+
+                    <div class="columns-container">
+                        <label>Select Columns:</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" checked> Column A</label>
+                            <label><input type="checkbox"> Column B</label>
+                            <label><input type="checkbox"> Column C</label>
+                            <label><input type="checkbox"> Column ...</label>
+                        </div>
+                    </div>
+
+                    <button id="applySettings">Apply Settings</button>
+                </div>
+            </div>
         </div>
     </body>
 </html>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const customizeBtn = document.getElementById("customizeTableBtn"); // Nút mở popup
+    const popup = document.getElementById("customizeTableModal"); // Popup
+
+    // Đảm bảo popup ẩn khi trang tải lên
+    popup.style.display = "none";
+
+    // Mở popup khi ấn vào nút Customize Table
+    customizeBtn.addEventListener("click", function () {
+        popup.style.display = "flex"; 
+    });
+
+    // Đóng popup khi click ra ngoài
+    window.addEventListener("click", function (event) {
+        if (event.target === popup) {
+            popup.style.display = "none";
+        }
+    });
+});
+</script>
