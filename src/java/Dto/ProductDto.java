@@ -2,15 +2,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package Entity;
-
+package Dto;
 import java.sql.Timestamp;
-
 /**
  *
  * @author Acer
  */
-public class Product {
+public class ProductDto {
     private int productId;
     private String productName;
     private String description;
@@ -23,11 +21,12 @@ public class Product {
     private double discountPercentage;
     private int soldQuantity;
     private double averageRating;
+    private String imageUrl; // Ảnh chính (từ ProductImages)
 
-    public Product() {
+    public ProductDto() {
     }
 
-    public Product(int productId, String productName, String description, double price, int stockQuantity, int subcategoryId, Timestamp createdAt, Timestamp updatedAt, double discountPrice, double discountPercentage, int soldQuantity, double averageRating) {
+    public ProductDto(int productId, String productName, String description, double price, int stockQuantity, int subcategoryId, Timestamp createdAt, Timestamp updatedAt, double discountPrice, double discountPercentage, int soldQuantity, double averageRating, String imageUrl) {
         this.productId = productId;
         this.productName = productName;
         this.description = description;
@@ -40,6 +39,7 @@ public class Product {
         this.discountPercentage = discountPercentage;
         this.soldQuantity = soldQuantity;
         this.averageRating = averageRating;
+        this.imageUrl = imageUrl;
     }
 
     public int getProductId() {
@@ -138,9 +138,17 @@ public class Product {
         this.averageRating = averageRating;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
     @Override
     public String toString() {
-        return "Product{" + "productId=" + productId + ", productName=" + productName + ", description=" + description + ", price=" + price + ", stockQuantity=" + stockQuantity + ", subcategoryId=" + subcategoryId + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", discountPrice=" + discountPrice + ", discountPercentage=" + discountPercentage + ", soldQuantity=" + soldQuantity + ", averageRating=" + averageRating + '}';
+        return "ProductDto{" + "productId=" + productId + ", productName=" + productName + ", description=" + description + ", price=" + price + ", stockQuantity=" + stockQuantity + ", subcategoryId=" + subcategoryId + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", discountPrice=" + discountPrice + ", discountPercentage=" + discountPercentage + ", soldQuantity=" + soldQuantity + ", averageRating=" + averageRating + ", imageUrl=" + imageUrl + '}';
     }
     
     

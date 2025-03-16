@@ -9,8 +9,8 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>LeftBar</title>
+       
+        <!-- <title>LeftBar</title> -->
         <style>
             .left-bar {
                 width: 250px;
