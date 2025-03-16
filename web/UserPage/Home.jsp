@@ -73,6 +73,7 @@
 
             <!-- Main Content -->
             <div class="main-content">
+                <jsp:include page="/CommonPage/Header.jsp" />
                 <a href="ChangePassword.jsp" class="btn">Change Password</a>
 
                 <%
@@ -91,6 +92,7 @@
                 <a href="<%= request.getContextPath() %>/userprofile" class="btn">Go to Profile</a>
                 <a href="<%= request.getContextPath() %>/sliderlistcontroller" class="btn">Go to Management Slider</a>
                 <a href="<%= request.getContextPath() %>/myordercontroller" class="btn">My Orders</a>
+                <jsp:include page="/CommonPage/Footer.jsp" />
             </div>
 
             <!-- Right Sidebar -->
