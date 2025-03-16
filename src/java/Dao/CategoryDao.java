@@ -210,6 +210,7 @@ public class CategoryDao {
         category.setDeletedAt(deletedAtTimestamp != null ? deletedAtTimestamp.toLocalDateTime() : null);
 
         category.setStatus(rs.getInt("status"));
+        category.setImageUrl(rs.getString("imageUrl"));
         return category;
     }
 

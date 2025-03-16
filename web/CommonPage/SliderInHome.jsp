@@ -9,7 +9,7 @@
         <style>
             .slider-container {
                 width: 100%;
-                max-width: 1400px;
+                max-width: 1300px;
                 margin: auto;
                 overflow: hidden;
                 position: relative;
@@ -24,26 +24,37 @@
                 transition: transform 0.5s ease-in-out;
             }
 
+            /* Phần tử slide */
             .slide {
                 flex: 0 0 calc(100% / 3); /* Đảm bảo đúng 3 ảnh hiển thị */
                 text-align: center;
                 margin-right: 10px; /* Thêm khoảng cách */
+                border: 2px solid #000; /* Thêm border cho slide */
+                padding: 10px; /* Thêm khoảng cách giữa nội dung và border */
+                border-radius: 5px; /* Tùy chọn: bo tròn góc nếu bạn muốn */
             }
 
+            /* Cấu trúc ảnh trong slide */
             .slide img {
                 width: 100%;
-                border-radius: 10px;
+                border-radius: 10px; /* Bo tròn các góc ảnh */
+                border-bottom: 2px solid #000; /* Thêm border dưới ảnh */
             }
+
+            /* Đảm bảo ảnh cuối không bị lệch */
             .slide:last-child {
                 margin-right: 0; /* Ảnh cuối không bị lệch */
             }
 
+            /* Phần caption (tiêu đề) */
             .caption {
                 margin-top: 10px; /* Tăng khoảng cách với ảnh */
                 font-size: 18px; /* Tăng kích thước chữ */
                 font-weight: bold; /* Làm đậm chữ */
                 color: #000; /* Chuyển màu chữ thành đen */
                 text-shadow: 2px 2px 5px rgba(150, 150, 150, 0.3); /* Đổ bóng nhẹ để nhìn rõ hơn */
+                border-top: 2px solid #000; /* Thêm border phía trên tiêu đề */
+                padding-top: 10px; /* Thêm khoảng cách với ảnh */
             }
 
             .prev, .next {

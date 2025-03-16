@@ -59,6 +59,12 @@
             .btn:hover {
                 background-color: #0056b3;
             }
+            .section-title {
+                font-size: 24px;
+                font-weight: bold;
+                color: #333;
+                margin: 30px 0 10px 0; /* Khoảng cách trước và sau tiêu đề */
+            }
         </style>
     </head>
     <body>
@@ -74,8 +80,10 @@
             <!-- Main Content -->
             <div class="main-content">
                 <jsp:include page="/CommonPage/Header.jsp" />
-                
+                <h2 class="section-title">Sliders Section</h2>
                 <jsp:include page="/sliderinhomecontroller" />
+                <h2 class="section-title">Categories Section</h2>
+                <jsp:include page="/categoryinhomecontroller" />
                 <a href="ChangePassword.jsp" class="btn">Change Password</a>
 
                 <%

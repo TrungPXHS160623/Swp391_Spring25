@@ -21,6 +21,7 @@ public class Category {
    private int status;          // Trạng thái danh mục (1: Hoạt động, 0: Ẩn)
    private Integer updatedBy;   // ID của người cập nhật danh mục (có thể NULL)
    private LocalDateTime deletedAt; // Thời điểm xóa mềm (có thể NULL)
+   private String imageUrl; // Thêm trường imageUrl
 
     public Category(int categoryId, String categoryName, String description, LocalDateTime createdAt, LocalDateTime updatedAt, int status, Integer updatedBy, LocalDateTime deletedAt) {
         this.categoryId = categoryId;
@@ -39,6 +40,20 @@ public class Category {
         this.createdAt = createdAt;
         this.status = status;
     }
+
+    public Category(int categoryId, String categoryName, String description, LocalDateTime createdAt, LocalDateTime updatedAt, int status, Integer updatedBy, LocalDateTime deletedAt, String imageUrl) {
+        this.categoryId = categoryId;
+        this.categoryName = categoryName;
+        this.description = description;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.status = status;
+        this.updatedBy = updatedBy;
+        this.deletedAt = deletedAt;
+        this.imageUrl = imageUrl;
+    }
+    
+    
    
 
     public Category() {
@@ -108,9 +123,17 @@ public class Category {
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
+    public String getImageUrl() {
+        return imageUrl;
+    }
 
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
     @Override
     public String toString() {
-        return "Category{" + "categoryId=" + categoryId + ", categoryName=" + categoryName + ", description=" + description + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", status=" + status + ", updatedBy=" + updatedBy + ", deletedAt=" + deletedAt + '}';
+        return "Category{" + "categoryId=" + categoryId + ", categoryName=" + categoryName + ", description=" + description + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", status=" + status + ", updatedBy=" + updatedBy + ", deletedAt=" + deletedAt + ", imageUrl=" + imageUrl + '}';
     }
+
+    
 }
