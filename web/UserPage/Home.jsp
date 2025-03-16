@@ -74,6 +74,8 @@
             <!-- Main Content -->
             <div class="main-content">
                 <jsp:include page="/CommonPage/Header.jsp" />
+                
+                <jsp:include page="/sliderinhomecontroller" />
                 <a href="ChangePassword.jsp" class="btn">Change Password</a>
 
                 <%
