@@ -182,6 +182,21 @@ public class BlogDAO {
         return result;
     }
 
+    public List<String> getAllCategoryNames() {
+        List<String> categories = new ArrayList<>();
+        String sql = "SELECT category_name FROM Categories";
+        try (Connection conn = new DBContext().getConnection(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                categories.add(rs.getString("category_name"));
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error getAllCategoryNames", e);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error getAllCategoryNames", e);
+        }
+        return categories;
+    }
+
     public static void main(String[] args) {
         try {
             BlogDAO dao = new BlogDAO();

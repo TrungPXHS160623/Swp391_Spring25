@@ -24,6 +24,10 @@
         <servlet-name>ServletTest</servlet-name>
         <servlet-class>Controller.ServletTest</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>BlogController</servlet-name>
+        <servlet-class>Controller.BlogController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ProductController</servlet-name>
         <url-pattern>/ProductController</url-pattern>
@@ -47,5 +51,9 @@
     <servlet-mapping>
         <servlet-name>ServletTest</servlet-name>
         <url-pattern>/test</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BlogController</servlet-name>
+        <url-pattern>/BlogController</url-pattern>
     </servlet-mapping>
 </web-app>
