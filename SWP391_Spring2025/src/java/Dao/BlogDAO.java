@@ -40,6 +40,9 @@ public class BlogDAO {
         media.setMediaUrl(rs.getString("media_url"));
         media.setMediaType(rs.getString("media_type"));
         media.setDescription(rs.getString("description"));
+        
+        post.setCoverMedia(media);
+        
         return post;
     }
 
@@ -209,6 +212,12 @@ public class BlogDAO {
                         + ", title=" + p.getTitle()
                         + ", summary=" + p.getSummary()
                         + ", updatedAt=" + p.getUpdateAt());
+                // Kiểm tra và in ra image URL của coverMedia
+                if (p.getCoverMedia() != null && p.getCoverMedia().getMediaUrl() != null) {
+                    System.out.println("Image URL: " + p.getCoverMedia().getMediaUrl());
+                } else {
+                    System.out.println("Image URL: [No Image]");
+                }
             }
 
             // 2. Test searchBlogs (keyword="Laptop", page=1, pageSize=3)
