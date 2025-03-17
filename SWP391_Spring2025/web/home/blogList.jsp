@@ -162,7 +162,7 @@
                             <img src="${post.coverMedia.mediaUrl}" alt="Blog Image" style="width: 150px; height: auto;"/>
                             <div class="blog-text">
                                 <h3>
-                                    <a href="${pageContext.request.contextPath}/blog/detail?postId=${post.postId}">
+                                    <a href="${pageContext.request.contextPath}/BlogDetailController?postId=${post.postId}">
                                         <c:out value="${post.title}"/>
                                     </a>
                                 </h3>
@@ -219,7 +219,7 @@
                         <c:forEach var="latest" items="${latestBlogs}">
                             <li>
                                 <!-- Link tới detail blog -->
-                                <a href="${pageContext.request.contextPath}/blog/detail?postId=${latest.postId}">
+                                <a href="${pageContext.request.contextPath}/BlogDetailController?postId=${latest.postId}">
                                     <c:out value="${latest.title}"/>
                                 </a>
                             </li>
