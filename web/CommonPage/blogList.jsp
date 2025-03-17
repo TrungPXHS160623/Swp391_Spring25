@@ -166,6 +166,7 @@
                                         <c:out value="${post.title}"/>
                                     </a>
                                 </h3>
+                                <p>Category: <c:out value="${post.category_name}"/></p>
                                 <p><c:out value="${post.summary}"/></p>
                                 <p><small>Day update: <c:out value="${post.updateAt}"/></small></p>
                             </div>

@@ -112,7 +112,7 @@ public class BlogController extends HttpServlet {
         request.setAttribute("categories", categories);
 
         // 6. Forward sang JSP hiển thị (blogList.jsp nằm trong thư mục home)
-        request.getRequestDispatcher("/home/blogList.jsp").forward(request, response);
+        request.getRequestDispatcher("/CommonPage/BlogList.jsp").forward(request, response);
     }
 
     /**

@@ -113,7 +113,7 @@ public class ProductDetailController extends HttpServlet {
             productDAO.addProduct(product);
         }
 
-        response.sendRedirect("views/product.jsp");
+        response.sendRedirect("AdminPage/ProductDetail.jsp");
     }
 
     /**

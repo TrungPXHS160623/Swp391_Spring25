@@ -79,7 +79,7 @@ public class BlogDetailController extends HttpServlet {
         // Đặt bài viết chi tiết vào request attribute
         request.setAttribute("postDetail", postDetail);
         // Forward đến trang blogDetail.jsp (không có right sidebar trong trang này)
-        request.getRequestDispatcher("/home/blogDetail.jsp").forward(request, response);
+        request.getRequestDispatcher("/CommonPage/BlogDetail.jsp").forward(request, response);
     }
 
     /**
