@@ -5,6 +5,7 @@
 package Entity;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -21,6 +22,8 @@ public class Post {
     private String user_name;
     private String category_name;
     private PostMedia coverMedia;
+    // Dành cho blog detail: danh sách tất cả media (ảnh/video)
+    private List<PostMedia> mediaList;
 
     public Post() {
     }
@@ -109,4 +112,12 @@ public class Post {
         this.coverMedia = coverMedia;
     }
 
+    // Getters & Setters cho tất cả các trường, bao gồm cả mediaList
+    public List<PostMedia> getMediaList() {
+        return mediaList;
+    }
+
+    public void setMediaList(List<PostMedia> mediaList) {
+        this.mediaList = mediaList;
+    }
 }
