@@ -92,7 +92,7 @@ public class CartDetailController extends HttpServlet {
         int productId = Integer.parseInt(request.getParameter("productId"));
         int cartId = Integer.parseInt(request.getParameter("cartId"));
         String action = request.getParameter("action");
-
+        CartDetailDao dao = new CartDetailDao();
         // Lấy số lượng hiện tại từ request thay vì từ database
         int quantity = Integer.parseInt(request.getParameter("quantity"));
 
@@ -100,18 +100,28 @@ public class CartDetailController extends HttpServlet {
             quantity++; // Tăng số lượng
         } else if ("decrease".equals(action) && quantity > 1) {
             quantity--; // Giảm số lượng, nhưng không được nhỏ hơn 1
+        } else if ("remove".equals(action)) {
+            int cartItemId = Integer.parseInt(request.getParameter("cartItemId"));
+            
+            boolean success = dao.removeFromCart(cartItemId);
+            if (success) {
+                request.getSession().setAttribute("message", "Sản phẩm đã được xóa khỏi giỏ hàng!");
+            } else {
+                request.getSession().setAttribute("message", "Xóa sản phẩm thất bại!");
+            }
         }
 
         // Cập nhật số lượng mới vào database
-        CartDetailDao dao = new CartDetailDao();
+        
         dao.updateQuantity(cartId, productId, quantity);
 
+        
+
         // 🔹 Cập nhật lại cartCount sau khi thay đổi số lượng
-    int userId = (int) request.getSession().getAttribute("userId");
-    int cartCount = dao.getCartItemCount(userId);
-    request.getSession().setAttribute("cartCount", cartCount);
-        
-        
+        int userId = (int) request.getSession().getAttribute("userId");
+        int cartCount = dao.getCartItemCount(userId);
+        request.getSession().setAttribute("cartCount", cartCount);
+
         // Quay lại trang giỏ hàng
         response.sendRedirect(request.getContextPath() + "/cartdetailcontroller");
     }

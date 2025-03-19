@@ -104,25 +104,44 @@ public class CartDetailDao {
             return false;
         }
     }
+
     public int getCartItemCount(int userId) {
-    String sql = "SELECT SUM(quantity) AS total FROM Cart_Items WHERE cart_id = (SELECT cart_id FROM Cart WHERE user_id = ?)";
+        String sql = "SELECT SUM(quantity) AS total FROM Cart_Items WHERE cart_id = (SELECT cart_id FROM Cart WHERE user_id = ?)";
 
-    try (Connection conn = new DBContext().getConnection();
-         PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = new DBContext().getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-        stmt.setInt(1, userId);
-        try (ResultSet rs = stmt.executeQuery()) {
-            if (rs.next()) {
-                return rs.getInt("total");
+            stmt.setInt(1, userId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("total");
+                }
             }
-        }
-    } catch (SQLException e) {
+        } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Lỗi SQL khi lấy chi tiết giỏ hàng", e);
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Lỗi kết nối CSDL", e);
         }
-    return 0;
-}
+        return 0;
+    }
+
+    public boolean removeFromCart(int cartItemId) {
+        String sql = "DELETE FROM Cart_Items WHERE cart_item_id = ?";
+
+        try (Connection conn = new DBContext().getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, cartItemId);
+            int rowsAffected = stmt.executeUpdate();
+
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Lỗi SQL khi lấy chi tiết giỏ hàng", e);
+            return false;
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Lỗi kết nối CSDL", e);
+            return false;
+        }
+    }
+
     public static void main(String[] args) {
         // Khởi tạo DAO
         CartDetailDao cartDetailDao = new CartDetailDao();

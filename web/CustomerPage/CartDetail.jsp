@@ -159,7 +159,27 @@
                 <input type="text" class="search-box" placeholder="Search...">
                 <button class="btn">Search</button>
             </header>
+            <%
+String message = (String) session.getAttribute("message");
+if (message != null) {
+%>
+    <div id="deleteAlert" class="alert alert-success" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background-color: #28a745; color: white; padding: 15px; border-radius: 5px; z-index: 1000;">
+        <strong>Thông báo:</strong> <%= message %>
+        <button type="button" onclick="this.parentElement.style.display = 'none';" style="background: none; border: none; color: white; font-size: 18px; margin-left: 10px;">✖</button>
+    </div>
 
+    <script>
+        setTimeout(function () {
+            var alertBox = document.getElementById('deleteAlert');
+            if (alertBox) {
+                alertBox.style.display = 'none';
+            }
+        }, 3000);
+    </script>
+<%
+    session.removeAttribute("message"); // Xóa thông báo sau khi hiển thị
+}
+%>
             <div class="cart-wrapper">
                 <div class="cart-content">
                     <table class="cart-table">
@@ -200,7 +220,16 @@
                                                 </form>
                                             </td>
                                             <td>${item.totalPrice} VND</td>
-                                            <td><button class="remove-btn">❌</button></td>
+                                            <td>
+                                                <form action="cartdetailcontroller" method="post">
+                                                    <input type="hidden" name="action" value="remove">
+                                                    <input type="hidden" name="productId" value="${item.productId}">
+                                                    <input type="hidden" name="cartId" value="${item.cartId}">
+                                                    <input type="hidden" name="quantity" value="${item.quantity}">
+                                                    <input type="hidden" name="cartItemId" value="${item.cartItemId}">
+                                                    <button type="submit" class="remove-btn">❌</button>
+                                                </form>
+                                            </td>
                                         </tr>
                                     </c:forEach>
                                 </c:otherwise>
