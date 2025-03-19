@@ -16,6 +16,14 @@ public class ProductDao {
 
     private static final Logger LOGGER = Logger.getLogger(ProductDao.class.getName());
 
+    // Lấy tất cả các sản phẩm trong database kèm ảnh
+    public List<ProductDto> getAllProducts() {
+        String sql = "SELECT p.*, pi.image_url FROM Products p "
+                + "LEFT JOIN ProductImages pi ON p.product_id = pi.product_id AND pi.is_primary = 1 "
+                + "ORDER BY p.created_at DESC";
+        return getProductList(sql);
+    }
+
     // Lấy sản phẩm mới nhất
     public ProductDto getNewestProduct() {
         String sql = "SELECT TOP 1 p.*, pi.image_url FROM Products p "
@@ -80,21 +88,47 @@ public class ProductDao {
         );
     }
 
+    public List<ProductDto> getProductList(String sql) {
+        List<ProductDto> products = new ArrayList<>();
+        try (Connection conn = new DBContext().getConnection(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                products.add(extractProduct(rs));
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Lỗi SQL khi lấy sản phẩm", e);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Lỗi kết nối CSDL", e);
+        }
+        return products;
+    }
+
     // Test DAO với hàm main
     public static void main(String[] args) {
         ProductDao dao = new ProductDao();
 
-        System.out.println("🆕 Sản phẩm mới nhất:");
-        printProduct(dao.getNewestProduct());
+//        System.out.println("🆕 Sản phẩm mới nhất:");
+//        printProduct(dao.getNewestProduct());
+//
+//        System.out.println("\n💰 Sản phẩm giảm giá sâu nhất:");
+//        printProduct(dao.getBestDiscountedProduct());
+//
+//        System.out.println("\n🔥 Sản phẩm bán chạy nhất:");
+//        printProduct(dao.getBestSellingProduct());
+//
+//        System.out.println("\n⭐ Sản phẩm được đánh giá cao nhất:");
+//        printProduct(dao.getTopRatedProduct());
+        
+        List<ProductDto> products = dao.getAllProducts(); // Lấy danh sách sản phẩm
 
-        System.out.println("\n💰 Sản phẩm giảm giá sâu nhất:");
-        printProduct(dao.getBestDiscountedProduct());
-
-        System.out.println("\n🔥 Sản phẩm bán chạy nhất:");
-        printProduct(dao.getBestSellingProduct());
-
-        System.out.println("\n⭐ Sản phẩm được đánh giá cao nhất:");
-        printProduct(dao.getTopRatedProduct());
+        if (products.isEmpty()) {
+            System.out.println("Không có sản phẩm nào trong database.");
+        } else {
+            System.out.println("Danh sách sản phẩm:");
+            for (ProductDto product : products) {
+                System.out.println(product);
+            }
+        }
     }
 
 // Hàm hỗ trợ in thông tin sản phẩm
