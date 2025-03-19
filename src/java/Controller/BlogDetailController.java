@@ -12,6 +12,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  *
@@ -68,6 +69,8 @@ public class BlogDetailController extends HttpServlet {
             return;
         }
 
+        int page = 1;
+        int pageSize = 3;
         // Lấy chi tiết blog theo postId
         Post postDetail = blogDAO.getDetailBlog(postId);
         if (postDetail == null) {
@@ -75,9 +78,36 @@ public class BlogDetailController extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/blog");
             return;
         }
+        // Xử lý action: search, category, hoặc mặc định là getAllBlogs
+        String action = request.getParameter("action");
+        List<Post> listBlogs = null;
+        if ("search".equalsIgnoreCase(action)) {
+            String keyword = request.getParameter("keyword");
+            if (keyword == null) {
+                keyword = "";
+            }
+            listBlogs = blogDAO.searchBlogs(keyword, page, pageSize);
+        } else if ("category".equalsIgnoreCase(action)) {
+            String category = request.getParameter("category");
+            if (category == null || category.trim().isEmpty()) {
+                listBlogs = blogDAO.getAllBlogs(page, pageSize);
+            } else {
+                listBlogs = blogDAO.getBlogsByCategory(category, page, pageSize);
+            }
+        } else {
+            listBlogs = blogDAO.getAllBlogs(page, pageSize);
+        }
+        // Lấy danh sách blog mới nhất (Latest Blogs) với giới hạn 3 blog
+        List<Post> latestBlogs = blogDAO.getLatestBlogs(3);
+
+        // Lấy danh sách các Category (cho combobox)
+        List<String> categories = blogDAO.getAllCategoryNames();
 
         // Đặt bài viết chi tiết vào request attribute
         request.setAttribute("postDetail", postDetail);
+        request.setAttribute("listBlogs", listBlogs);
+        request.setAttribute("latestBlogs", latestBlogs);
+        request.setAttribute("categories", categories);
         // Forward đến trang blogDetail.jsp (không có right sidebar trong trang này)
         request.getRequestDispatcher("/CommonPage/BlogDetail.jsp").forward(request, response);
     }

@@ -4,14 +4,20 @@
     Author     : LENOVO
 --%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html>
     <head>
         <title>Blog Detail</title>
         <style>
-            /* Container tổng: chia làm 2 cột */
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f7f7f7;
+                margin: 0;
+                padding: 0;
+            }
             .container {
                 width: 1200px;
                 margin: 30px auto;
@@ -74,8 +80,7 @@
             .back-link a:hover {
                 text-decoration: underline;
             }
-
-            /* Cột phải: Sidebar */
+            /* Cột phải: Sidebar (giống blog list) */
             .right-sidebar {
                 flex: 1;
                 background-color: #8ff078;
@@ -140,9 +145,7 @@
             <!-- Cột trái: Blog Detail -->
             <div class="left-content">
                 <c:if test="${not empty postDetail}">
-                    <div class="blog-title">
-                        ${postDetail.title}
-                    </div>
+                    <div class="blog-title">${postDetail.title}</div>
                     <div class="blog-meta">
                         <span>Author: ${postDetail.user_name}</span> |
                         <span>Updated: ${postDetail.updateAt}</span> |
@@ -158,13 +161,29 @@
                                 <div class="media-item">
                                     <c:choose>
                                         <c:when test="${media.mediaType eq 'image'}">
-                                            <img src="${pageContext.request.contextPath}${media.mediaUrl}" alt="Media Image"/>
+                                            <img src="${media.mediaUrl}" alt="Media Image" style="width:150px; height:auto;"/>
                                         </c:when>
                                         <c:when test="${media.mediaType eq 'video'}">
-                                            <video controls>
-                                                <source src="${pageContext.request.contextPath}${media.mediaUrl}" type="video/mp4">
-                                                Your browser does not support the video tag.
-                                            </video>
+                                            <c:choose>
+                                                <c:when test="${fn:contains(media.mediaUrl, 'youtu.be')}">
+                                                    <iframe width="560" height="315" 
+                                                            src="https://www.youtube.com/embed/${fn:substringAfter(media.mediaUrl, 'https://youtu.be/')}" 
+                                                            frameborder="0" allowfullscreen>
+                                                    </iframe>
+                                                </c:when>
+                                                <c:when test="${fn:contains(media.mediaUrl, 'watch?v=')}">
+                                                    <iframe width="560" height="315" 
+                                                            src="https://www.youtube.com/embed/${fn:substringAfter(media.mediaUrl, 'watch?v=')}" 
+                                                            frameborder="0" allowfullscreen>
+                                                    </iframe>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <video controls style="width:560px; height:auto;">
+                                                        <source src="${pageContext.request.contextPath}${media.mediaUrl}" type="video/mp4">
+                                                        Your browser does not support the video tag.
+                                                    </video>
+                                                </c:otherwise>
+                                            </c:choose>
                                         </c:when>
                                         <c:otherwise>
                                             <p>Unsupported media type</p>
@@ -183,7 +202,7 @@
                 </c:if>
             </div>
 
-            <!-- Cột phải: Sidebar (đưa từ Blog List) -->
+            <!-- Cột phải: Sidebar (sử dụng chung với blog list) -->
             <div class="right-sidebar">
                 <!-- Search blog -->
                 <div class="sidebar-section search-box">

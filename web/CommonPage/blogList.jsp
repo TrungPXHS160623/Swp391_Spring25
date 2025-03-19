@@ -204,6 +204,7 @@
                         <input type="hidden" name="action" value="category"/>
                         <select name="category" style="width:100%; padding:5px;">
                             <!-- Duyệt qua list categories -->
+                            <option value="">--All--</option>
                             <c:forEach var="cat" items="${categories}">
                                 <option value="${cat}">${cat}</option>
                             </c:forEach>
