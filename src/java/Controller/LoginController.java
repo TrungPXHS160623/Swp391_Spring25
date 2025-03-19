@@ -4,6 +4,7 @@
  */
 package Controller;
 
+import Dao.CartDetailDao;
 import Dao.UserDao;
 import Entity.User;
 import jakarta.servlet.RequestDispatcher;
@@ -104,6 +105,10 @@ public class LoginController extends HttpServlet {
 
             session.setAttribute("user", user); // Đảm bảo lưu user object
             session.setAttribute("userId", user.getUser_id()); // Lưu cả userId nếu cần
+            // 🔹 Lấy số lượng sản phẩm trong giỏ hàng
+            CartDetailDao cartDao = new CartDetailDao();
+            int cartCount = cartDao.getCartItemCount(user.getUser_id());
+            session.setAttribute("cartCount", cartCount); // Cập nhật session ngay khi đăng nhập
 
             // Nếu chọn "Remember Me", lưu email vào cookie
             if ("on".equals(rememberMe)) {

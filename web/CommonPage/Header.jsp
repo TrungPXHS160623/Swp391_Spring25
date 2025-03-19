@@ -59,6 +59,29 @@
                 background-color: #007bff;
                 color: white;
             }
+            .cart-btn {
+                position: relative;
+                display: inline-block;
+                font-size: 18px;
+                font-weight: bold;
+                color: #fff;
+                background-color: #28a745;
+                padding: 10px 15px;
+                border-radius: 8px;
+                text-decoration: none;
+            }
+
+            .cart-count {
+                background: red;
+                color: white;
+                font-size: 14px;
+                font-weight: bold;
+                padding: 4px 8px;
+                border-radius: 50%;
+                position: absolute;
+                top: -5px;
+                right: -10px;
+            }
         </style>
     </head>
     <body>
@@ -71,7 +94,12 @@
             </div>
 
             <div class="nav-links">
-                <a href="#">Cart</a>
+
+                <a href="${pageContext.request.contextPath}/cartdetailcontroller" class="cart-btn">
+                    🛒 Cart <span class="cart-count">
+                        <%= session.getAttribute("cartCount") != null ? session.getAttribute("cartCount") : 0 %>
+                    </span>
+                </a>
                 <a href="#">Register/Login</a>
                 <a href="#">Hotline</a>
             </div>

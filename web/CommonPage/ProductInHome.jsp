@@ -48,17 +48,25 @@
                 margin-top: 10px;
             }
 
-            .add-to-cart {
-                background-color: green;
-                color: white;
-                border: none;
-                padding: 8px 12px;
-                cursor: pointer;
-                margin-top: 5px;
+            .add-to-cart-btn {
+                background-color: #28a745; /* Màu xanh lá cây */
+                color: white; /* Chữ trắng */
+                font-size: 18px; /* Cỡ chữ to hơn */
+                font-weight: bold; /* Chữ đậm */
+                padding: 12px 24px; /* Kích thước nút lớn hơn */
+                border: none; /* Bỏ viền */
+                border-radius: 8px; /* Bo góc */
+                cursor: pointer; /* Biến con trỏ thành bàn tay */
+                transition: background 0.3s, transform 0.2s; /* Hiệu ứng */
             }
 
-            .add-to-cart:hover {
-                background-color: darkgreen;
+            .add-to-cart-btn:hover {
+                background-color: #218838; /* Màu xanh lá cây đậm hơn khi hover */
+                transform: scale(1.05); /* Tạo hiệu ứng phóng to nhẹ */
+            }
+
+            .add-to-cart-btn:active {
+                transform: scale(0.95); /* Nhấn xuống thì hơi thu nhỏ */
             }
             .pagination {
                 margin-top: 20px;
@@ -95,7 +103,7 @@
                 border: 1px solid #ccc;
                 box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
                 transition: transform 0.3s ease-in-out;
-                
+
             }
 
             /* Hiệu ứng rung nhẹ khi hover */
@@ -167,11 +175,40 @@
                     opacity: 0.7;
                 }
             }
-            
-           
+
+
         </style>
     </head>
     <body>
+        <%
+String message = (String) session.getAttribute("message");
+if (message != null) {
+        %>
+        <div id="updateAlert" class="alert alert-info" style="display: flex; align-items: center; background-color: #d1ecf1; border-color: #bee5eb; color: #0c5460; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+            <i class="fas fa-info-circle" style="font-size: 24px; margin-right: 10px;"></i>
+            <div>
+                <strong>Thông Báo:</strong> <%= message %>
+            </div>
+            <button type="button" onclick="this.parentElement.style.display = 'none';" style="background: transparent; border: none; color: #0c5460; cursor: pointer; margin-left: auto;">
+                <i class="fas fa-times-circle" style="font-size: 24px;"></i>
+            </button>
+        </div>
+
+        <script>
+            // Kiểm tra xem phần tử có tồn tại không trước khi gọi setTimeout
+            document.addEventListener("DOMContentLoaded", function () {
+                var alertBox = document.getElementById('updateAlert');
+                if (alertBox) {
+                    setTimeout(function () {
+                        alertBox.style.display = 'none';
+                    }, 4000);
+                }
+            });
+        </script>
+        <%
+                session.removeAttribute("message"); // Xóa thông báo sau khi hiển thị
+            }
+        %>
         <div class="product-section">
 
             <div class="product-container">
@@ -221,7 +258,10 @@
 
                         <!-- Giá giảm và nút thêm vào giỏ -->
                         <div class="product-actions"> 
-                            <button class="add-to-cart">Add To Cart</button>
+                            <form action="<%= request.getContextPath() %>/homecontroller" method="post">
+                                <input type="hidden" name="productId" value="${product.productId}">
+                                <button type="submit" name="action" value="addToCart" class="add-to-cart-btn">Add To Cart</button>
+                            </form>
                         </div>
                     </div>
                 </c:forEach>

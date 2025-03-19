@@ -5,7 +5,7 @@
 package Controller;
 
 import Dao.CartDetailDao;
-import Entity.User;
+import Dto.CartDetailDto;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -14,13 +14,14 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  *
  * @author Acer
  */
-@WebServlet(name = "HomeController", urlPatterns = {"/homecontroller"})
-public class HomeController extends HttpServlet {
+@WebServlet(name = "CartDetailController", urlPatterns = {"/cartdetailcontroller"})
+public class CartDetailController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,10 +40,10 @@ public class HomeController extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet HomeController</title>");
+            out.println("<title>Servlet CartDetailController</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet HomeController at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet CartDetailController at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -61,20 +62,20 @@ public class HomeController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
+        Integer userId = (Integer) session.getAttribute("userId");
 
-        if (user == null) {
-            response.sendRedirect(request.getContextPath() + "/UserPage/Login.jsp");
+        if (userId == null) {
+            response.sendRedirect("/UserPage/Login.jsp"); // Nếu chưa đăng nhập, chuyển hướng đến trang login
             return;
         }
 
-        int userId = user.getUser_id();
-        session.setAttribute("userId", userId);
+        // Lấy danh sách giỏ hàng từ CartDetailDao
+        CartDetailDao cartDetailDao = new CartDetailDao();
+        List<CartDetailDto> cartDetails = cartDetailDao.getCartDetails(userId);
 
-        // Ghi log để kiểm tra session
-        System.out.println("HomeController: userId set in session = " + userId);
-
-        response.sendRedirect(request.getContextPath() + "/UserPage/Home.jsp");
+        // Gửi dữ liệu đến JSP
+        request.setAttribute("cartDetails", cartDetails);
+        request.getRequestDispatcher("/CustomerPage/CartDetail.jsp").forward(request, response);
     }
 
     /**
@@ -88,28 +89,31 @@ public class HomeController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        int productId = Integer.parseInt(request.getParameter("productId"));
+        int cartId = Integer.parseInt(request.getParameter("cartId"));
         String action = request.getParameter("action");
 
-        if ("addToCart".equals(action)) {
-            int productId = Integer.parseInt(request.getParameter("productId"));
-            int userId = (int) request.getSession().getAttribute("userId"); // Lấy userId từ session
+        // Lấy số lượng hiện tại từ request thay vì từ database
+        int quantity = Integer.parseInt(request.getParameter("quantity"));
 
-            CartDetailDao cartDao = new CartDetailDao();
-            boolean success = cartDao.addToCart(userId, productId);
-
-            if (success) {
-                // Cập nhật số lượng giỏ hàng trong session
-                int cartCount = cartDao.getCartItemCount(userId);
-                request.getSession().setAttribute("cartCount", cartCount);
-                request.getSession().setAttribute("message", "Đã thêm sản phẩm vào giỏ hàng!");
-            } else {
-                request.getSession().setAttribute("message", "Không thể thêm sản phẩm!");
-            }
-
-            // Quay lại trang home
-            response.sendRedirect(request.getContextPath() + "/homecontroller");
-
+        if ("increase".equals(action)) {
+            quantity++; // Tăng số lượng
+        } else if ("decrease".equals(action) && quantity > 1) {
+            quantity--; // Giảm số lượng, nhưng không được nhỏ hơn 1
         }
+
+        // Cập nhật số lượng mới vào database
+        CartDetailDao dao = new CartDetailDao();
+        dao.updateQuantity(cartId, productId, quantity);
+
+        // 🔹 Cập nhật lại cartCount sau khi thay đổi số lượng
+    int userId = (int) request.getSession().getAttribute("userId");
+    int cartCount = dao.getCartItemCount(userId);
+    request.getSession().setAttribute("cartCount", cartCount);
+        
+        
+        // Quay lại trang giỏ hàng
+        response.sendRedirect(request.getContextPath() + "/cartdetailcontroller");
     }
 
     /**
