@@ -8,7 +8,7 @@ package Dto;
  *
  * @author Acer
  */
-public class CardDetailDto {
+public class CartDetailDto {
     private int cartItemId;
     private int cartId;
     private int productId;
@@ -19,10 +19,10 @@ public class CardDetailDto {
     private double discountPrice;
     private double totalPrice;
 
-    public CardDetailDto() {
+    public CartDetailDto() {
     }
 
-    public CardDetailDto(int cartItemId, int cartId, int productId, String productName, String imageUrl, int quantity, double price, double discountPrice, double totalPrice) {
+    public CartDetailDto(int cartItemId, int cartId, int productId, String productName, String imageUrl, int quantity, double price, double discountPrice, double totalPrice) {
         this.cartItemId = cartItemId;
         this.cartId = cartId;
         this.productId = productId;
@@ -33,6 +33,8 @@ public class CardDetailDto {
         this.discountPrice = discountPrice;
         this.totalPrice = totalPrice;
     }
+    
+    
 
     public int getCartItemId() {
         return cartItemId;
@@ -101,10 +103,11 @@ public class CardDetailDto {
     public double getTotalPrice() {
         return totalPrice;
     }
-
-    public void setTotalPrice(double totalPrice) {
-        this.totalPrice = totalPrice;
-    }
+    
+    public void setTotalPrice() {
+    // Nếu sản phẩm có giá giảm thì lấy discountPrice, nếu không thì lấy price
+    this.totalPrice = (discountPrice > 0 ? discountPrice : price) * quantity;
+}
 
     @Override
     public String toString() {
