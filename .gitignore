@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 # Compiled class file
 *.class
 
@@ -26,3 +27,8 @@ replay_pid*
 # Thêm dòng này từ phiên bản mới
 /build/
 /dist/
+=======
+/Swp391_Spring25/nbproject/private/
+/build/
+>>>>>>> Stashed changes
+/nbproject/private/
