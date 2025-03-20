@@ -1,5 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page import="java.util.List, java.util.ArrayList" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html lang="vi">
     <head>
@@ -145,6 +147,38 @@
             .btn-back:hover {
                 background-color: #218838; /* Màu xanh đậm khi hover */
             }
+            .update-cart-btn {
+                background-color: #ff6600; /* Màu cam nổi bật */
+                color: white;
+                font-size: 18px;
+                font-weight: bold;
+                padding: 12px 20px;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                display: block;
+                margin: 20px auto; /* Tạo khoảng trắng phía trên & căn giữa */
+                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+                transition: background 0.3s ease, transform 0.2s ease;
+            }
+
+            .update-cart-btn:hover {
+                background-color: #e65c00; /* Màu cam đậm hơn khi hover */
+                transform: scale(1.05);
+            }
+
+            .update-cart-btn:active {
+                transform: scale(0.98);
+            }
+
+            /* Thêm chú thích phía trên nút */
+            .update-cart-reminder {
+                text-align: center;
+                font-size: 14px;
+                color: #666;
+                margin-bottom: 10px;
+                font-style: italic;
+            }
         </style>
     </head>
     <body>
@@ -162,81 +196,107 @@
             <%
 String message = (String) session.getAttribute("message");
 if (message != null) {
-%>
-    <div id="deleteAlert" class="alert alert-success" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background-color: #28a745; color: white; padding: 15px; border-radius: 5px; z-index: 1000;">
-        <strong>Thông báo:</strong> <%= message %>
-        <button type="button" onclick="this.parentElement.style.display = 'none';" style="background: none; border: none; color: white; font-size: 18px; margin-left: 10px;">✖</button>
-    </div>
+            %>
+            <div id="deleteAlert" class="alert alert-success" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background-color: #28a745; color: white; padding: 15px; border-radius: 5px; z-index: 1000;">
+                <strong>Thông báo:</strong> <%= message %>
+                <button type="button" onclick="this.parentElement.style.display = 'none';" style="background: none; border: none; color: white; font-size: 18px; margin-left: 10px;">✖</button>
+            </div>
 
-    <script>
-        setTimeout(function () {
-            var alertBox = document.getElementById('deleteAlert');
-            if (alertBox) {
-                alertBox.style.display = 'none';
+            <script>
+                setTimeout(function () {
+                    var alertBox = document.getElementById('deleteAlert');
+                    if (alertBox) {
+                        alertBox.style.display = 'none';
+                    }
+                }, 3000);
+            </script>
+            <%
+                session.removeAttribute("message"); // Xóa thông báo sau khi hiển thị
             }
-        }, 3000);
-    </script>
-<%
-    session.removeAttribute("message"); // Xóa thông báo sau khi hiển thị
-}
-%>
+            %>
             <div class="cart-wrapper">
                 <div class="cart-content">
-                    <table class="cart-table">
-                        <thead>
-                            <tr>
-                                <th><input type="checkbox"></th>
-                                <th>ID</th>
-                                <th>Product Name</th>
-                                <th>Price</th>
-                                <th>Qty</th>
-                                <th>Total</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <c:choose>
-                                <c:when test="${empty cartDetails}">
-                                    <tr>
-                                        <td colspan="7" style="text-align:center; color:red;">Your cart is empty!</td>
-                                    </tr>
-                                </c:when>
-                                <c:otherwise>
-                                    <c:forEach var="item" items="${cartDetails}">
+                    <form action="cartdetailcontroller" method="post">
+                        <table class="cart-table">
+                            <thead>
+                                <tr>
+                                    <th><input type="checkbox" id="selectAll" onclick="toggleCheckboxes(this)"><label for="selectAll"> Choose All!!!</label></th>
+                                    <th>ID</th>
+                                    <th>Product Name</th>
+                                    <th>Price</th>
+                                    <th>Discount Price</th>
+                                    <th>Qty</th>
+                                    <th>Total</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <c:choose>
+                                    <c:when test="${empty cartDetails}">
                                         <tr>
-                                            <td><input type="checkbox"></td>
-                                            <td>${item.productId}</td>
-                                            <td>${item.productName}</td>
-                                            <td>${item.price} VND</td>
-                                            <td>
-                                                <form action="cartdetailcontroller" method="post">
-                                                    <input type="hidden" name="productId" value="${item.productId}">
-
-                                                    <button type="submit" name="action" value="decrease">-</button>
-                                                    <input type="number" name="quantity" value="${item.quantity}" min="1" readonly>
-                                                    <button type="submit" name="action" value="increase">+</button>
-
-                                                    <input type="hidden" name="cartId" value="${item.cartId}">
-                                                </form>
-                                            </td>
-                                            <td>${item.totalPrice} VND</td>
-                                            <td>
-                                                <form action="cartdetailcontroller" method="post">
-                                                    <input type="hidden" name="action" value="remove">
-                                                    <input type="hidden" name="productId" value="${item.productId}">
-                                                    <input type="hidden" name="cartId" value="${item.cartId}">
-                                                    <input type="hidden" name="quantity" value="${item.quantity}">
-                                                    <input type="hidden" name="cartItemId" value="${item.cartItemId}">
-                                                    <button type="submit" class="remove-btn">❌</button>
-                                                </form>
-                                            </td>
+                                            <td colspan="7" style="text-align:center; color:red;">Your cart is empty!</td>
                                         </tr>
-                                    </c:forEach>
-                                </c:otherwise>
-                            </c:choose>
-                        </tbody>
-                    </table>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <c:forEach var="item" items="${cartDetails}">
+                                            <tr>
+                                                <td>
+                                                    <input type="checkbox" name="selectedProducts" value="${item.productId}" 
+                                                           ${selectedProducts.contains(item.productId) ? "checked" : ""}>
+                                                </td>
+                                                <td>${item.productId}</td>
+                                                <td>${item.productName}</td>
+                                                <td><fmt:formatNumber value="${item.price}" type="number" groupingUsed="true"/> VND</td>
+                                                <td>
+                                                    <c:choose>
+                                                        <c:when test="${item.discountPrice == 0.0}">
+                                                            Not discounted yet ❌💰
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <fmt:formatNumber value="${item.discountPrice}" type="number" groupingUsed="true"/> VND
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </td>
+                                                <td>
+                                                    <form action="cartdetailcontroller" method="post">
+                                                        <input type="hidden" name="productId" value="${item.productId}">
 
+                                                        <div style="display: flex; align-items: center; gap: 5px;">
+                                                            <button type="submit" name="action" value="decrease">-</button>
+                                                            <input type="number" name="quantity" value="${item.quantity}" min="1" readonly 
+                                                                   style="width: 40px; text-align: center; font-size: 14px; padding: 2px;">
+                                                            <button type="submit" name="action" value="increase">+</button>
+                                                        </div>
+
+                                                        <input type="hidden" name="cartId" value="${item.cartId}">
+                                                    </form>
+                                                </td>
+                                                <td><fmt:formatNumber value="${item.totalPrice}" type="number" groupingUsed="true"/> VND</td>
+
+                                                <td>
+                                                    <form action="cartdetailcontroller" method="post">
+                                                        <input type="hidden" name="action" value="remove">
+                                                        <input type="hidden" name="productId" value="${item.productId}">
+                                                        <input type="hidden" name="cartId" value="${item.cartId}">
+                                                        <input type="hidden" name="quantity" value="${item.quantity}">
+                                                        <input type="hidden" name="cartItemId" value="${item.cartItemId}">
+                                                        <button type="submit" class="remove-btn">❌</button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        </c:forEach>
+                                    </c:otherwise>
+                                </c:choose>
+                            </tbody>
+                        </table>
+                        <input type="hidden" name="action" value="updateSelection">
+                        <div class="update-cart-container">
+                            <p class="update-cart-reminder">⚠️ Remember to update your cart to apply the latest discounts!</p>
+                            <button type="submit" class="update-cart-btn">Refresh Cart Prices</button>
+                        </div>
+
+                    </form>
+                    
                     <div class="pagination">
                         <button>&lt;</button>
                         <button class="active">1</button>
@@ -245,15 +305,32 @@ if (message != null) {
                         <button>&gt;</button>
                     </div>
 
-                    <div class="promo-section">
+                    <div class="promo-section" style="margin-top: 20px;">
                         🎁 Promotion Code: <input type="text" id="promo-code"> 
                         <button class="btn">✅ Apply</button>
                     </div>
 
                     <div class="price-summary">
-                        🏷️ Before Price: <b><c:out value="${beforePrice}" default="0"/> VND</b>
                         <br>
-                        🏷️ Final Total Price: <b><c:out value="${finalPrice}" default="0"/> VND</b>
+                        <%-- Hiển thị tổng giá trước giảm giá --%>
+                        💰 <b>Total Before Discount:</b> <fmt:formatNumber value="${beforePrice}" type="number" groupingUsed="true" /> VND
+
+                        <%-- Hiển thị mức giảm giá nếu có --%>
+                        <c:if test="${discountRate > 0}">
+                            <br>🎯 <b>You have reached a discount level!</b>
+                            <br> Your total is over 
+                            <c:choose>
+                                <c:when test="${beforePrice > 100000000}">100 million VND</c:when>
+                                <c:when test="${beforePrice > 50000000}">50 million VND</c:when>
+                                <c:when test="${beforePrice > 10000000}">10 million VND</c:when>
+                            </c:choose>
+                            → <b><fmt:formatNumber value="${discountRate}" type="number" maxFractionDigits="2"/>% Discount</b>
+
+                            <br>💰 Discount Applied: | -<fmt:formatNumber value="${discountAmount}" type="number" groupingUsed="true"/> VND
+                        </c:if>
+
+                        <br>
+                        🏷️ <b>Final Total Price:</b> <fmt:formatNumber value="${finalPrice}" type="number" groupingUsed="true"/> VND
                     </div>
 
                     <button class="btn">➕ Choose More Products</button>
@@ -263,13 +340,41 @@ if (message != null) {
                 <div class="discount-info">
                     <h3>DISCOUNTS FOR PURCHASES</h3>
                     <ul>
-                        <li class="green">🟢 From 10 million VND → 5% Discount</li>
-                        <li class="blue">🔵 From 50 million VND → 7% Discount ✅ (You are here!)</li>
-                        <li class="red">🔴 From 100 million VND → 10% Discount (Add <c:out value="${remainingForNextDiscount}" default="0"/> VND more to reach! 🚀)</li>
+                        <li class="green">
+                            🟢 From 10 million VND → 5% Discount 
+                            <c:if test="${beforePrice >= 10000000 && beforePrice < 50000000}">✅ (You are here!)</c:if>
+                            <c:if test="${beforePrice < 10000000}">
+                                (Add <fmt:formatNumber value="${10000000 - beforePrice}" type="number" groupingUsed="true"/> VND more to reach! 🚀)
+                            </c:if>
+                        </li>
+                        <li class="blue">
+                            🔵 From 50 million VND → 7% Discount  
+                            <c:if test="${beforePrice >= 50000000 && beforePrice < 100000000}">✅ (You are here!)</c:if>
+                            <c:if test="${beforePrice < 50000000}">
+                                (Add <fmt:formatNumber value="${50000000 - beforePrice}" type="number" groupingUsed="true"/> VND more to reach! 🚀)
+                            </c:if>
+                        </li>
+                        <li class="red">
+                            🔴 From 100 million VND → 10% Discount  
+                            <c:if test="${beforePrice >= 100000000}">✅ (You are here!)</c:if>
+                            <c:if test="${beforePrice < 100000000}">
+                                (Add <fmt:formatNumber value="${100000000 - beforePrice}" type="number" groupingUsed="true"/> VND more to reach! 🚀)
+                            </c:if>
+                        </li>
                     </ul>
                 </div>
+
+
             </div>
         </div>
 
     </body>
 </html>
+<script>
+    function toggleCheckboxes(source) {
+        let checkboxes = document.getElementsByName("selectedProducts");
+        for (let i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].checked = source.checked;
+        }
+    }
+</script>

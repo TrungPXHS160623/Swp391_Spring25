@@ -142,6 +142,50 @@ public class CartDetailDao {
         }
     }
 
+    public CartDetailDto getCartItem(int cartId, int productId) {
+        String query = "SELECT ci.cart_item_id, ci.cart_id, ci.product_id, ci.quantity, "
+                + "p.product_name, p.price, p.discount_price, "
+                + "pi.image_url FROM Cart_Items ci "
+                + "JOIN Products p ON ci.product_id = p.product_id "
+                + "LEFT JOIN ProductImages pi ON p.product_id = pi.product_id AND pi.is_primary = 1 "
+                + "WHERE ci.cart_id = ? AND ci.product_id = ?";
+
+        try (Connection conn = new DBContext().getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
+
+            ps.setInt(1, cartId);
+            ps.setInt(2, productId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    CartDetailDto item = new CartDetailDto();
+                    item.setCartItemId(rs.getInt("cart_item_id"));
+                    item.setCartId(rs.getInt("cart_id"));
+                    item.setProductId(rs.getInt("product_id"));
+                    item.setProductName(rs.getString("product_name"));
+                    item.setPrice(rs.getDouble("price"));
+                    item.setDiscountPrice(rs.getDouble("discount_price"));
+                    item.setQuantity(rs.getInt("quantity"));
+                    item.setImageUrl(rs.getString("image_url"));
+
+                    // Gọi setTotalPrice() để tính toán
+                    item.setTotalPrice();
+                    return item;
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Lỗi SQL khi lấy chi tiết giỏ hàng", e);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Lỗi kết nối CSDL", e);
+        }
+
+        return null;
+    }
+
+    public double getProductTotalPrice(int productId, int cartId) {
+        CartDetailDto cartItem = getCartItem(cartId, productId);
+        return (cartItem != null) ? cartItem.getTotalPrice() : 0.0;
+    }
+
     public static void main(String[] args) {
         // Khởi tạo DAO
         CartDetailDao cartDetailDao = new CartDetailDao();

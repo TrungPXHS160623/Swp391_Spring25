@@ -1,6 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -234,15 +234,23 @@ if (message != null) {
                             <c:choose>
                                 <c:when test="${product.discountPrice > 0}">
                                     <!-- Giá gốc có gạch ngang và mờ đi -->
-                                    <span class="product-price original-price">Price: $${product.price}</span>
+                                    <span class="product-price original-price">
+                                        Price: <del> <fmt:formatNumber value="${product.price}" type="number" groupingUsed="true"/></del> VNĐ
+                                    </span>
+
                                     <!-- Giá giảm nổi bật -->
                                     <span class="product-discount highlight-discount">
-                                        <i class="fas fa-fire"></i>Discount Price: $${product.discountPrice}
+                                        <i class="fas fa-fire"></i> Discount Price: 
+                                        <fmt:formatNumber value="${product.discountPrice}" type="number" groupingUsed="true"/> VNĐ
                                     </span>
+
                                 </c:when>
                                 <c:when test="${product.discountPrice == 0.0}">
                                     <!-- Giá gốc nổi bật hơn khi không có giảm giá -->
-                                    <span class="product-price highlighted-price">Price: $${product.price}</span>
+                                    <span class="product-price highlighted-price">
+                                        Price: <fmt:formatNumber value="${product.price}" type="number" groupingUsed="true"/> VNĐ
+                                    </span>
+
                                     </br>
                                     <span class="no-discount-label">
                                         No Discount Available 😢
@@ -250,7 +258,10 @@ if (message != null) {
                                     </br>
                                 </c:when>
                                 <c:otherwise>
-                                    <span class="product-price">Price: $${product.price}</span>
+                                    <span class="product-price">
+                                        Price: <fmt:formatNumber value="${product.price}" type="number" groupingUsed="true"/> VNĐ
+                                    </span>
+
                                 </c:otherwise>
                             </c:choose>
                             <span class="product-quantity">Quantity Sold: ${product.soldQuantity}</span>

@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -89,10 +90,68 @@ public class CartDetailController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int productId = Integer.parseInt(request.getParameter("productId"));
-        int cartId = Integer.parseInt(request.getParameter("cartId"));
         String action = request.getParameter("action");
         CartDetailDao dao = new CartDetailDao();
+        HttpSession session = request.getSession();
+
+        if ("updateSelection".equals(action)) {
+            // Lấy id giỏ hàng của người dùng
+            int cartId = Integer.parseInt(request.getParameter("cartId"));
+            // Lấy danh sách id sản phẩm được chọn checkbox
+            // có thể có nhiều sản phẩm được chọn
+            String[] selectedProductIds = request.getParameterValues("selectedProducts");
+            double beforePrice = 0.0;
+            List<Integer> selectedProductsList = new ArrayList<>();
+            //nếu phát hiện mảng có data
+            if (selectedProductIds != null) {
+                for (String productIdStr : selectedProductIds) {
+                    int productId = Integer.parseInt(productIdStr);
+                    double productTotal = dao.getProductTotalPrice(productId, cartId);
+                    beforePrice += productTotal;
+                    selectedProductsList.add(productId); // Chuyển đổi sang List<Integer>
+                }
+            }
+            session.setAttribute("selectedProducts", selectedProductsList); // Lưu vào session dưới dạng List<Integer>
+            session.setAttribute("beforePrice", beforePrice);
+
+            // Xác định mức giảm giá dựa trên tổng tiền
+            double discountRate = 0.0;
+            if (beforePrice > 100_000_000) {
+                discountRate = 0.10; // 10%
+            } else if (beforePrice > 50_000_000) {
+                discountRate = 0.07; // 7%
+            } else if (beforePrice > 10_000_000) {
+                discountRate = 0.05; // 5%
+            }
+
+            // Tính toán số tiền giảm giá và giá cuối cùng
+            double discountAmount = beforePrice * discountRate;
+            double finalTotalPrice = beforePrice - discountAmount;
+
+            double remainingForNextDiscount = 0.0;
+
+            if (beforePrice < 10_000_000) {
+                remainingForNextDiscount = 10_000_000 - beforePrice;
+            } else if (beforePrice < 50_000_000) {
+                remainingForNextDiscount = 50_000_000 - beforePrice;
+            } else if (beforePrice < 100_000_000) {
+                remainingForNextDiscount = 100_000_000 - beforePrice;
+            } else {
+                remainingForNextDiscount = 0; // Đã đạt mức cao nhất
+            }
+
+            // Lưu vào session
+            session.setAttribute("remainingForNextDiscount", remainingForNextDiscount);
+            session.setAttribute("discountRate", discountRate * 100); // Lưu % giảm giá
+            session.setAttribute("discountAmount", discountAmount);
+            session.setAttribute("finalPrice", finalTotalPrice);
+            response.sendRedirect(request.getContextPath() + "/cartdetailcontroller");
+            return;
+        }
+
+        int productId = Integer.parseInt(request.getParameter("productId"));
+        int cartId = Integer.parseInt(request.getParameter("cartId"));
+
         // Lấy số lượng hiện tại từ request thay vì từ database
         int quantity = Integer.parseInt(request.getParameter("quantity"));
 
@@ -102,7 +161,7 @@ public class CartDetailController extends HttpServlet {
             quantity--; // Giảm số lượng, nhưng không được nhỏ hơn 1
         } else if ("remove".equals(action)) {
             int cartItemId = Integer.parseInt(request.getParameter("cartItemId"));
-            
+
             boolean success = dao.removeFromCart(cartItemId);
             if (success) {
                 request.getSession().setAttribute("message", "Sản phẩm đã được xóa khỏi giỏ hàng!");
@@ -112,10 +171,7 @@ public class CartDetailController extends HttpServlet {
         }
 
         // Cập nhật số lượng mới vào database
-        
         dao.updateQuantity(cartId, productId, quantity);
-
-        
 
         // 🔹 Cập nhật lại cartCount sau khi thay đổi số lượng
         int userId = (int) request.getSession().getAttribute("userId");
