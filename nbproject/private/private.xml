@@ -1,20 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
-    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/src/java/Entity/Category.java</file>
-            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/src/java/Controller/LeftbarController.java</file>
-            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/src/java/Dao/CategoryDao.java</file>
-            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/web/AdminPage/AddSlider.jsp</file>
-            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/src/java/Controller/SliderListController.java</file>
-            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/web/CommonPage/LeftBar.jsp</file>
-            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/web/AdminPage/SliderList.jsp</file>
-            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/web/UserPage/Home.jsp</file>
-            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/src/java/Dao/SliderDao.java</file>
-            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/web/CustomerPage/MyOrders.jsp</file>
-            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/src/java/Controller/HomeController.java</file>
-            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/web/AdminPage/SliderDetail.jsp</file>
-        </group>
-    </open-files>
 </project-private>
