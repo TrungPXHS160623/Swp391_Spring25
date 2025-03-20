@@ -299,8 +299,8 @@
                     <td>${UserController.getRole_name()}</td>
                     <td>${UserController.getIs_active() == 1 ? "Active" : "No Active"}</td>
                     <td>
-                        <a href="detail/userDetail.jsp?action=view&userId=${UserController.getUser_id()}">View</a>
-                        <a href="detail/userDetail.jsp?action=edit&userId=${UserController.getUser_id()}">Edit</a>
+                        <a href="AdminPage/UserDetail.jsp?action=view&userId=${UserController.getUser_id()}">View</a>
+                        <a href="AdminPage/UserDetail.jsp?action=edit&userId=${UserController.getUser_id()}">Edit</a>
                     </td>
 
                 </tr>   

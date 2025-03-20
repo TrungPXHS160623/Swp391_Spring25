@@ -73,7 +73,7 @@ public class ProductDetailController extends HttpServlet {
         }
 
         request.setAttribute("action", action);
-        request.getRequestDispatcher("detail/productDetail.jsp").forward(request, response);
+        request.getRequestDispatcher("AdminPage/ProductDetail.jsp").forward(request, response);
     }
 
     /**
@@ -100,7 +100,7 @@ public class ProductDetailController extends HttpServlet {
         int featured = Integer.parseInt(request.getParameter("featured"));
 
         Product product = new Product();
-        product.setImage_url(imageUrl);
+//        product.setImage_url(imageUrl);
         product.setProduct_name(productName);
         product.setSubcategory_name(subcategoryName);
         product.setList_price(listPrice);

@@ -69,7 +69,7 @@ public class UserDetailController extends HttpServlet {
 
                 if (user != null) {
                     request.setAttribute("user", user);
-                    request.getRequestDispatcher("view/userDetails.jsp").forward(request, response);
+                    request.getRequestDispatcher("AdminPage/UserDetail.jsp").forward(request, response);
                 } else {
                     response.sendRedirect("UserController?error=UserNotFound");
                 }

@@ -150,7 +150,7 @@ public class UserController extends HttpServlet {
         request.setAttribute("totalPages", totalPages);
 
         request.setAttribute("UserController", users);
-        request.getRequestDispatcher("view/user.jsp").forward(request, response);
+        request.getRequestDispatcher("AdminPage/UserList.jsp").forward(request, response);
     }
 
     /**

@@ -5,6 +5,7 @@
 package Entity;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -13,7 +14,6 @@ import java.util.Date;
 public class Product {
 
     private int product_id;
-    private String image_url;
     private String product_name;
     private String subcategory_name; // Chuyển từ subcategory_id sang
     private Date created_at;
@@ -23,13 +23,14 @@ public class Product {
     private float sale_price;
     private int featured;
     private int stock;
+    private ProductImage coverProduct;
+    private List<ProductImage> imageList;
 
     public Product() {
     }
 
-    public Product(int product_id, String image_url, String product_name, String subcategory_name, Date created_at, Date updated_at, int status, float list_price, float sale_price, int featured, int stock) {
+    public Product(int product_id, String image_url, String product_name, String subcategory_name, Date created_at, Date updated_at, int status, float list_price, float sale_price, int featured, int stock, ProductImage coverProduct) {
         this.product_id = product_id;
-        this.image_url = image_url;
         this.product_name = product_name;
         this.subcategory_name = subcategory_name;
         this.created_at = created_at;
@@ -39,6 +40,7 @@ public class Product {
         this.sale_price = sale_price;
         this.featured = featured;
         this.stock = stock;
+        this.coverProduct = coverProduct;
     }
 
     public int getProduct_id() {
@@ -47,14 +49,6 @@ public class Product {
 
     public void setProduct_id(int product_id) {
         this.product_id = product_id;
-    }
-
-    public String getImage_url() {
-        return image_url;
-    }
-
-    public void setImage_url(String image_url) {
-        this.image_url = image_url;
     }
 
     public String getProduct_name() {
@@ -127,5 +121,21 @@ public class Product {
 
     public void setStock(int stock) {
         this.stock = stock;
+    }
+
+    public List<ProductImage> getImageList() {
+        return imageList;
+    }
+
+    public void setImageList(List<ProductImage> imageList) {
+        this.imageList = imageList;
+    }
+
+    public ProductImage getCoverProduct() {
+        return coverProduct;
+    }
+
+    public void setCoverProduct(ProductImage coverProduct) {
+        this.coverProduct = coverProduct;
     }
 }

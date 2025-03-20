@@ -53,7 +53,7 @@
             <div class="form-group">
                 <label>Thumbnail:</label>
                 <br>
-                <img class="image-preview" src="${product.image_url}" alt="Product Image" />
+                <img class="image-preview" src="${coverProduct.image_url}" alt="Product Image" />
                 <input type="file" name="image" accept="image/*">
             </div>
             

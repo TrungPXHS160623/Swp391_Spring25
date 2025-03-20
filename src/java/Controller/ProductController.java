@@ -121,7 +121,7 @@ public class ProductController extends HttpServlet {
         }
 
         request.setAttribute("ProductController", products);
-        request.getRequestDispatcher("AdminPage/ProuctLists.jsp").forward(request, response);
+        request.getRequestDispatcher("AdminPage/ProductList.jsp").forward(request, response);
     }
 
     /**

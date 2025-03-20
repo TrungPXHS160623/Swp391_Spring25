@@ -186,7 +186,8 @@
                 <c:forEach var="ProductController" items="${ProductController}">
                     <tr>
                         <td>${ProductController.getProduct_id()}</td>
-                        <td><img src="${ProductController.getImage_url()}" alt="Product Image" style="width: 120px; height: auto;"/></td>
+                        <td><img src="${ProductController.coverProduct.imageUrl}" 
+                                 alt="Product Image" style="width: 120px; height: auto;"/></td>
                         <td>${ProductController.getProduct_name()}</td>
                         <td>${ProductController.getSubcategory_name()}</td>
                         <td>${ProductController.getList_price()}</td>
