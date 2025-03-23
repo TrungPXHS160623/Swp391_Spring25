@@ -37,26 +37,22 @@
 
             <!-- Form Tìm kiếm, Lọc và Sắp xếp -->
             <form method="get" action="AdminUserListController" class="filter-form mb-4">
-                <input type="text" name="keyword" class="form-control" placeholder="Tìm kiếm..." value="${keyword}">
-
+                <input type="text" name="keyword" class="form-control" placeholder="Tìm kiếm..." value="${keyword}" />
                 <select name="gender" class="form-select">
                     <option value="">--Giới tính--</option>
                     <option value="Male" ${gender == 'Male' ? 'selected' : ''}>Male</option>
                     <option value="Female" ${gender == 'Female' ? 'selected' : ''}>Female</option>
                 </select>
-
                 <select name="role" class="form-select">
                     <option value="">--Vai trò--</option>
                     <option value="Admin" ${role == 'Admin' ? 'selected' : ''}>Admin</option>
                     <option value="User" ${role == 'User' ? 'selected' : ''}>User</option>
                 </select>
-
                 <select name="status" class="form-select">
                     <option value="">--Trạng thái--</option>
                     <option value="Active" ${status == 'Active' ? 'selected' : ''}>Active</option>
                     <option value="Inactive" ${status == 'Inactive' ? 'selected' : ''}>Inactive</option>
                 </select>
-
                 <select name="sortField" class="form-select">
                     <option value="user_id" ${sortField == 'user_id' ? 'selected' : ''}>ID</option>
                     <option value="full_name" ${sortField == 'full_name' ? 'selected' : ''}>Full Name</option>
@@ -67,12 +63,10 @@
                     <option value="role_name" ${sortField == 'role_name' ? 'selected' : ''}>Role</option>
                     <option value="status" ${sortField == 'status' ? 'selected' : ''}>Status</option>
                 </select>
-
                 <select name="sortDirection" class="form-select">
                     <option value="ASC" ${sortDirection == 'ASC' ? 'selected' : ''}>Tăng dần</option>
                     <option value="DESC" ${sortDirection == 'DESC' ? 'selected' : ''}>Giảm dần</option>
                 </select>
-
                 <button type="submit" class="btn btn-primary">Áp dụng</button>
             </form>
 
@@ -116,44 +110,21 @@
             </table>
 
             <!-- Thanh phân trang -->
-            <nav aria-label="Page navigation example">
+            <nav aria-label="Page navigation">
                 <ul class="pagination justify-content-center">
                     <!-- Nút Previous -->
                     <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
-                        <a class="page-link" href="AdminUserListController?page=${currentPage - 1}
-                           &pageSize=${pageSize}
-                           &keyword=${keyword}
-                           &gender=${gender}
-                           &role=${role}
-                           &status=${status}
-                           &sortField=${sortField}
-                           &sortDirection=${sortDirection}">Previous</a>
+                        <a class="page-link" href="AdminUserListController?page=${currentPage - 1}&pageSize=${pageSize}&keyword=${keyword}&gender=${gender}&role=${role}&status=${status}&sortField=${sortField}&sortDirection=${sortDirection}">Previous</a>
                     </li>
-
                     <!-- Hiển thị số trang -->
                     <c:forEach var="i" begin="1" end="${totalPages}">
                         <li class="page-item ${i == currentPage ? 'active' : ''}">
-                            <a class="page-link" href="AdminUserListController?page=${i}
-                               &pageSize=${pageSize}
-                               &keyword=${keyword}
-                               &gender=${gender}
-                               &role=${role}
-                               &status=${status}
-                               &sortField=${sortField}
-                               &sortDirection=${sortDirection}">${i}</a>
+                            <a class="page-link" href="AdminUserListController?page=${i}&pageSize=${pageSize}&keyword=${keyword}&gender=${gender}&role=${role}&status=${status}&sortField=${sortField}&sortDirection=${sortDirection}">${i}</a>
                         </li>
                     </c:forEach>
-
                     <!-- Nút Next -->
                     <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
-                        <a class="page-link" href="AdminUserListController?page=${currentPage + 1}
-                           &pageSize=${pageSize}
-                           &keyword=${keyword}
-                           &gender=${gender}
-                           &role=${role}
-                           &status=${status}
-                           &sortField=${sortField}
-                           &sortDirection=${sortDirection}">Next</a>
+                        <a class="page-link" href="AdminUserListController?page=${currentPage + 1}&pageSize=${pageSize}&keyword=${keyword}&gender=${gender}&role=${role}&status=${status}&sortField=${sortField}&sortDirection=${sortDirection}">Next</a>
                     </li>
                 </ul>
             </nav>

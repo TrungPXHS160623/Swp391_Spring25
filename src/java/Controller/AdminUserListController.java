@@ -61,66 +61,55 @@ public class AdminUserListController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Lấy các tham số tìm kiếm, lọc, sắp xếp và phân trang từ request
-        String keyword = request.getParameter("keyword");
-        String gender = request.getParameter("gender");
-        String role = request.getParameter("role");
-        String status = request.getParameter("status");
-        String sortField = request.getParameter("sortField");
-        String sortDirection = request.getParameter("sortDirection");
+        // Lấy các tham số từ request và trim khoảng trắng
+        String keyword = request.getParameter("keyword") != null ? request.getParameter("keyword").trim() : "";
+        String gender = request.getParameter("gender") != null ? request.getParameter("gender").trim() : "";
+        String role = request.getParameter("role") != null ? request.getParameter("role").trim() : "";
+        String status = request.getParameter("status") != null ? request.getParameter("status").trim() : "";
+        String sortField = request.getParameter("sortField") != null ? request.getParameter("sortField").trim() : "";
+        String sortDirection = request.getParameter("sortDirection") != null ? request.getParameter("sortDirection").trim() : "";
 
         // Phân trang: mặc định trang 1, 7 bản ghi/trang
         int page = 1;
         int pageSize = 7;
-        String pageParam = request.getParameter("page");
-        String pageSizeParam = request.getParameter("pageSize");
-        if (pageParam != null && !pageParam.trim().isEmpty()) {
+        String pageParam = request.getParameter("page") != null ? request.getParameter("page").trim() : "";
+        String pageSizeParam = request.getParameter("pageSize") != null ? request.getParameter("pageSize").trim() : "";
+        if (!pageParam.isEmpty()) {
             try {
                 page = Integer.parseInt(pageParam);
             } catch (NumberFormatException e) {
-                // Giữ giá trị mặc định
+                // giữ giá trị mặc định
             }
         }
-        if (pageSizeParam != null && !pageSizeParam.trim().isEmpty()) {
+        if (!pageSizeParam.isEmpty()) {
             try {
                 pageSize = Integer.parseInt(pageSizeParam);
             } catch (NumberFormatException e) {
-                // Giữ giá trị mặc định
+                // giữ giá trị mặc định
             }
         }
 
-        // Lựa chọn phương thức DAO phù hợp dựa trên tham số nhập vào:
-        List<UserDto> userList = null;
-        if (keyword != null && !keyword.trim().isEmpty()) {
-            // Nếu có từ khóa tìm kiếm, sử dụng searchUserList
+        // Lựa chọn phương thức DAO phù hợp:
+        List<UserDto> userList;
+        if (!keyword.isEmpty()) {
             userList = userDao.searchUserList(keyword, page, pageSize);
-        } else if ((gender != null && !gender.trim().isEmpty())
-                || (role != null && !role.trim().isEmpty())
-                || (status != null && !status.trim().isEmpty())) {
-            // Nếu có ít nhất một tham số lọc, sử dụng filterUserList
+        } else if (!gender.isEmpty() || !role.isEmpty() || !status.isEmpty()) {
             userList = userDao.filterUserList(gender, role, status, page, pageSize);
-        } else if (sortField != null && !sortField.trim().isEmpty() && !sortField.equals("user_id")) {
-            // Nếu có yêu cầu sắp xếp khác mặc định, sử dụng sortUserList
+        } else if (!sortField.isEmpty() && !sortField.equals("user_id")) {
             userList = userDao.sortUserList(sortField, sortDirection, page, pageSize);
         } else {
-            // Nếu không có tham số nào, trả về tất cả
             userList = userDao.getAllUserList(page, pageSize);
         }
 
-        // --- Phân trang: tính tổng số trang ---
-        // Giả sử bạn có phương thức getUserCount trong UserDtoDao, ví dụ:
-        // int totalCount = userDao.getUserCount(keyword, gender, role, status);
-        // Ở đây minh họa bằng giá trị tạm (ví dụ 12)
-        int totalCount = 12; // <-- Bạn cần thay thế bằng cách lấy từ DB
+        // Lấy tổng số user theo điều kiện (sử dụng getUserCount của DAO)
+        int totalCount = userDao.getUserCount(keyword, gender, role, status);
         int totalPages = (int) Math.ceil((double) totalCount / pageSize);
 
-        // Đẩy các tham số và dữ liệu về JSP
+        // Đẩy dữ liệu và tham số về JSP
         request.setAttribute("userList", userList);
         request.setAttribute("currentPage", page);
         request.setAttribute("pageSize", pageSize);
         request.setAttribute("totalPages", totalPages);
-
-        // Đẩy lại các tham số tìm kiếm, lọc và sắp xếp để duy trì trên giao diện
         request.setAttribute("keyword", keyword);
         request.setAttribute("gender", gender);
         request.setAttribute("role", role);

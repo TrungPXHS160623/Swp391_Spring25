@@ -215,6 +215,57 @@ public class UserDtoDao {
         return userList;
     }
 
+    public int getUserCount(String keyword, String gender, String role, String status) {
+        int count = 0;
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT COUNT(*) as total FROM Users u ");
+        sql.append("LEFT JOIN Roles r ON u.role_id = r.role_id ");
+        sql.append("WHERE 1=1 ");
+
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            sql.append("AND (u.full_name LIKE ? OR u.email LIKE ? OR u.phone_number LIKE ?) ");
+        }
+        if (gender != null && !gender.trim().isEmpty()) {
+            sql.append("AND u.gender = ? ");
+        }
+        if (role != null && !role.trim().isEmpty()) {
+            sql.append("AND r.role_name = ? ");
+        }
+        if (status != null && !status.trim().isEmpty()) {
+            sql.append("AND (CASE WHEN u.is_active = 1 THEN 'Active' ELSE 'Inactive' END) = ? ");
+        }
+
+        try (Connection conn = new DBContext().getConnection(); PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
+
+            int index = 1;
+            if (keyword != null && !keyword.trim().isEmpty()) {
+                String searchPattern = "%" + keyword.trim() + "%";
+                stmt.setString(index++, searchPattern);
+                stmt.setString(index++, searchPattern);
+                stmt.setString(index++, searchPattern);
+            }
+            if (gender != null && !gender.trim().isEmpty()) {
+                stmt.setString(index++, gender.trim());
+            }
+            if (role != null && !role.trim().isEmpty()) {
+                stmt.setString(index++, role.trim());
+            }
+            if (status != null && !status.trim().isEmpty()) {
+                stmt.setString(index++, status.trim());
+            }
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                count = rs.getInt("total");
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Lỗi SQL khi đếm số user", e);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Lỗi kết nối CSDL khi đếm số user", e);
+        }
+        return count;
+    }
+
     public static void main(String[] args) {
         UserDtoDao userDao = new UserDtoDao();
         int page = 1;      // Số trang cần lấy
