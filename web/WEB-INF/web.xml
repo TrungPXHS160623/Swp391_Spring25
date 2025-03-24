@@ -20,6 +20,14 @@
         <servlet-name>AdminUserDetailController</servlet-name>
         <servlet-class>Controller.AdminUserDetailController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>BlogListController</servlet-name>
+        <servlet-class>Controller.BlogListController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>BlogDetailController</servlet-name>
+        <servlet-class>Controller.BlogDetailController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginController</servlet-name>
         <url-pattern>/logincontroller</url-pattern>
@@ -87,5 +95,13 @@
     <servlet-mapping>
         <servlet-name>AdminUserDetailController</servlet-name>
         <url-pattern>/AdminUserDetailController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BlogListController</servlet-name>
+        <url-pattern>/BlogListController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BlogDetailController</servlet-name>
+        <url-pattern>/BlogDetailController</url-pattern>
     </servlet-mapping>
 </web-app>
