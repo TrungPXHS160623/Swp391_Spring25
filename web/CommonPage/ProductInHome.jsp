@@ -18,6 +18,8 @@
                 justify-content: center;
                 gap: 20px;
                 flex-wrap: wrap;
+                
+                
             }
 
             .product-item {
@@ -25,6 +27,8 @@
                 padding: 15px;
                 text-align: center;
                 width: 250px; /* Điều chỉnh độ rộng */
+                background-color: #ffffff; /* Màu trắng */
+                
             }
 
             .product-image {

@@ -87,10 +87,21 @@
         </style>
     </head>
     <body>
-        <% String errorMessage = (String) request.getAttribute("errorMessage"); %>
         <div class="container">
             <h1>Change Password</h1>
-            <form action="${pageContext.request.contextPath}/change-password" method="post">
+            <% 
+            String errorMessagePassChanging = (String) request.getAttribute("errorMessagePassChanging"); 
+            String successMessageChanging = (String) request.getAttribute("successMessageChanging");
+            %>
+            <div style="margin-bottom: 20px;">
+                <% if (errorMessagePassChanging != null) { %>
+                <div style="color: red; font-weight: bold;"><%= errorMessagePassChanging %></div>
+                <% } %>
+                <% if (successMessageChanging != null) { %>
+                <div style="color: green; font-weight: bold;"><%= successMessageChanging %></div>
+                <% } %>
+            </div>
+            <form action="${pageContext.request.contextPath}/changepasswordcontroller" method="post">
                 <div class="input-group">
                     <i class="fas fa-lock"></i>
                     <input type="password" name="currentPassword" placeholder="Current Password" required>
