@@ -84,9 +84,9 @@
                 <jsp:include page="/sliderinhomecontroller" />
                 <h2 class="section-title">Categories Section</h2>
                 <jsp:include page="/categoryinhomecontroller" />
-                <h2 class="section-title">Products Section</h2
+                <h2 class="section-title">Products Section</h2>
                 <jsp:include page="/productinhomecontroller" />
-                <h2 class="section-title">Blogs Section</h2
+                <h2 class="section-title">Blogs Section</h2>
                 <a href="ChangePassword.jsp" class="btn">Change Password</a>
 
                 <%
