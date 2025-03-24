@@ -82,6 +82,7 @@
                         <th>Phone Number</th>
                         <th>Role</th>
                         <th>Status</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -97,6 +98,10 @@
                                     <td>${user.phoneNumber}</td>
                                     <td>${user.role}</td>
                                     <td>${user.status}</td>
+                                    <td>
+                                        <a href="AdminUserDetailController?action=view&userId=${user.userId}" class="btn btn-info btn-sm">View</a>
+                                        <a href="AdminUserDetailController?action=edit&userId=${user.userId}" class="btn btn-warning btn-sm">Edit</a>
+                                    </td>
                                 </tr>
                             </c:forEach>
                         </c:when>
@@ -108,6 +113,11 @@
                     </c:choose>
                 </tbody>
             </table>
+
+            <!-- Nút Add User -->
+            <div class="mt-3">
+                <a href="AdminUserDetailController?action=add" class="btn btn-primary">Add User</a>
+            </div>
 
             <!-- Thanh phân trang -->
             <nav aria-label="Page navigation">

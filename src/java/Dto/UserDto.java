@@ -10,27 +10,71 @@ package Dto;
  */
 public class UserDto {
 
-    private int userId;
+    private int userId; // Có thể dùng khi xem/sửa, với trường hợp thêm user thì để mặc định (hoặc 0)
+    private String avatarUrl;
     private String fullName;
-    private String gender;
-    private String address;
+    private String gender;   // Male, Female, Other
     private String email;
+    private String password;
     private String phoneNumber;
-    private String role;
-    private String status;
+    private String role;     // User, Seller, Marketing, Admin
+    private String address;
+    private String status;   // Active, NotActive
 
     public UserDto() {
     }
 
-    public UserDto(int userId, String fullName, String gender, String address, String email, String phoneNumber, String role, String status) {
+    public UserDto(int userId, String avatarUrl, String fullName, String gender, String email, String password, String phoneNumber, String role, String address, String status) {
+        this.userId = userId;
+        this.avatarUrl = avatarUrl;
+        this.fullName = fullName;
+        this.gender = gender;
+        this.email = email;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+        this.role = role;
+        this.address = address;
+        this.status = status;
+    }
+
+    // Constructor cho Userlist chung
+    public UserDto(int userId, String fullName, String gender, String email, String phoneNumber, String role, String address, String status) {
         this.userId = userId;
         this.fullName = fullName;
         this.gender = gender;
-        this.address = address;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.role = role;
+        this.address = address;
         this.status = status;
+    }
+
+    // Constructor không có userId (dùng cho chức năng thêm user)
+    public UserDto(String avatarUrl, String fullName, String gender, String email,
+            String password, String phoneNumber, String role, String address, String status) {
+        this.avatarUrl = avatarUrl;
+        this.fullName = fullName;
+        this.gender = gender;
+        this.email = email;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+        this.role = role;
+        this.address = address;
+        this.status = status;
+    }
+
+    // Phương thức để cập nhật thông tin (sửa) user dựa trên một đối tượng mới
+    public void updateUser(UserDto newInfo) {
+        // Lưu ý: userId không được thay đổi
+        this.avatarUrl = newInfo.getAvatarUrl();
+        this.fullName = newInfo.getFullName();
+        this.gender = newInfo.getGender();
+        this.email = newInfo.getEmail();
+        this.password = newInfo.getPassword();
+        this.phoneNumber = newInfo.getPhoneNumber();
+        this.role = newInfo.getRole();
+        this.address = newInfo.getAddress();
+        this.status = newInfo.getStatus();
     }
 
     public int getUserId() {
@@ -39,6 +83,14 @@ public class UserDto {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
     }
 
     public String getFullName() {
@@ -57,20 +109,20 @@ public class UserDto {
         this.gender = gender;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getPhoneNumber() {
@@ -89,6 +141,14 @@ public class UserDto {
         this.role = role;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
     public String getStatus() {
         return status;
     }
@@ -97,4 +157,20 @@ public class UserDto {
         this.status = status;
     }
 
+    // Override toString() để hỗ trợ chức năng xem chi tiết user
+    @Override
+    public String toString() {
+        return "UserDto {"
+                + "userId=" + userId
+                + ", avatarUrl='" + avatarUrl + '\''
+                + ", fullName='" + fullName + '\''
+                + ", gender='" + gender + '\''
+                + ", email='" + email + '\''
+                + ", password='" + password + '\''
+                + ", phoneNumber='" + phoneNumber + '\''
+                + ", role='" + role + '\''
+                + ", address='" + address + '\''
+                + ", status='" + status + '\''
+                + '}';
+    }
 }
