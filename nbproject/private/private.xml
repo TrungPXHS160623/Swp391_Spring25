@@ -3,18 +3,18 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/src/java/Entity/Category.java</file>
-            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/src/java/Controller/LeftbarController.java</file>
-            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/src/java/Dao/CategoryDao.java</file>
-            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/web/AdminPage/AddSlider.jsp</file>
-            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/src/java/Controller/SliderListController.java</file>
-            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/web/CommonPage/LeftBar.jsp</file>
-            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/web/AdminPage/SliderList.jsp</file>
-            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/web/UserPage/Home.jsp</file>
-            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/src/java/Dao/SliderDao.java</file>
-            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/web/CustomerPage/MyOrders.jsp</file>
-            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/src/java/Controller/HomeController.java</file>
-            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/web/AdminPage/SliderDetail.jsp</file>
+            <file>file:/C:/Users/FPT%20SHOP/Desktop/MyProject/src/java/Controller/CategoryController.java</file>
+            <file>file:/C:/Users/FPT%20SHOP/Desktop/MyProject/src/java/Dao/FeedbackDao.java</file>
+            <file>file:/C:/Users/FPT%20SHOP/Desktop/MyProject/src/java/Util/RatingUtil.java</file>
+            <file>file:/C:/Users/FPT%20SHOP/Desktop/MyProject/src/java/Dto/FeedbackDto.java</file>
+            <file>file:/C:/Users/FPT%20SHOP/Desktop/MyProject/src/java/Controller/CartContactController.java</file>
+            <file>file:/C:/Users/FPT%20SHOP/Desktop/MyProject/src/java/Dto/CartContactDto.java</file>
+            <file>file:/C:/Users/FPT%20SHOP/Desktop/MyProject/src/java/Controller/UserProfile.java</file>
+            <file>file:/C:/Users/FPT%20SHOP/Desktop/MyProject/src/java/Dao/CartContactDao.java</file>
+            <file>file:/C:/Users/FPT%20SHOP/Desktop/MyProject/src/java/Dto/CustomerDto.java</file>
+            <file>file:/C:/Users/FPT%20SHOP/Desktop/MyProject/src/java/Entity/Review.java</file>
+            <file>file:/C:/Users/FPT%20SHOP/Desktop/MyProject/src/java/Entity/FeedbackImage.java</file>
+            <file>file:/C:/Users/FPT%20SHOP/Desktop/MyProject/src/java/Dao/CustomerDao.java</file>
         </group>
     </open-files>
 </project-private>
