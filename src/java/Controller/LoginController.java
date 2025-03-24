@@ -17,6 +17,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import Util.HashUtil;
 
 /**
  *
@@ -97,35 +98,36 @@ public class LoginController extends HttpServlet {
         }
 
         UserDao userDAO = new UserDao();
-        User user = userDAO.login(email, password);
+        //User user = userDAO.login(email, password);
+        User user = userDAO.getUserByEmail(email); // 🔥 Lấy user bằng email, không truyền password nữa
 
         // Kiểm tra user có tồn tại không
-        if (user != null) {
-            HttpSession session = request.getSession();
+        if (user != null && HashUtil.checkPassword(password, user.getPassword_hash())) { // 🔥 Dùng checkpw() để kiểm tra mật khẩu
+        HttpSession session = request.getSession();
+        session.setAttribute("user", user);
+        session.setAttribute("userId", user.getUser_id());
 
-            session.setAttribute("user", user); // Đảm bảo lưu user object
-            session.setAttribute("userId", user.getUser_id()); // Lưu cả userId nếu cần
-            // 🔹 Lấy số lượng sản phẩm trong giỏ hàng
-            CartDetailDao cartDao = new CartDetailDao();
-            int cartCount = cartDao.getCartItemCount(user.getUser_id());
-            session.setAttribute("cartCount", cartCount); // Cập nhật session ngay khi đăng nhập
+        // Lấy số lượng sản phẩm trong giỏ hàng
+        CartDetailDao cartDao = new CartDetailDao();
+        int cartCount = cartDao.getCartItemCount(user.getUser_id());
+        session.setAttribute("cartCount", cartCount);
 
-            // Nếu chọn "Remember Me", lưu email vào cookie
-            if ("on".equals(rememberMe)) {
-                Cookie cookie = new Cookie("rememberedEmail", email);
-                cookie.setMaxAge(7 * 24 * 60 * 60); // 7 ngày
-                response.addCookie(cookie);
-            } else {
-                Cookie cookie = new Cookie("rememberedEmail", "");
-                cookie.setMaxAge(0);
-                response.addCookie(cookie);
-            }
-
-            response.sendRedirect(request.getContextPath() + "/UserPage/Home.jsp");
+        // Remember Me (lưu email vào cookie)
+        if ("on".equals(rememberMe)) {
+            Cookie cookie = new Cookie("rememberedEmail", email);
+            cookie.setMaxAge(7 * 24 * 60 * 60);
+            response.addCookie(cookie);
         } else {
-            request.setAttribute("errorMessage", "Invalid email or password.");
-            request.getRequestDispatcher("/UserPage/Login.jsp").forward(request, response);
+            Cookie cookie = new Cookie("rememberedEmail", "");
+            cookie.setMaxAge(0);
+            response.addCookie(cookie);
         }
+
+        response.sendRedirect(request.getContextPath() + "/UserPage/Home.jsp");
+    } else {
+        request.setAttribute("errorMessage", "Invalid email or password.");
+        request.getRequestDispatcher("/UserPage/Login.jsp").forward(request, response);
+    }
     }
 
     /**

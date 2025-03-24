@@ -32,6 +32,7 @@
                 border: 2px solid #000; /* Thêm border cho slide */
                 padding: 10px; /* Thêm khoảng cách giữa nội dung và border */
                 border-radius: 5px; /* Tùy chọn: bo tròn góc nếu bạn muốn */
+                background: linear-gradient(135deg, #007bff, #ffcc80);
             }
 
             /* Cấu trúc ảnh trong slide */
