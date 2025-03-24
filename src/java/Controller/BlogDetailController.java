@@ -13,6 +13,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  *
@@ -60,6 +61,13 @@ public class BlogDetailController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String keyword = request.getParameter("keyword") != null ? request.getParameter("keyword").trim() : "";
+        String category = request.getParameter("category") != null ? request.getParameter("category").trim() : "";
+
+        // Lấy danh sách tên danh mục từ DB
+        List<String> categoryList = blogDao.getAllCategoryNames();
+        request.setAttribute("categoryList", categoryList);
+
         // Lấy postId từ request, nếu không có thì chuyển hướng về BlogListController
         String postIdParam = request.getParameter("postId");
         if (postIdParam == null || postIdParam.trim().isEmpty()) {
@@ -74,6 +82,9 @@ public class BlogDetailController extends HttpServlet {
             response.sendRedirect("BlogListController");
             return;
         }
+        // Lấy latest 3 blog
+        List<PostDto> latest3Blogs = blogDao.latest3Bloglink();
+        request.setAttribute("latest3Blogs", latest3Blogs);
 
         // Lấy chi tiết blog theo postId
         PostDto blogDetail = blogDao.getBlogDetail(postId);

@@ -27,7 +27,7 @@ public class BlogDao {
      */
     public List<PostDto> getAllBlog() {
         List<PostDto> list = new ArrayList<>();
-        String sql = "SELECT p.title, p.summary, CONVERT(varchar, p.updated_at, 103) as dayUpdate, "
+        String sql = "SELECT p.post_id, p.title, p.summary, CONVERT(varchar, p.updated_at, 103) as dayUpdate, "
                 + "pm.media_url, c.category_name "
                 + "FROM Posts p "
                 + "LEFT JOIN Post_Media pm ON p.post_id = pm.post_id AND pm.is_primary = 1 "
@@ -37,12 +37,12 @@ public class BlogDao {
 
             while (rs.next()) {
                 PostDto dto = new PostDto();
+                dto.setPostId(rs.getInt("post_id"));  // Set postId ở đây
                 dto.setTitle(rs.getString("title"));
                 dto.setSummary(rs.getString("summary"));
                 dto.setDayUpdate(rs.getString("dayUpdate"));
                 dto.setMediaUrl(rs.getString("media_url"));
                 dto.setCategory(rs.getString("category_name"));
-                // Các trường detail khác không cần set trong list view.
                 list.add(dto);
             }
         } catch (SQLException e) {
@@ -92,7 +92,7 @@ public class BlogDao {
      */
     public List<PostDto> filterBlogbyCategory(String category) {
         List<PostDto> list = new ArrayList<>();
-        String sql = "SELECT p.title, p.summary, CONVERT(varchar, p.updated_at, 103) as dayUpdate, "
+        String sql = "SELECT p.post_id, p.title, p.summary, CONVERT(varchar, p.updated_at, 103) as dayUpdate, "
                 + "pm.media_url, c.category_name "
                 + "FROM Posts p "
                 + "LEFT JOIN Post_Media pm ON p.post_id = pm.post_id AND pm.is_primary = 1 "
@@ -105,6 +105,7 @@ public class BlogDao {
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     PostDto dto = new PostDto();
+                    dto.setPostId(rs.getInt("post_id"));
                     dto.setTitle(rs.getString("title"));
                     dto.setSummary(rs.getString("summary"));
                     dto.setDayUpdate(rs.getString("dayUpdate"));
@@ -126,7 +127,7 @@ public class BlogDao {
      */
     public List<PostDto> latest3Bloglink() {
         List<PostDto> list = new ArrayList<>();
-        String sql = "SELECT TOP 3 p.title, p.summary, CONVERT(varchar, p.updated_at, 103) as dayUpdate, "
+        String sql = "SELECT TOP 3 p.post_id, p.title, p.summary, CONVERT(varchar, p.updated_at, 103) as dayUpdate, "
                 + "pm.media_url, c.category_name "
                 + "FROM Posts p "
                 + "LEFT JOIN Post_Media pm ON p.post_id = pm.post_id AND pm.is_primary = 1 "
@@ -136,6 +137,7 @@ public class BlogDao {
 
             while (rs.next()) {
                 PostDto dto = new PostDto();
+                dto.setPostId(rs.getInt("post_id"));  // Đảm bảo lấy post_id
                 dto.setTitle(rs.getString("title"));
                 dto.setSummary(rs.getString("summary"));
                 dto.setDayUpdate(rs.getString("dayUpdate"));
@@ -205,6 +207,22 @@ public class BlogDao {
             LOGGER.log(Level.SEVERE, "Lỗi SQL khi lấy chi tiết blog", e);
         }
         return dto;
+    }
+
+    public List<String> getAllCategoryNames() {
+        List<String> categories = new ArrayList<>();
+        String sql = "SELECT category_name FROM Categories WHERE status = 1"; // hoặc bỏ WHERE nếu muốn lấy tất cả
+        try (Connection conn = new DBContext().getConnection(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                categories.add(rs.getString("category_name"));
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Lỗi SQL khi lấy danh sách category", e);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Lỗi SQL khi lấy danh sách category", e);
+        }
+        return categories;
     }
 
     public static void main(String[] args) {
