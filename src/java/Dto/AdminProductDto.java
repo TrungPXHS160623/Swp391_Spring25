@@ -5,16 +5,12 @@
 package Dto;
 
 import Entity.ProductImage;
-import java.security.Timestamp;
+import java.sql.Timestamp;
 import java.util.List;
 
-/**
- *
- * @author LENOVO
- */
 public class AdminProductDto {
 
-    // Thông tin sản phẩm
+    // Thông tin sản phẩm cơ bản
     private int productId;
     private String productName;
     private String description;
@@ -28,34 +24,24 @@ public class AdminProductDto {
     private int soldQuantity;
     private double averageRating;
 
-    // Thông tin hiển thị: Ảnh chính (primary image) và danh sách các ảnh (có thể bao gồm cả video)
-    private String primaryImageUrl;  // Ảnh chính của sản phẩm
-    private List<ProductImage> mediaList; // Danh sách các ảnh (và video nếu có)
+    // Ảnh chính (thumbnail)
+    private String primaryImageUrl;
 
+    // Danh sách media (ảnh/video) dùng cho ProductDetail
+    private List<ProductImage> mediaList;
+
+    // Trường bổ sung tính toán
+    private String featured; // "Yes" nếu soldQuantity>=50 và averageRating>4, ngược lại "No"
+    private String status;   // "Sale" nếu stockQuantity>0, "Soldout" nếu không
+
+    // Thêm trường Category để hiển thị tên subcategory
+    private String category;
+
+    // Constructor mặc định
     public AdminProductDto() {
     }
 
-    public AdminProductDto(int productId, String productName, String description, double price, int stockQuantity,
-            int subcategoryId, Timestamp createdAt, Timestamp updatedAt, double discountPrice,
-            double discountPercentage, int soldQuantity, double averageRating,
-            String primaryImageUrl, List<ProductImage> mediaList) {
-        this.productId = productId;
-        this.productName = productName;
-        this.description = description;
-        this.price = price;
-        this.stockQuantity = stockQuantity;
-        this.subcategoryId = subcategoryId;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.discountPrice = discountPrice;
-        this.discountPercentage = discountPercentage;
-        this.soldQuantity = soldQuantity;
-        this.averageRating = averageRating;
-        this.primaryImageUrl = primaryImageUrl;
-        this.mediaList = mediaList;
-    }
-
-    // Getters & Setters
+    // Getters & Setters cho tất cả các trường
     public int getProductId() {
         return productId;
     }
@@ -168,6 +154,37 @@ public class AdminProductDto {
         this.mediaList = mediaList;
     }
 
+    public String getFeatured() {
+        return featured;
+    }
+
+    public void setFeatured(String featured) {
+        this.featured = featured;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    // Setter and getter cho category
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    // Phương thức tính toán các trường derived (có thể gọi sau khi set dữ liệu)
+    public void computeDerivedFields() {
+        this.featured = (this.soldQuantity >= 50 && this.averageRating > 4) ? "Yes" : "No";
+        this.status = (this.stockQuantity > 0) ? "Sale" : "Soldout";
+    }
+
     @Override
     public String toString() {
         return "AdminProductDto{"
@@ -185,6 +202,9 @@ public class AdminProductDto {
                 + ", averageRating=" + averageRating
                 + ", primaryImageUrl='" + primaryImageUrl + '\''
                 + ", mediaList=" + mediaList
+                + ", featured='" + featured + '\''
+                + ", status='" + status + '\''
+                + ", category='" + category + '\''
                 + '}';
     }
 }
