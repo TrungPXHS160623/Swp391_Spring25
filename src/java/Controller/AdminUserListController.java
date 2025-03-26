@@ -89,17 +89,7 @@ public class AdminUserListController extends HttpServlet {
             }
         }
 
-        // Lựa chọn phương thức DAO phù hợp:
-        List<UserDto> userList;
-        if (!keyword.isEmpty()) {
-            userList = userDao.searchUserList(keyword, page, pageSize);
-        } else if (!gender.isEmpty() || !role.isEmpty() || !status.isEmpty()) {
-            userList = userDao.filterUserList(gender, role, status, page, pageSize);
-        } else if (!sortField.isEmpty() && !sortField.equals("user_id")) {
-            userList = userDao.sortUserList(sortField, sortDirection, page, pageSize);
-        } else {
-            userList = userDao.getAllUserList(page, pageSize);
-        }
+        List<UserDto> userList = userDao.getUserListDynamic(keyword, gender, role, status, sortField, sortDirection, page, pageSize);
 
         // Lấy tổng số user theo điều kiện (sử dụng getUserCount của DAO)
         int totalCount = userDao.getUserCount(keyword, gender, role, status);

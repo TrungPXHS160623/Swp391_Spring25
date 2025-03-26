@@ -72,16 +72,13 @@ public class AdminUserDetailController extends HttpServlet {
                 int userId = Integer.parseInt(userIdParam);
                 user = userDao.getUserById(userId);
             } catch (NumberFormatException e) {
-                // Không hợp lệ, user vẫn null
+                // Nếu không hợp lệ, để user là null
             }
         }
-
-        // Nếu action là "add" hoặc không có userId, tạo đối tượng user mới (rỗng)
         if (user == null) {
-            user = new UserDto(); // Các trường sẽ rỗng, dùng cho add
+            user = new UserDto();
         }
 
-        // Đẩy thông tin và action về JSP
         request.setAttribute("user", user);
         request.setAttribute("action", action);
         RequestDispatcher dispatcher = request.getRequestDispatcher("AdminPage/UserDetail.jsp");
@@ -99,43 +96,64 @@ public class AdminUserDetailController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Chú ý: nếu form có upload file, cần đảm bảo enctype="multipart/form-data" trong JSP
+        // Đảm bảo mã hóa UTF-8 cho dữ liệu
         request.setCharacterEncoding("UTF-8");
-        String action = request.getParameter("action") != null ? request.getParameter("action").trim() : "add";
+        String action = request.getParameter("action") != null ? request.getParameter("action").trim() : "";
 
-        // Lấy các trường thông tin từ form
+        // Nếu ở chế độ View, không cho phép cập nhật, chỉ chuyển sang chế độ xem
+        if ("view".equalsIgnoreCase(action)) {
+            doGet(request, response);
+            return;
+        }
+
+        // Nếu ở chế độ Edit, thực hiện cập nhật
         String avatarUrl = request.getParameter("avatarUrl");
-        // Nếu có upload file, bạn có thể xử lý phần file ở đây (ví dụ: lưu file và lấy đường dẫn lưu vào avatarUrl)
         String fullName = request.getParameter("fullName");
         String gender = request.getParameter("gender");
         String email = request.getParameter("email");
         String password = request.getParameter("password");
-        String phoneNumber = request.getParameter("phoneNumber");
+        String phone = request.getParameter("phone");
         String role = request.getParameter("role");
         String address = request.getParameter("address");
         String status = request.getParameter("status");
 
-        UserDto user = new UserDto(avatarUrl, fullName, gender, email, password, phoneNumber, role, address, status);
+        UserDto user = new UserDto();
+        user.setAvatarUrl(avatarUrl);
+        user.setFullName(fullName);
+        user.setGender(gender);
+        user.setEmail(email);
+        user.setPassword(password);
+        user.setPhoneNumber(phone);
+        user.setRole(role);
+        user.setAddress(address);
+        user.setStatus(status);
 
-        if (action.equalsIgnoreCase("edit")) {
-            // Nếu là chỉnh sửa, cần lấy userId và set vào user
+        // Chỉ xử lý cập nhật nếu action là "edit"
+        if ("edit".equalsIgnoreCase(action)) {
             String userIdParam = request.getParameter("userId");
+            if (userIdParam == null || userIdParam.trim().isEmpty()) {
+                request.setAttribute("message", "User ID không hợp lệ.");
+                request.setAttribute("user", user);
+                request.setAttribute("action", action);
+                RequestDispatcher dispatcher = request.getRequestDispatcher("AdminPage/UserDetail.jsp");
+                dispatcher.forward(request, response);
+                return;
+            }
             try {
-                int userId = Integer.parseInt(userIdParam);
+                int userId = Integer.parseInt(userIdParam.trim());
                 user.setUserId(userId);
                 boolean result = userDao.updateUser(user);
                 request.setAttribute("message", result ? "Cập nhật thành công" : "Cập nhật thất bại");
             } catch (NumberFormatException e) {
-                request.setAttribute("message", "UserId không hợp lệ");
+                request.setAttribute("message", "User ID không hợp lệ.");
             }
-        } else {
-            // Nếu là thêm mới
+        } else { // action "add"
             boolean result = userDao.addUser(user);
             request.setAttribute("message", result ? "Thêm mới thành công" : "Thêm mới thất bại");
         }
-        // Sau khi xử lý, chuyển về trang chi tiết của user vừa được cập nhật/ thêm mới
-        // Có thể chuyển về danh sách hoặc chi tiết, ở đây ta chuyển về chi tiết
-        RequestDispatcher dispatcher = request.getRequestDispatcher("AdminUserDetailController?action=view&userId=" + (user.getUserId()));
+        // Sau khi cập nhật, chuyển về chế độ xem chi tiết
+        // Lưu ý: Nếu cập nhật thành công, bạn có thể cần lấy lại thông tin user từ DB
+        RequestDispatcher dispatcher = request.getRequestDispatcher("AdminUserDetailController?action=view&userId=" + user.getUserId());
         dispatcher.forward(request, response);
     }
 

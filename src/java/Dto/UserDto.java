@@ -37,32 +37,6 @@ public class UserDto {
         this.status = status;
     }
 
-    // Constructor cho Userlist chung
-    public UserDto(int userId, String fullName, String gender, String email, String phoneNumber, String role, String address, String status) {
-        this.userId = userId;
-        this.fullName = fullName;
-        this.gender = gender;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.role = role;
-        this.address = address;
-        this.status = status;
-    }
-
-    // Constructor không có userId (dùng cho chức năng thêm user)
-    public UserDto(String avatarUrl, String fullName, String gender, String email,
-            String password, String phoneNumber, String role, String address, String status) {
-        this.avatarUrl = avatarUrl;
-        this.fullName = fullName;
-        this.gender = gender;
-        this.email = email;
-        this.password = password;
-        this.phoneNumber = phoneNumber;
-        this.role = role;
-        this.address = address;
-        this.status = status;
-    }
-
     // Phương thức để cập nhật thông tin (sửa) user dựa trên một đối tượng mới
     public void updateUser(UserDto newInfo) {
         // Lưu ý: userId không được thay đổi

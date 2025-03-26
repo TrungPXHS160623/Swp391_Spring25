@@ -42,11 +42,14 @@
                     <option value="">--Giới tính--</option>
                     <option value="Male" ${gender == 'Male' ? 'selected' : ''}>Male</option>
                     <option value="Female" ${gender == 'Female' ? 'selected' : ''}>Female</option>
+                    <option value="Other" ${gender == 'Other' ? 'selected' : ''}>Other</option>
                 </select>
                 <select name="role" class="form-select">
                     <option value="">--Vai trò--</option>
                     <option value="Admin" ${role == 'Admin' ? 'selected' : ''}>Admin</option>
                     <option value="User" ${role == 'User' ? 'selected' : ''}>User</option>
+                    <option value="Seller" ${role == 'Seller' ? 'selected' : ''}>Seller</option>
+                    <option value="Marketing" ${role == 'Marketing' ? 'selected' : ''}>Marketing</option>
                 </select>
                 <select name="status" class="form-select">
                     <option value="">--Trạng thái--</option>
@@ -60,7 +63,7 @@
                     <option value="address" ${sortField == 'address' ? 'selected' : ''}>Address</option>
                     <option value="email" ${sortField == 'email' ? 'selected' : ''}>Email</option>
                     <option value="phone_number" ${sortField == 'phone_number' ? 'selected' : ''}>Phone</option>
-                    <option value="role_name" ${sortField == 'role_name' ? 'selected' : ''}>Role</option>
+                    <option value="role" ${sortField == 'role' ? 'selected' : ''}>Role</option>
                     <option value="status" ${sortField == 'status' ? 'selected' : ''}>Status</option>
                 </select>
                 <select name="sortDirection" class="form-select">
