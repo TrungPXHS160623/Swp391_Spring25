@@ -79,6 +79,7 @@
                     <tr>
                         <th>Id</th>
                         <th>Thumbnail</th>
+                        <th>Title</th>
                         <th>Category</th>
                         <th>List Price</th>
                         <th>Sale Price</th>
@@ -98,6 +99,7 @@
                                             <img src="${product.primaryImageUrl}" class="thumbnail" alt="${product.productName}">
                                         </c:if>
                                     </td>
+                                    <td>${product.productName}</td>
                                     <td>${product.category}</td>
                                     <td>${product.price}</td>
                                     <td>${product.discountPrice}</td>
@@ -106,8 +108,14 @@
                                     <td>
                                         <a href="AdminProductDetailController?action=view&productId=${product.productId}" class="btn btn-info btn-sm">View</a>
                                         <a href="AdminProductDetailController?action=edit&productId=${product.productId}" class="btn btn-warning btn-sm">Edit</a>
-                                        <a href="ProductHideController?action=hide&productId=${product.productId}" class="btn btn-danger btn-sm">Hide</a>
-                                        <!-- Nếu sản phẩm đang ẩn, hiển thị nút Show (ví dụ: nếu có flag hidden, hiển thị nút Show) -->
+                                        <c:choose>
+                                            <c:when test="${hiddenProducts != null && hiddenProducts.contains(product.productId)}">
+                                                <a href="ProductHideController?action=show&productId=${product.productId}" class="btn btn-success btn-sm">Show</a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a href="ProductHideController?action=hide&productId=${product.productId}" class="btn btn-danger btn-sm">Hide</a>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </td>
                                 </tr>
                             </c:forEach>
