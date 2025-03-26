@@ -99,7 +99,14 @@
                         <input type="number" step="0.01" class="form-control ${action eq 'view' ? 'read-only' : ''}" name="discountPrice" id="discountPrice" value="${product.discountPrice}" ${action eq 'view' ? 'readonly' : ''}>
                     </div>
                 </div>
-                <!-- Có thể thêm các trường khác như stockQuantity, discountPercentage, soldQuantity, averageRating, subcategoryId -->
+                <div class="mb-3">
+                    <label class="form-label">Quantity:</label>
+                    <input type="number" class="form-control read-only" value="${product.stockQuantity}" readonly>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Featured:</label>
+                    <input type="text" class="form-control read-only" value="${product.featured}" readonly>
+                </div>
 
                 <!-- Media Section: Chỉ hiển thị ở chế độ add/edit -->
                 <c:if test="${action ne 'view'}">

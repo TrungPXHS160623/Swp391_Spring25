@@ -270,6 +270,14 @@ public class AdminProductDao {
             stmt.setDouble(10, product.getAverageRating());
             stmt.setInt(11, product.getProductId());
 
+            double listPrice = product.getPrice();
+            double salePrice = product.getDiscountPrice();
+            double discountPercentage = 0;
+            if (listPrice > 0) {
+                discountPercentage = ((listPrice - salePrice) / listPrice) * 100;
+            }
+            product.setDiscountPercentage(discountPercentage);
+
             int affected = stmt.executeUpdate();
             return affected > 0;
         } catch (SQLException e) {
@@ -308,6 +316,15 @@ public class AdminProductDao {
                     return false;
                 }
             }
+
+            double listPrice = product.getPrice();
+            double salePrice = product.getDiscountPrice();
+            double discountPercentage = 0;
+            if (listPrice > 0) {
+                discountPercentage = ((listPrice - salePrice) / listPrice) * 100;
+            }
+            product.setDiscountPercentage(discountPercentage);
+
             return true;
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Lỗi SQL khi thêm sản phẩm", e);
