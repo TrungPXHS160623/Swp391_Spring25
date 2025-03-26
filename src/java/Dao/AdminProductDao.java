@@ -40,12 +40,12 @@ public class AdminProductDao {
             String sortField, String sortDirection, int page, int pageSize) {
         List<AdminProductDto> list = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
-        sql.append("SELECT p.product_id, p.product_name, p.description, p.price, p.stockQuantity, p.subcategoryId, ");
-        sql.append("p.created_at, p.updated_at, p.discountPrice, p.discountPercentage, p.soldQuantity, p.averageRating, ");
+        sql.append("SELECT p.product_id, p.product_name, p.description, p.price, p.stock_quantity, p.subcategory_id, ");
+        sql.append("p.created_at, p.updated_at, p.discount_price, p.discount_percentage, p.sold_quantity, p.average_rating, ");
         sql.append("pi.image_url, sc.subcategory_name ");
         sql.append("FROM Products p ");
-        sql.append("LEFT JOIN ProductImage pi ON p.product_id = pi.product_id AND pi.is_primary = 1 ");
-        sql.append("LEFT JOIN SubCategories sc ON p.subcategoryId = sc.subcategory_id ");
+        sql.append("LEFT JOIN ProductImages pi ON p.product_id = pi.product_id AND pi.is_primary = 1 ");
+        sql.append("LEFT JOIN SubCategories sc ON p.subcategory_id = sc.subcategory_id ");
         sql.append("WHERE 1=1 ");
 
         // Tìm kiếm theo product_name
@@ -59,17 +59,17 @@ public class AdminProductDao {
         // Lọc theo featured: nếu "Yes" thì soldQuantity>=50 AND averageRating>4, nếu "No" thì (soldQuantity<50 OR averageRating<=4)
         if (featured != null && !featured.trim().isEmpty()) {
             if ("Yes".equalsIgnoreCase(featured)) {
-                sql.append("AND p.soldQuantity >= 50 AND p.averageRating > 4 ");
+                sql.append("AND p.sold_quantity >= 50 AND p.average_rating > 4 ");
             } else if ("No".equalsIgnoreCase(featured)) {
-                sql.append("AND (p.soldQuantity < 50 OR p.averageRating <= 4) ");
+                sql.append("AND (p.sold_quantity < 50 OR p.average_rating <= 4) ");
             }
         }
         // Lọc theo status: nếu "Sale" thì stockQuantity>0, nếu "Soldout" thì stockQuantity<=0
         if (status != null && !status.trim().isEmpty()) {
             if ("Sale".equalsIgnoreCase(status)) {
-                sql.append("AND p.stockQuantity > 0 ");
+                sql.append("AND p.stock_quantity > 0 ");
             } else if ("Soldout".equalsIgnoreCase(status)) {
-                sql.append("AND p.stockQuantity <= 0 ");
+                sql.append("AND p.stock_quantity <= 0 ");
             }
         }
 
@@ -87,11 +87,11 @@ public class AdminProductDao {
                     sortField = "p.price";
                     break;
                 case "SalePrice":
-                    sortField = "p.discountPrice";
+                    sortField = "p.discount_price";
                     break;
                 case "featured":
                     // Sắp xếp theo soldQuantity (giả sử: nhiều bán hơn -> được đánh dấu featured)
-                    sortField = "p.soldQuantity";
+                    sortField = "p.sold_quantity";
                     break;
                 case "status":
                     sortField = "p.stockQuantity";
@@ -135,14 +135,14 @@ public class AdminProductDao {
                     dto.setProductName(rs.getString("product_name"));
                     dto.setDescription(rs.getString("description"));
                     dto.setPrice(rs.getDouble("price"));
-                    dto.setStockQuantity(rs.getInt("stockQuantity"));
-                    dto.setSubcategoryId(rs.getInt("subcategoryId"));
+                    dto.setStockQuantity(rs.getInt("stock_quantity"));
+                    dto.setSubcategoryId(rs.getInt("subcategory_id"));
                     dto.setCreatedAt(rs.getTimestamp("created_at"));
                     dto.setUpdatedAt(rs.getTimestamp("updated_at"));
-                    dto.setDiscountPrice(rs.getDouble("discountPrice"));
-                    dto.setDiscountPercentage(rs.getDouble("discountPercentage"));
-                    dto.setSoldQuantity(rs.getInt("soldQuantity"));
-                    dto.setAverageRating(rs.getDouble("averageRating"));
+                    dto.setDiscountPrice(rs.getDouble("discount_price"));
+                    dto.setDiscountPercentage(rs.getDouble("discount_percentage"));
+                    dto.setSoldQuantity(rs.getInt("sold_quantity"));
+                    dto.setAverageRating(rs.getDouble("average_rating"));
                     dto.setPrimaryImageUrl(rs.getString("image_url"));
                     dto.setCategory(rs.getString("subcategory_name"));
                     // Tính toán các trường derived
@@ -163,19 +163,44 @@ public class AdminProductDao {
     }
 
     // Các phương thức riêng biệt
+    // Phương thức tìm kiếm Sản Phẩm
     public List<AdminProductDto> searchProductList(String keyword, int page, int pageSize) {
         return getProductListDynamic(keyword, "", "", "", "Title", "ASC", page, pageSize);
     }
 
+    // Phương thức Lọc Sản Phẩm
     public List<AdminProductDto> filterProductList(String category, String featured, String status, int page, int pageSize) {
         return getProductListDynamic("", category, featured, status, "Title", "ASC", page, pageSize);
     }
 
+    // Phương thức sắp xếp Sản Phẩm
     public List<AdminProductDto> sortProductList(String sortField, String sortDirection, int page, int pageSize) {
         return getProductListDynamic("", "", "", "", sortField, sortDirection, page, pageSize);
     }
 
+    // Phương thức goi tất cả sản phẩm
     public List<AdminProductDto> getAllProductList(int page, int pageSize) {
         return getProductListDynamic("", "", "", "", "product_id", "ASC", page, pageSize);
+    }
+
+    public static void main(String[] args) {
+        AdminProductDao dao = new AdminProductDao();
+        int page = 1;
+        int pageSize = 10; // Số lượng sản phẩm mỗi trang, thay đổi nếu cần
+
+        // Gọi phương thức getAllProductList để lấy danh sách sản phẩm
+        List<AdminProductDto> productList = dao.getAllProductList(page, pageSize);
+
+        // In ra thông tin các sản phẩm để kiểm tra
+        System.out.println("----- Testing getAllProductList -----");
+        if (productList.isEmpty()) {
+            System.out.println("Không tìm thấy sản phẩm nào.");
+        } else {
+            for (AdminProductDto product : productList) {
+                // Có thể gọi computeDerivedFields() nếu DAO chưa tự tính toán
+                product.computeDerivedFields();
+                System.out.println(product);
+            }
+        }
     }
 }
