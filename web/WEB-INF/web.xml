@@ -36,6 +36,10 @@
         <servlet-name>ProductHideController</servlet-name>
         <servlet-class>Controller.ProductHideController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AdminProductDetailController</servlet-name>
+        <servlet-class>Controller.AdminProductDetailController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginController</servlet-name>
         <url-pattern>/logincontroller</url-pattern>
@@ -119,5 +123,9 @@
     <servlet-mapping>
         <servlet-name>ProductHideController</servlet-name>
         <url-pattern>/ProductHideController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AdminProductDetailController</servlet-name>
+        <url-pattern>/AdminProductDetailController</url-pattern>
     </servlet-mapping>
 </web-app>
