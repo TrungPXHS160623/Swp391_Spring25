@@ -18,8 +18,8 @@
                 justify-content: center;
                 gap: 20px;
                 flex-wrap: wrap;
-                
-                
+
+
             }
 
             .product-item {
@@ -28,7 +28,7 @@
                 text-align: center;
                 width: 250px; /* Điều chỉnh độ rộng */
                 background-color: #ffffff; /* Màu trắng */
-                
+
             }
 
             .product-image {
@@ -222,7 +222,12 @@ if (message != null) {
                         <img src="${product.imageUrl}" alt="${product.productName}" class="product-image">
 
                         <!-- Title ngay bên dưới ảnh, cùng độ rộng -->
-                        <div class="product-title">${product.productName}</div>
+                        <div class="product-title">
+                            <a href="${pageContext.request.contextPath}/ProductHomeDetailController?productId=${product.productId}">
+                                ${product.productName}
+                            </a>
+                        </div>
+
 
                         <div class="product-rating">
                             <c:forEach var="i" begin="1" end="${product.averageRating - (product.averageRating % 1)}">
