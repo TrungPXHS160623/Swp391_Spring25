@@ -44,6 +44,10 @@
         <servlet-name>ProductHomeDetailController</servlet-name>
         <servlet-class>Controller.ProductHomeDetailController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>OrderListController</servlet-name>
+        <servlet-class>Controller.OrderListController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginController</servlet-name>
         <url-pattern>/logincontroller</url-pattern>
@@ -135,5 +139,9 @@
     <servlet-mapping>
         <servlet-name>ProductHomeDetailController</servlet-name>
         <url-pattern>/ProductHomeDetailController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>OrderListController</servlet-name>
+        <url-pattern>/OrderListController</url-pattern>
     </servlet-mapping>
 </web-app>
