@@ -106,6 +106,7 @@ public class LoginController extends HttpServlet {
         HttpSession session = request.getSession();
         session.setAttribute("user", user);
         session.setAttribute("userId", user.getUser_id());
+        
 
         // Lấy số lượng sản phẩm trong giỏ hàng
         CartDetailDao cartDao = new CartDetailDao();
@@ -113,41 +114,45 @@ public class LoginController extends HttpServlet {
         session.setAttribute("cartCount", cartCount);
 
 
-//            // Nếu chọn "Remember Me", lưu email vào cookie
-//            if ("on".equals(rememberMe)) {
-//                Cookie cookie = new Cookie("rememberedEmail", email);
-//                cookie.setMaxAge(7 * 24 * 60 * 60); // 7 ngày
-//                response.addCookie(cookie);
-//            } else {
-//                Cookie cookie = new Cookie("rememberedEmail", "");
-//                cookie.setMaxAge(0);
-//                response.addCookie(cookie);
-//            }
+            // Nếu chọn "Remember Me", lưu email vào cookie
+            if ("on".equals(rememberMe)) {
+                Cookie cookie = new Cookie("rememberedEmail", email);
+                cookie.setMaxAge(7 * 24 * 60 * 60); // 7 ngày
+                response.addCookie(cookie);
+            } else {
+                Cookie cookie = new Cookie("rememberedEmail", "");
+                cookie.setMaxAge(0);
+                response.addCookie(cookie);
+            }
+
+            // Redirect based on user role
+            int roleId = user.getRole_id();
+            
+            if (roleId == 2) { // Customer role
+                response.sendRedirect(request.getContextPath() + "/UserPage/Home.jsp");
+                return;
+            } else if (roleId == 1 || roleId == 4) { // Admin or Marketing role
+                response.sendRedirect(request.getContextPath() + "/admin/customers");
+                return;
+            } else {
+                // Default redirect for any other role
+                response.sendRedirect(request.getContextPath() + "/UserPage/Home.jsp");
+                return;
+            }
+
+//        // Remember Me (lưu email vào cookie)
+//        if ("on".equals(rememberMe)) {
+//            Cookie cookie = new Cookie("rememberedEmail", email);
+//            cookie.setMaxAge(7 * 24 * 60 * 60);
+//            response.addCookie(cookie);
 //
-//            // Redirect based on user role
-//            int roleId = user.getRole_id();
-//            if (roleId == 2) { // Customer role
-//                response.sendRedirect(request.getContextPath() + "/UserPage/Home.jsp");
-//            } else if (roleId == 1 || roleId == 4) { // Admin or Marketing role
-//                response.sendRedirect(request.getContextPath() + "/admin/customers");
-//            } else {
-//                // Default redirect for any other role
-//                response.sendRedirect(request.getContextPath() + "/UserPage/Home.jsp");
-//            }
+//        } else {
+//            Cookie cookie = new Cookie("rememberedEmail", "");
+//            cookie.setMaxAge(0);
+//            response.addCookie(cookie);
+//        }
 
-        // Remember Me (lưu email vào cookie)
-        if ("on".equals(rememberMe)) {
-            Cookie cookie = new Cookie("rememberedEmail", email);
-            cookie.setMaxAge(7 * 24 * 60 * 60);
-            response.addCookie(cookie);
-
-        } else {
-            Cookie cookie = new Cookie("rememberedEmail", "");
-            cookie.setMaxAge(0);
-            response.addCookie(cookie);
-        }
-
-        response.sendRedirect(request.getContextPath() + "/UserPage/Home.jsp");
+       // response.sendRedirect(request.getContextPath() + "/UserPage/Home.jsp");
     } else {
         request.setAttribute("errorMessage", "Invalid email or password.");
         request.getRequestDispatcher("/UserPage/Login.jsp").forward(request, response);
