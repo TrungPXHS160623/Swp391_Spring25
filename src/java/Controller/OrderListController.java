@@ -6,14 +6,16 @@ package Controller;
 
 import Dao.OrderListDao;
 import Dto.OrderListDto;
-import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.*;
 
 /**
  *
@@ -61,13 +63,64 @@ public class OrderListController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Gọi DAO để lấy danh sách Orders
-        List<OrderListDto> orderList = orderDao.getAllOrderList();
+        // Lấy tham số từ request
+        String fromDateParam = request.getParameter("fromDate");
+        String toDateParam = request.getParameter("toDate");
+        String status = request.getParameter("status") != null ? request.getParameter("status").trim() : "";
+        String searchKey = request.getParameter("searchKey") != null ? request.getParameter("searchKey").trim() : "";
+
+        // Chuyển sang Timestamp
+        Timestamp fromDate = null, toDate = null;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            if (fromDateParam != null && !fromDateParam.isEmpty()) {
+                fromDate = new Timestamp(sdf.parse(fromDateParam).getTime());
+            }
+            if (toDateParam != null && !toDateParam.isEmpty()) {
+                // Để bao gồm cả ngày toDate, ta có thể cộng thêm 1 ngày
+                toDate = new Timestamp(sdf.parse(toDateParam).getTime() + 24 * 60 * 60 * 1000);
+            }
+        } catch (ParseException e) {
+            // bỏ qua hoặc set null
+        }
+
+        // Phân trang
+        int page = 1;
+        int pageSize = 5;
+        String pageParam = request.getParameter("page");
+        String pageSizeParam = request.getParameter("pageSize");
+        if (pageParam != null && !pageParam.isEmpty()) {
+            try {
+                page = Integer.parseInt(pageParam);
+            } catch (NumberFormatException e) {
+            }
+        }
+        if (pageSizeParam != null && !pageSizeParam.isEmpty()) {
+            try {
+                pageSize = Integer.parseInt(pageSizeParam);
+            } catch (NumberFormatException e) {
+            }
+        }
+
+        // Gọi DAO
+        List<OrderListDto> orderList = orderDao.getOrderListDynamic(fromDate, toDate, status, searchKey, page, pageSize);
+
+        // Tạm thời set totalCount = 50 (hoặc gọi hàm count)
+        int totalCount = 50;
+        int totalPages = (int) Math.ceil((double) totalCount / pageSize);
 
         // Đưa vào request attribute
         request.setAttribute("orderList", orderList);
+        request.setAttribute("currentPage", page);
+        request.setAttribute("pageSize", pageSize);
+        request.setAttribute("totalPages", totalPages);
 
-        // Forward sang JSP hiển thị
+        // Giữ lại giá trị filter, search
+        request.setAttribute("fromDate", fromDateParam);
+        request.setAttribute("toDate", toDateParam);
+        request.setAttribute("status", status);
+        request.setAttribute("searchKey", searchKey);
+
         RequestDispatcher dispatcher = request.getRequestDispatcher("AdminPage/OrderList.jsp");
         dispatcher.forward(request, response);
     }
