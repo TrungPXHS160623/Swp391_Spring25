@@ -7,6 +7,7 @@ package Controller;
 
 import Dao.PostDao;
 import Dto.PostDto;
+import Dto.PostDto2;
 import java.io.IOException;
 import java.util.List;
 import jakarta.servlet.ServletException;
@@ -110,7 +111,7 @@ public class PostListController extends HttpServlet {
             }
             
             // Get posts according to filters and pagination
-            List<PostDto> posts = postDao.getPosts(page, pageSize, categoryId, authorId, status, searchTitle, sortBy, sortOrder);
+            List<PostDto2> posts = postDao.getPosts(page, pageSize, categoryId, authorId, status, searchTitle, sortBy, sortOrder);
             
             // Set attributes for the JSP
             request.setAttribute("posts", posts);

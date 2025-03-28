@@ -1,4 +1,5 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -197,7 +198,8 @@
                 <input type="submit" value="Login">
             </form>
             <a href="ResetPassword.jsp">Forgot password?</a>
-            <a href="Register.jsp">Register a new account</a>
+            <a href="${pageContext.request.contextPath}/UserPage/Register.jsp">Register a new account</a>
+
         </div>
     </body>
 </html>

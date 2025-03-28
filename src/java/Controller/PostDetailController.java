@@ -1,7 +1,9 @@
+
 package Controller;
 
 import Dao.PostDao;
 import Dto.PostDto;
+import Dto.PostDto2;
 import Entity.CategoryPost;
 import Entity.Post_2;
 import java.io.File;
@@ -51,7 +53,7 @@ public class PostDetailController extends HttpServlet {
                 int postId = Integer.parseInt(request.getParameter("id"));
                 
                 // Get post details
-                PostDto post = postDao.getPostById(postId);
+                PostDto2 post = postDao.getPostById(postId);
                 
                 if (post != null) {
                     // Get categories for dropdown

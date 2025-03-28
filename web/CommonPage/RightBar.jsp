@@ -1,5 +1,5 @@
 
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -8,7 +8,7 @@
         <title>RightBar</title>
         <style>
             .right-bar {
-                width: 250px;
+                width: 330px;
                 padding: 15px;
                 background: #f8f9fa;
                 border-radius: 8px;
@@ -85,7 +85,12 @@
                 <div class="product-card">
                     <img src="${newestProduct.imageUrl}" alt="${newestProduct.description}">
                     <div class="product-title">${newestProduct.productName}</div>
-                    <div class="product-info">Giá: <span class="product-price">${newestProduct.price} VND</span></div>
+                    <div class="product-info">
+    Giá: <span class="product-price">
+        <fmt:formatNumber value="${newestProduct.price}" type="number" groupingUsed="true"/> VND
+    </span>
+</div>
+
                     <button class="add-to-cart">Thêm vào giỏ</button>
                 </div>
             </c:if>
@@ -96,9 +101,14 @@
                     <img src="${bestDiscountedProduct.imageUrl}" alt="${bestDiscountedProduct.description}">
                     <div class="product-title">${bestDiscountedProduct.productName}</div>
                     <div class="product-info">
-                        Giá gốc: <span class="product-price">${bestDiscountedProduct.price} VND</span><br>
-                        Giá giảm: <span class="discount-price">${bestDiscountedProduct.discountPrice} VND</span>
-                    </div>
+    Giá gốc: <span class="product-price">
+        <fmt:formatNumber value="${bestDiscountedProduct.price}" type="number" groupingUsed="true"/> VND
+    </span><br>
+    Giá giảm: <span class="discount-price">
+        <fmt:formatNumber value="${bestDiscountedProduct.discountPrice}" type="number" groupingUsed="true"/> VND
+    </span>
+</div>
+
                     <button class="add-to-cart">Thêm vào giỏ</button>
                 </div>
             </c:if>

@@ -79,7 +79,7 @@ public class CartDetailDao {
         
         return cartItems;
     }
-
+    //update số lượng
     public void updateQuantity(int cartId, int productId, int quantity) {
         String sql = "UPDATE Cart_Items SET quantity = ? WHERE cart_id = ? AND product_id = ?";
         try (Connection conn = new DBContext().getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -93,7 +93,7 @@ public class CartDetailDao {
             LOGGER.log(Level.SEVERE, "Lỗi kết nối CSDL", e);
         }
     }
-
+    //thêm hoặc update cart
     public boolean addToCart(int userId, int productId) {
         String checkSql = "SELECT cart_item_id, quantity FROM Cart_Items WHERE cart_id = (SELECT cart_id FROM Cart WHERE user_id = ?) AND product_id = ?";
         String insertSql = "INSERT INTO Cart_Items (cart_id, product_id, quantity) VALUES ((SELECT cart_id FROM Cart WHERE user_id = ?), ?, 1)";
@@ -128,7 +128,7 @@ public class CartDetailDao {
             return false;
         }
     }
-
+   // lấy số lượng cart
     public int getCartItemCount(int userId) {
         String sql = "SELECT SUM(quantity) AS total FROM Cart_Items WHERE cart_id = (SELECT cart_id FROM Cart WHERE user_id = ?)";
 
@@ -147,7 +147,7 @@ public class CartDetailDao {
         }
         return 0;
     }
-
+//xoá cart
     public boolean removeFromCart(int cartItemId) {
         String sql = "DELETE FROM Cart_Items WHERE cart_item_id = ?";
 
@@ -165,7 +165,7 @@ public class CartDetailDao {
             return false;
         }
     }
-
+// lấy sản phẩm trong cart
     public CartDetailDto getCartItem(int cartId, int productId) {
         String query = "SELECT ci.cart_item_id, ci.cart_id, ci.product_id, ci.quantity, "
                 + "p.product_name, p.price, p.discount_price, "

@@ -6,6 +6,7 @@ package Dao;
 
 import Context.DBContext;
 import Dto.PostDto;
+import Dto.PostDto2;
 import Entity.CategoryPost;
 import Entity.Post_2;
 import java.sql.Connection;
@@ -13,9 +14,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.sql.Timestamp;
 
 /**
  *
@@ -24,9 +25,9 @@ import java.util.List;
 public class PostDao {
 
     // Get all posts with pagination, filtering, and sorting
-    public List<PostDto> getPosts(int pageNumber, int pageSize, String categoryId, String authorId,
+    public List<PostDto2> getPosts(int pageNumber, int pageSize, String categoryId, String authorId,
             String status, String searchTitle, String sortBy, String sortOrder) throws Exception {
-        List<PostDto> posts = new ArrayList<>();
+        List<PostDto2> posts = new ArrayList<>();
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -115,7 +116,7 @@ public class PostDao {
             rs = stmt.executeQuery();
 
             while (rs.next()) {
-                PostDto post = new PostDto();
+                PostDto2 post = new PostDto2();
                 post.setPostId(rs.getInt("post_id"));
                 post.setTitle(rs.getString("title"));
                 post.setContent(rs.getString("content"));
@@ -215,11 +216,11 @@ public class PostDao {
     }
 
     // Get post by ID
-    public PostDto getPostById(int postId) throws Exception {
+    public PostDto2 getPostById(int postId) throws Exception {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        PostDto post = null;
+        PostDto2 post = null;
 
         try {
             conn = new DBContext().getConnection();
@@ -237,7 +238,7 @@ public class PostDao {
             rs = stmt.executeQuery();
 
             if (rs.next()) {
-                post = new PostDto();
+                post = new PostDto2();
                 post.setPostId(rs.getInt("post_id"));
                 post.setTitle(rs.getString("title"));
                 post.setContent(rs.getString("content"));
