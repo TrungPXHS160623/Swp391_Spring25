@@ -256,7 +256,10 @@
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h2>Customer Management</h2>
                         <div>
-                            <a href="${pageContext.request.contextPath}/admin/feedbacks" class="btn btn-info me-2">
+                            <a href="${pageContext.request.contextPath}/PostListController" class="btn btn-primary me-2">
+                                <i class="fas fa-file-alt me-1"></i> Post Management
+                            </a>
+                            <a href="${pageContext.request.contextPath}/FeedbackList" class="btn btn-info me-2">
                                 <i class="fas fa-comments me-1"></i> Feedback Management
                             </a>
                             <a href="${pageContext.request.contextPath}/admin/customers/add" class="btn btn-primary">

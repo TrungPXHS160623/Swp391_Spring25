@@ -121,7 +121,16 @@ public class LoginController extends HttpServlet {
                 response.addCookie(cookie);
             }
 
-            response.sendRedirect(request.getContextPath() + "/UserPage/Home.jsp");
+            // Redirect based on user role
+            int roleId = user.getRole_id();
+            if (roleId == 2) { // Customer role
+                response.sendRedirect(request.getContextPath() + "/UserPage/Home.jsp");
+            } else if (roleId == 1 || roleId == 4) { // Admin or Marketing role
+                response.sendRedirect(request.getContextPath() + "/admin/customers");
+            } else {
+                // Default redirect for any other role
+                response.sendRedirect(request.getContextPath() + "/UserPage/Home.jsp");
+            }
         } else {
             request.setAttribute("errorMessage", "Invalid email or password.");
             request.getRequestDispatcher("/UserPage/Login.jsp").forward(request, response);

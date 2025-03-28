@@ -221,6 +221,37 @@ public class CartContactDao {
         }
     }
     
+    
+    
+      public CartContactDto getUserContactInfo(int userId) {
+        CartContactDto contactInfo = new CartContactDto();
+        
+        String sql = "SELECT full_name, gender, email, phone_number as phone, address FROM Users WHERE user_id = ?";
+        
+        try (Connection conn = new DBContext().getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setInt(1, userId);
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    contactInfo.setFullName(rs.getString("full_name"));
+                    contactInfo.setGender(rs.getString("gender"));
+                    contactInfo.setEmail(rs.getString("email"));
+                    contactInfo.setPhone(rs.getString("phone"));
+                    contactInfo.setAddress(rs.getString("address"));
+                    // Notes would be empty as it's not a user property
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error querying user contact info", e);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Database connection error", e);
+        }
+        
+        return contactInfo;
+    }
+    
     /**
      * Gets order details by order ID
      */
@@ -259,5 +290,9 @@ public class CartContactDao {
         }
         
         return orderDetails;
+    }
+
+    public CartContactDto getUserContactInfo(Integer userId) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }
