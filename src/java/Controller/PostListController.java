@@ -32,114 +32,114 @@ public class PostListController extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        
-        // Check if user is logged in
-        HttpSession session = request.getSession();
-        Entity.User loggedInUser = (Entity.User) session.getAttribute("user");
-        
-        // If not logged in, redirect to login page
-        if (loggedInUser == null) {
-            // Store the original requested URL to redirect back after login
-            session.setAttribute("redirectURL", request.getRequestURL().toString() + (request.getQueryString() != null ? "?" + request.getQueryString() : ""));
-            response.sendRedirect(request.getContextPath() + "/logincontroller");
-            return;
-        }
-        
-        try {
-            // Get parameters for pagination, filtering, and sorting
-            String pageStr = request.getParameter("page");
-            int page = 1;
-            try {
-                if (pageStr != null && !pageStr.isEmpty()) {
-                    page = Math.max(1, Integer.parseInt(pageStr)); // Ensure page is at least 1
-                }
-            } catch (NumberFormatException e) {
-                // Default to page 1 if invalid
-            }
-            
-            String pageSizeStr = request.getParameter("pageSize");
-            int pageSize = 5; // Default
-            try {
-                if (pageSizeStr != null && !pageSizeStr.isEmpty()) {
-                    int requestedPageSize = Integer.parseInt(pageSizeStr);
-                    // Ensure page size is positive
-                    pageSize = Math.max(1, requestedPageSize);
-                }
-            } catch (NumberFormatException e) {
-                // Default to 10 if invalid
-            }
-            
-            // Get filter parameters
-            String categoryId = request.getParameter("categoryId");
-            String authorId = request.getParameter("authorId");
-            String status = request.getParameter("status");
-            String searchTitle = request.getParameter("searchTitle");
-            
-            // Get sorting parameters
-            String sortBy = request.getParameter("sortBy");
-            String sortOrder = request.getParameter("sortOrder");
-            
-            // Initialize DAO
-            PostDao postDao = new PostDao();
-            
-            // Get categories and authors for filter dropdowns - Do this before any filtering
-            List<Entity.CategoryPost> categories = postDao.getAllCategories();
-            List<Entity.User> authors = postDao.getAllAuthors();
-            
-            // Set dropdown data
-            request.setAttribute("categories", categories);
-            request.setAttribute("authors", authors);
-            
-            // Handle category filter as integer if not empty
-            if (categoryId != null && !categoryId.isEmpty()) {
-                try {
-                    Integer.parseInt(categoryId); // Validate it's a valid integer
-                } catch (NumberFormatException e) {
-                    categoryId = ""; // Reset if not a valid integer
-                }
-            }
-            
-            // Get total count for pagination before applying pagination to validate current page
-            int totalPosts = postDao.countPosts(categoryId, authorId, status, searchTitle);
-            int totalPages = (int) Math.ceil((double) totalPosts / pageSize);
-            
-            // Validate page number against total pages
-            if (totalPages > 0 && page > totalPages) {
-                page = totalPages;
-            }
-            
-            // Get posts according to filters and pagination
-            List<PostDto> posts = postDao.getPosts(page, pageSize, categoryId, authorId, status, searchTitle, sortBy, sortOrder);
-            
-            // Set attributes for the JSP
-            request.setAttribute("posts", posts);
-            request.setAttribute("currentPage", page);
-            request.setAttribute("pageSize", pageSize);
-            request.setAttribute("totalPages", totalPages);
-            request.setAttribute("totalPosts", totalPosts);
-            
-            // Set filter attributes
-            request.setAttribute("categoryId", categoryId);
-            request.setAttribute("authorId", authorId);
-            request.setAttribute("status", status);
-            request.setAttribute("searchTitle", searchTitle);
-            
-            // Set sorting attributes
-            request.setAttribute("sortBy", sortBy);
-            request.setAttribute("sortOrder", sortOrder);
-            
-            // Forward to the JSP page
-            request.getRequestDispatcher("/AdminPage/PostList.jsp").forward(request, response);
-            
-        } catch (Exception e) {
-            // Log the exception
-            e.printStackTrace();
-            
-            // Set error message
-            request.setAttribute("errorMessage", "An error occurred: " + e.getMessage());
-            request.getRequestDispatcher("/AdminPage/error.jsp").forward(request, response);
-        }
+//        response.setContentType("text/html;charset=UTF-8");
+//        
+//        // Check if user is logged in
+//        HttpSession session = request.getSession();
+//        Entity.User loggedInUser = (Entity.User) session.getAttribute("user");
+//        
+//        // If not logged in, redirect to login page
+//        if (loggedInUser == null) {
+//            // Store the original requested URL to redirect back after login
+//            session.setAttribute("redirectURL", request.getRequestURL().toString() + (request.getQueryString() != null ? "?" + request.getQueryString() : ""));
+//            response.sendRedirect(request.getContextPath() + "/logincontroller");
+//            return;
+//        }
+//        
+//        try {
+//            // Get parameters for pagination, filtering, and sorting
+//            String pageStr = request.getParameter("page");
+//            int page = 1;
+//            try {
+//                if (pageStr != null && !pageStr.isEmpty()) {
+//                    page = Math.max(1, Integer.parseInt(pageStr)); // Ensure page is at least 1
+//                }
+//            } catch (NumberFormatException e) {
+//                // Default to page 1 if invalid
+//            }
+//            
+//            String pageSizeStr = request.getParameter("pageSize");
+//            int pageSize = 5; // Default
+//            try {
+//                if (pageSizeStr != null && !pageSizeStr.isEmpty()) {
+//                    int requestedPageSize = Integer.parseInt(pageSizeStr);
+//                    // Ensure page size is positive
+//                    pageSize = Math.max(1, requestedPageSize);
+//                }
+//            } catch (NumberFormatException e) {
+//                // Default to 10 if invalid
+//            }
+//            
+//            // Get filter parameters
+//            String categoryId = request.getParameter("categoryId");
+//            String authorId = request.getParameter("authorId");
+//            String status = request.getParameter("status");
+//            String searchTitle = request.getParameter("searchTitle");
+//            
+//            // Get sorting parameters
+//            String sortBy = request.getParameter("sortBy");
+//            String sortOrder = request.getParameter("sortOrder");
+//            
+//            // Initialize DAO
+//            PostDao postDao = new PostDao();
+//            
+//            // Get categories and authors for filter dropdowns - Do this before any filtering
+//            List<Entity.CategoryPost> categories = postDao.getAllCategories();
+//            List<Entity.User> authors = postDao.getAllAuthors();
+//            
+//            // Set dropdown data
+//            request.setAttribute("categories", categories);
+//            request.setAttribute("authors", authors);
+//            
+//            // Handle category filter as integer if not empty
+//            if (categoryId != null && !categoryId.isEmpty()) {
+//                try {
+//                    Integer.parseInt(categoryId); // Validate it's a valid integer
+//                } catch (NumberFormatException e) {
+//                    categoryId = ""; // Reset if not a valid integer
+//                }
+//            }
+//            
+//            // Get total count for pagination before applying pagination to validate current page
+//            int totalPosts = postDao.countPosts(categoryId, authorId, status, searchTitle);
+//            int totalPages = (int) Math.ceil((double) totalPosts / pageSize);
+//            
+//            // Validate page number against total pages
+//            if (totalPages > 0 && page > totalPages) {
+//                page = totalPages;
+//            }
+//            
+//            // Get posts according to filters and pagination
+//            List<PostDto> posts = postDao.getPosts(page, pageSize, categoryId, authorId, status, searchTitle, sortBy, sortOrder);
+//            
+//            // Set attributes for the JSP
+//            request.setAttribute("posts", posts);
+//            request.setAttribute("currentPage", page);
+//            request.setAttribute("pageSize", pageSize);
+//            request.setAttribute("totalPages", totalPages);
+//            request.setAttribute("totalPosts", totalPosts);
+//            
+//            // Set filter attributes
+//            request.setAttribute("categoryId", categoryId);
+//            request.setAttribute("authorId", authorId);
+//            request.setAttribute("status", status);
+//            request.setAttribute("searchTitle", searchTitle);
+//            
+//            // Set sorting attributes
+//            request.setAttribute("sortBy", sortBy);
+//            request.setAttribute("sortOrder", sortOrder);
+//            
+//            // Forward to the JSP page
+//            request.getRequestDispatcher("/AdminPage/PostList.jsp").forward(request, response);
+//            
+//        } catch (Exception e) {
+//            // Log the exception
+//            e.printStackTrace();
+//            
+//            // Set error message
+//            request.setAttribute("errorMessage", "An error occurred: " + e.getMessage());
+//            request.getRequestDispatcher("/AdminPage/error.jsp").forward(request, response);
+//        }
     } 
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -166,50 +166,50 @@ public class PostListController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        // Check if user is logged in
-        HttpSession session = request.getSession();
-        Entity.User loggedInUser = (Entity.User) session.getAttribute("user");
-        
-        // If not logged in, redirect to login page
-        if (loggedInUser == null) {
-            session.setAttribute("errorMessage", "You must be logged in to perform this action.");
-            response.sendRedirect(request.getContextPath() + "/logincontroller");
-            return;
-        }
-        
-        String action = request.getParameter("action");
-        
-        try {
-            PostDao postDao = new PostDao();
-            
-            if ("updateStatus".equals(action)) {
-                // Get parameters
-                int postId = Integer.parseInt(request.getParameter("postId"));
-                boolean status = Boolean.parseBoolean(request.getParameter("status"));
-                
-                // Update post status
-                boolean success = postDao.updatePostStatus(postId, status);
-                
-                // Set success/error message
-                if (success) {
-                    request.getSession().setAttribute("successMessage", "Post status updated successfully!");
-                } else {
-                    request.getSession().setAttribute("errorMessage", "Failed to update post status.");
-                }
-                
-                // Redirect back to post list without filters but keep pagination
-                response.sendRedirect(request.getContextPath() + "/PostListController" + buildMinimalQueryString(request));
-                return;
-            }
-            
-            // If no specific action, process as a normal request
-            processRequest(request, response);
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-            request.getSession().setAttribute("errorMessage", "An error occurred: " + e.getMessage());
-            response.sendRedirect(request.getContextPath() + "/PostListController");
-        }
+//        // Check if user is logged in
+//        HttpSession session = request.getSession();
+//        Entity.User loggedInUser = (Entity.User) session.getAttribute("user");
+//        
+//        // If not logged in, redirect to login page
+//        if (loggedInUser == null) {
+//            session.setAttribute("errorMessage", "You must be logged in to perform this action.");
+//            response.sendRedirect(request.getContextPath() + "/logincontroller");
+//            return;
+//        }
+//        
+//        String action = request.getParameter("action");
+//        
+//        try {
+//            PostDao postDao = new PostDao();
+//            
+//            if ("updateStatus".equals(action)) {
+//                // Get parameters
+//                int postId = Integer.parseInt(request.getParameter("postId"));
+//                boolean status = Boolean.parseBoolean(request.getParameter("status"));
+//                
+//                // Update post status
+//                boolean success = postDao.updatePostStatus(postId, status);
+//                
+//                // Set success/error message
+//                if (success) {
+//                    request.getSession().setAttribute("successMessage", "Post status updated successfully!");
+//                } else {
+//                    request.getSession().setAttribute("errorMessage", "Failed to update post status.");
+//                }
+//                
+//                // Redirect back to post list without filters but keep pagination
+//                response.sendRedirect(request.getContextPath() + "/PostListController" + buildMinimalQueryString(request));
+//                return;
+//            }
+//            
+//            // If no specific action, process as a normal request
+//            processRequest(request, response);
+//            
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            request.getSession().setAttribute("errorMessage", "An error occurred: " + e.getMessage());
+//            response.sendRedirect(request.getContextPath() + "/PostListController");
+//        }
     }
 
     // Helper method to preserve only pagination parameters when redirecting

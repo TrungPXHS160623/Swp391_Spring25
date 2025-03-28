@@ -127,6 +127,7 @@ public class RegisterController extends HttpServlet {
 
         // Mã hóa mật khẩu trước khi lưu
         String hashedPassword = HashUtil.hashPassword(password);
+        
 
         // Tạo đối tượng User
         User user = new User(fullName, gender, email, hashedPassword, phoneNumber, address, 2, true, false);

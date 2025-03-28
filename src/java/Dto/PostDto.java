@@ -4,43 +4,44 @@
  */
 package Dto;
 
-import java.sql.Timestamp;
+import Entity.Post;
+import Entity.PostMedia;
+import java.util.List;
 
 /**
  *
- * @author Admin
+ * @author LENOVO
  */
 public class PostDto {
+
     private int postId;
     private String title;
-    private String content;
-    private String thumbnailUrl;
-    private int userId;
-    private String authorName;
-    private int categoryId;
-    private String categoryName;
-    private boolean status; // Changed from String to boolean
-    private Timestamp createdAt;
+    private String content;    // Dành cho detail view
+    private String summary;    // Dành cho list view
+    private String dayUpdate;  // Ngày cập nhật dạng chuỗi (ví dụ: dd/MM/yyyy)
+    private String author;     // Tên tác giả (dành cho detail view)
+    private String mediaUrl;   // Đường dẫn ảnh chính (is_primary)
+    private String description;// Mô tả của ảnh (dành cho detail view)
+    private String category;   // Tên danh mục
+    // Nếu cần thêm danh sách media (nhiều hơn 1 ảnh), có thể thêm thuộc tính:
+    private List<PostMedia> mediaList;
 
     public PostDto() {
     }
 
-    public PostDto(int postId, String title, String content, String thumbnailUrl, 
-                  int userId, String authorName, int categoryId, String categoryName, 
-                  boolean status, Timestamp createdAt) {
+    public PostDto(int postId, String title, String content, String summary, String dayUpdate, String author, String mediaUrl, String description, String category, List<PostMedia> mediaList) {
         this.postId = postId;
         this.title = title;
         this.content = content;
-        this.thumbnailUrl = thumbnailUrl;
-        this.userId = userId;
-        this.authorName = authorName;
-        this.categoryId = categoryId;
-        this.categoryName = categoryName;
-        this.status = status;
-        this.createdAt = createdAt;
+        this.summary = summary;
+        this.dayUpdate = dayUpdate;
+        this.author = author;
+        this.mediaUrl = mediaUrl;
+        this.description = description;
+        this.category = category;
+        this.mediaList = mediaList;
     }
 
-    // Getters and setters
     public int getPostId() {
         return postId;
     }
@@ -65,67 +66,75 @@ public class PostDto {
         this.content = content;
     }
 
-    public String getThumbnailUrl() {
-        return thumbnailUrl;
+    public String getSummary() {
+        return summary;
     }
 
-    public void setThumbnailUrl(String thumbnailUrl) {
-        this.thumbnailUrl = thumbnailUrl;
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 
-    public int getUserId() {
-        return userId;
+    public String getDayUpdate() {
+        return dayUpdate;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setDayUpdate(String dayUpdate) {
+        this.dayUpdate = dayUpdate;
     }
 
-    public String getAuthorName() {
-        return authorName;
+    public String getAuthor() {
+        return author;
     }
 
-    public void setAuthorName(String authorName) {
-        this.authorName = authorName;
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
-    public int getCategoryId() {
-        return categoryId;
+    public String getMediaUrl() {
+        return mediaUrl;
     }
 
-    public void setCategoryId(int categoryId) {
-        this.categoryId = categoryId;
+    public void setMediaUrl(String mediaUrl) {
+        this.mediaUrl = mediaUrl;
     }
 
-    public String getCategoryName() {
-        return categoryName;
+    public String getDescription() {
+        return description;
     }
 
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public boolean isStatus() {
-        return status;
+    public String getCategory() {
+        return category;
     }
 
-    public void setStatus(boolean status) {
-        this.status = status;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
-    public Timestamp getCreatedAt() {
-        return createdAt;
+    public List<PostMedia> getMediaList() {
+        return mediaList;
     }
 
-    public void setCreatedAt(Timestamp createdAt) {
-        this.createdAt = createdAt;
+    public void setMediaList(List<PostMedia> mediaList) {
+        this.mediaList = mediaList;
     }
-    
-    // Helper method to get brief content (first 100 characters)
-    public String getBriefContent() {
-        if (content != null && content.length() > 100) {
-            return content.substring(0, 100) + "...";
-        }
-        return content;
+
+    @Override
+    public String toString() {
+        return "PostDto{"
+                + "postId=" + postId
+                + ", title='" + title + '\''
+                + ", content='" + content + '\''
+                + ", summary='" + summary + '\''
+                + ", dayUpdate='" + dayUpdate + '\''
+                + ", author='" + author + '\''
+                + ", mediaUrl='" + mediaUrl + '\''
+                + ", description='" + description + '\''
+                + ", category='" + category + '\''
+                + ", mediaList=" + mediaList
+                + '}';
     }
 }

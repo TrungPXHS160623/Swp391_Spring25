@@ -26,22 +26,23 @@
 
             .leftbar {
                 width: 20%;
-                background-color: #e9ecef;
+                background-color: #b3e0ff;
                 padding: 15px;
                 border-radius: 5px;
             }
 
             .main-content {
                 width: 60%;
-                background-color: white;
+                background-color: #ffee58;
                 padding: 20px;
                 border-radius: 5px;
                 box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+                background: linear-gradient(135deg, #007bff, #ffcc80);
             }
 
             .rightbar {
                 width: 20%;
-                background-color: #e9ecef;
+                background-color: #b3e0ff;
                 padding: 15px;
                 border-radius: 5px;
             }
@@ -84,9 +85,9 @@
                 <jsp:include page="/sliderinhomecontroller" />
                 <h2 class="section-title">Categories Section</h2>
                 <jsp:include page="/categoryinhomecontroller" />
-                <h2 class="section-title">Products Section</h2
+                <h2 class="section-title">Products Section</h2>
                 <jsp:include page="/productinhomecontroller" />
-                <h2 class="section-title">Blogs Section</h2
+                <h2 class="section-title">Blogs Section</h2>
                 <a href="ChangePassword.jsp" class="btn">Change Password</a>
 
                 <%

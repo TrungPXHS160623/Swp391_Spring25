@@ -137,8 +137,17 @@
 
             </form>
 
+
             <img src="${user.avatar_url != null ? user.avatar_url : 'default-avatar.png'}" 
                  alt="Avatar" style="width: 100px; height: 100px; border-radius: 50%;">
+
+            <br></br>
+
+            <button type="button" 
+                    style="background-color: #28a745; color: white; font-size: 18px; padding: 12px 24px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; margin-bottom: 20px;"
+                    onclick="window.location.href = '${pageContext.request.contextPath}/UserPage/ChangePassword.jsp'">
+                Change Password
+            </button>
 
 
 

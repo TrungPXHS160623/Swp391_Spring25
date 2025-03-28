@@ -12,6 +12,34 @@
         <servlet-name>MyOrderController</servlet-name>
         <servlet-class>Controller.MyOrderController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AdminUserListController</servlet-name>
+        <servlet-class>Controller.AdminUserListController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AdminUserDetailController</servlet-name>
+        <servlet-class>Controller.AdminUserDetailController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>BlogListController</servlet-name>
+        <servlet-class>Controller.BlogListController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>BlogDetailController</servlet-name>
+        <servlet-class>Controller.BlogDetailController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AdminProductListController</servlet-name>
+        <servlet-class>Controller.AdminProductListController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ProductHideController</servlet-name>
+        <servlet-class>Controller.ProductHideController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AdminProductDetailController</servlet-name>
+        <servlet-class>Controller.AdminProductDetailController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginController</servlet-name>
         <url-pattern>/logincontroller</url-pattern>
@@ -71,5 +99,33 @@
     <servlet-mapping>
         <servlet-name>MyOrderController</servlet-name>
         <url-pattern>/myordercontroller</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AdminUserListController</servlet-name>
+        <url-pattern>/AdminUserListController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AdminUserDetailController</servlet-name>
+        <url-pattern>/AdminUserDetailController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BlogListController</servlet-name>
+        <url-pattern>/BlogListController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BlogDetailController</servlet-name>
+        <url-pattern>/BlogDetailController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AdminProductListController</servlet-name>
+        <url-pattern>/AdminProductListController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ProductHideController</servlet-name>
+        <url-pattern>/ProductHideController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AdminProductDetailController</servlet-name>
+        <url-pattern>/AdminProductDetailController</url-pattern>
     </servlet-mapping>
 </web-app>

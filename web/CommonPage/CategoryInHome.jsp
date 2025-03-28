@@ -21,6 +21,8 @@
                 display: flex;
                 white-space: nowrap;
                 transition: transform 0.5s ease-in-out;
+                background: linear-gradient(135deg, #007bff, #ffcc80);
+                
             }
 
             .category-item {
@@ -30,12 +32,15 @@
                 border: 2px solid #000; /* Thêm border */
                 padding: 10px; /* Thêm khoảng cách giữa nội dung và border */
                 border-radius: 5px; /* Tùy chọn: bo tròn góc nếu bạn muốn */
+                
             }
 
             .category-item img {
                 width: 100%;
                 border-radius: 10px;
                 border-bottom: 2px solid #000; /* Border dưới ảnh */
+                background: linear-gradient(135deg, #007bff, #ffcc80);
+                
             }
             .category-item:last-child {
                 margin-right: 0;
