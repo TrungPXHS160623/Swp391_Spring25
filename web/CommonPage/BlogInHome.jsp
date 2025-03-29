@@ -52,7 +52,8 @@
                                         </div>
                                         <div class="card-footer">
                                             <small class="text-muted blog-meta">
-                                                Updated on ${blog.dayUpdate} | Category: ${blog.category}
+                                                By ${blog.author} | Updated on ${blog.dayUpdate}
+                                                <br>Category: ${blog.category}
                                             </small>
                                         </div>
                                     </div>
