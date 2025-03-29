@@ -179,39 +179,15 @@
                 margin-bottom: 10px;
                 font-style: italic;
             }
-            header {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 10px 20px;
-            }
-
-            .header-center {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                position: fixed;
-                top: 50px; /* Giữ cố định ở vị trí cao */
-                left: 50%;
-                transform: translateX(-50%);
-                background-color: white; /* Đảm bảo không bị che bởi nội dung khác */
-                z-index: 1000; /* Giữ phần header luôn trên cùng */
-                padding: 10px;
-                box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Tạo hiệu ứng nổi nhẹ */
-                border-radius: 10px;
-            }
-
-            .logo img {
-                width: 80px; /* Điều chỉnh kích thước logo */
+            .vip-icon {
+                width: 100px; /* Điều chỉnh kích thước icon */
                 height: auto;
-                margin-bottom: -5px; /* Giảm khoảng cách giữa logo và tiêu đề */
+                margin-right: 10px; /* Khoảng cách giữa icon và chữ */
+                vertical-align: middle;
             }
-
             .page-title {
-                font-size: 22px;
-                font-weight: bold;
-                text-align: center;
-                margin-top: 0px; /* Giảm khoảng cách với logo */
+             margin-right: 700px; /* Đẩy sang phải 20px */
+             font-weight: bold; /* Làm chữ đậm */
             }
         </style>
     </head>
@@ -222,12 +198,9 @@
                 <button onclick="window.location.href = 'homecontroller'" class="btn btn-back">
                     ⬅ Back to Home
                 </button>
-                <div class="header-center">
-                    <div class="logo">
-                        <img src="https://cdn-icons-png.flaticon.com/512/6134/6134346.png" alt="Page Logo">
-                    </div>
-                    <div class="page-title">Cart Detail</div>
-                </div>
+                <div class="page-title">Cart Detail</div>
+                    
+            
             </header>
             <%
 String message = (String) session.getAttribute("message");
@@ -353,11 +326,18 @@ if (message != null) {
                         <%-- Hiển thị mức giảm giá nếu có --%>
                         <c:if test="${discountRate > 0}">
                             <br>🎯 <b>You have reached a discount level!</b>
-                            <br> Your total is over 
+                            <br> That is : 
                             <c:choose>
-                                <c:when test="${beforePrice > 100000000}">100 million VND</c:when>
-                                <c:when test="${beforePrice > 50000000}">50 million VND</c:when>
-                                <c:when test="${beforePrice > 10000000}">10 million VND</c:when>
+                                <c:when test="${beforePrice > 100000000}">
+                                    <img src="https://th.bing.com/th/id/R.c9384077736ad81156c7565b6654b050?rik=6Bdpt%2bUO70Pijg&pid=ImgRaw&r=0" alt="Gold VIP" class="vip-icon"> <br> Your total is over 100 million VND
+                                </c:when>
+                                <c:when test="${beforePrice > 50000000}">
+                                    <img src="https://th.bing.com/th/id/OIP.cUqwovu6XOuHoqd_lHGrTgHaHa?rs=1&pid=ImgDetMain" alt="Silver VIP" class="vip-icon"> <br> Your total is over 50 million VND
+                                </c:when>
+                                <c:when test="${beforePrice > 10000000}">
+                                    <img src="https://cdn5.vectorstock.com/i/1000x1000/78/79/bronze-vip-symbol-set-3-vector-14037879.jpg" alt="Bronze VIP" class="vip-icon"> <br> Your total is over 10 million VND
+
+                                </c:when>
                             </c:choose>
                             → <b><fmt:formatNumber value="${discountRate}" type="number" maxFractionDigits="2"/>% Discount</b>
 
@@ -368,7 +348,9 @@ if (message != null) {
                         🏷️ <b>Final Total Price:</b> <fmt:formatNumber value="${finalPrice}" type="number" groupingUsed="true"/> VND
                     </div>
 
-                    <button class="btn" onclick="window.location.href = 'homecontroller'">➕ Choose More Products</button>
+                    <a href="<%= request.getContextPath() %>/homecontroller" class="btn btn-back">
+                        ➕ Choose More Products
+                    </a>
                 </div>
 
                 <div class="discount-info">

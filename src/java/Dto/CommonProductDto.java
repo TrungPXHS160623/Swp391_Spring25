@@ -8,15 +8,18 @@ import Entity.ProductImage;
 import java.sql.Timestamp;
 import java.util.List;
 
-public class AdminProductDto {
+/**
+ *
+ * @author LENOVO
+ */
+public class CommonProductDto {
 
-    // Thông tin sản phẩm cơ bản
     private int productId;
     private String productName;
     private String description;
     private double price;
     private int stockQuantity;
-    private int subcategoryId;
+    private String category; // Lấy từ subcategory_name của bảng SubCategories
     private Timestamp createdAt;
     private Timestamp updatedAt;
     private double discountPrice;
@@ -24,35 +27,16 @@ public class AdminProductDto {
     private int soldQuantity;
     private double averageRating;
 
-    // Ảnh chính (thumbnail)
-    private String primaryImageUrl;
+    // Danh sách tất cả ảnh (và video) của sản phẩm
+    private List<ProductImage> imageList;
 
-    // Danh sách media (ảnh/video) dùng cho ProductDetail
-    private List<ProductImage> mediaList;
+    // Trường derived: trạng thái sản phẩm (Sale nếu còn hàng, Soldout nếu hết)
+    private String status;
 
-    // Trường bổ sung tính toán
-    private String featured; // "Yes" nếu soldQuantity>=50 và averageRating>4, ngược lại "No"
-    private String status;   // "Sale" nếu stockQuantity>0, "Soldout" nếu không
-
-    // Thêm trường Category để hiển thị tên subcategory
-    private String category;
-
-    // Flag “featured” do admin bật/tắt
-    private boolean featuredFlag;
-
-    public boolean isFeaturedFlag() {
-        return featuredFlag;
+    public CommonProductDto() {
     }
 
-    public void setFeaturedFlag(boolean featuredFlag) {
-        this.featuredFlag = featuredFlag;
-    }
-
-    // Constructor mặc định
-    public AdminProductDto() {
-    }
-
-    // Getters & Setters cho tất cả các trường
+    // Getters and Setters
     public int getProductId() {
         return productId;
     }
@@ -93,12 +77,12 @@ public class AdminProductDto {
         this.stockQuantity = stockQuantity;
     }
 
-    public int getSubcategoryId() {
-        return subcategoryId;
+    public String getCategory() {
+        return category;
     }
 
-    public void setSubcategoryId(int subcategoryId) {
-        this.subcategoryId = subcategoryId;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public Timestamp getCreatedAt() {
@@ -149,28 +133,12 @@ public class AdminProductDto {
         this.averageRating = averageRating;
     }
 
-    public String getPrimaryImageUrl() {
-        return primaryImageUrl;
+    public List<ProductImage> getImageList() {
+        return imageList;
     }
 
-    public void setPrimaryImageUrl(String primaryImageUrl) {
-        this.primaryImageUrl = primaryImageUrl;
-    }
-
-    public List<ProductImage> getMediaList() {
-        return mediaList;
-    }
-
-    public void setMediaList(List<ProductImage> mediaList) {
-        this.mediaList = mediaList;
-    }
-
-    public String getFeatured() {
-        return featured;
-    }
-
-    public void setFeatured(String featured) {
-        this.featured = featured;
+    public void setImageList(List<ProductImage> imageList) {
+        this.imageList = imageList;
     }
 
     public String getStatus() {
@@ -181,41 +149,28 @@ public class AdminProductDto {
         this.status = status;
     }
 
-    // Setter and getter cho category
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    // Phương thức tính toán các trường derived (có thể gọi sau khi set dữ liệu)
-    public void computeDerivedFields() {
-        this.featured = (this.soldQuantity >= 50 && this.averageRating > 4) ? "Yes" : "No";
+    // Phương thức tính trạng thái dựa trên stockQuantity
+    public void computeStatus() {
         this.status = (this.stockQuantity > 0) ? "Sale" : "Soldout";
     }
 
     @Override
     public String toString() {
-        return "AdminProductDto{"
+        return "CommonProductDto{"
                 + "productId=" + productId
                 + ", productName='" + productName + '\''
                 + ", description='" + description + '\''
                 + ", price=" + price
                 + ", stockQuantity=" + stockQuantity
-                + ", subcategoryId=" + subcategoryId
+                + ", category='" + category + '\''
                 + ", createdAt=" + createdAt
                 + ", updatedAt=" + updatedAt
                 + ", discountPrice=" + discountPrice
                 + ", discountPercentage=" + discountPercentage
                 + ", soldQuantity=" + soldQuantity
                 + ", averageRating=" + averageRating
-                + ", primaryImageUrl='" + primaryImageUrl + '\''
-                + ", mediaList=" + mediaList
-                + ", featured='" + featured + '\''
+                + ", imageList=" + imageList
                 + ", status='" + status + '\''
-                + ", category='" + category + '\''
                 + '}';
     }
 }

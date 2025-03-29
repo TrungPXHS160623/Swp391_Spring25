@@ -28,10 +28,11 @@ public class BlogDao {
     public List<PostDto> getAllBlog() {
         List<PostDto> list = new ArrayList<>();
         String sql = "SELECT p.post_id, p.title, p.summary, CONVERT(varchar, p.updated_at, 103) as dayUpdate, "
-                + "pm.media_url, c.category_name "
+                + "pm.media_url, c.category_name, u.full_name as author "
                 + "FROM Posts p "
                 + "LEFT JOIN Post_Media pm ON p.post_id = pm.post_id AND pm.is_primary = 1 "
                 + "LEFT JOIN Categories c ON p.category_id = c.category_id "
+                + "LEFT JOIN Users u ON p.user_id = u.user_id "
                 + "ORDER BY p.updated_at DESC";
         try (Connection conn = new DBContext().getConnection(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
 
@@ -39,6 +40,7 @@ public class BlogDao {
                 PostDto dto = new PostDto();
                 dto.setPostId(rs.getInt("post_id"));  // Set postId ở đây
                 dto.setTitle(rs.getString("title"));
+                dto.setAuthor(rs.getString("author"));
                 dto.setSummary(rs.getString("summary"));
                 dto.setDayUpdate(rs.getString("dayUpdate"));
                 dto.setMediaUrl(rs.getString("media_url"));
@@ -59,10 +61,11 @@ public class BlogDao {
     public List<PostDto> searchBlog(String keyword) {
         List<PostDto> list = new ArrayList<>();
         String sql = "SELECT p.title, p.summary, CONVERT(varchar, p.updated_at, 103) as dayUpdate, "
-                + "pm.media_url, c.category_name "
+                + "pm.media_url, c.category_name, u.full_name as author "
                 + "FROM Posts p "
                 + "LEFT JOIN Post_Media pm ON p.post_id = pm.post_id AND pm.is_primary = 1 "
                 + "LEFT JOIN Categories c ON p.category_id = c.category_id "
+                + "LEFT JOIN Users u ON p.user_id = u.user_id "
                 + "WHERE p.title LIKE ? "
                 + "ORDER BY p.updated_at DESC";
         try (Connection conn = new DBContext().getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -72,6 +75,7 @@ public class BlogDao {
                 while (rs.next()) {
                     PostDto dto = new PostDto();
                     dto.setTitle(rs.getString("title"));
+                    dto.setAuthor(rs.getString("author"));
                     dto.setSummary(rs.getString("summary"));
                     dto.setDayUpdate(rs.getString("dayUpdate"));
                     dto.setMediaUrl(rs.getString("media_url"));
@@ -93,10 +97,11 @@ public class BlogDao {
     public List<PostDto> filterBlogbyCategory(String category) {
         List<PostDto> list = new ArrayList<>();
         String sql = "SELECT p.post_id, p.title, p.summary, CONVERT(varchar, p.updated_at, 103) as dayUpdate, "
-                + "pm.media_url, c.category_name "
+                + "pm.media_url, c.category_name, u.full_name as author "
                 + "FROM Posts p "
                 + "LEFT JOIN Post_Media pm ON p.post_id = pm.post_id AND pm.is_primary = 1 "
                 + "LEFT JOIN Categories c ON p.category_id = c.category_id "
+                + "LEFT JOIN Users u ON p.user_id = u.user_id "
                 + "WHERE c.category_name = ? "
                 + "ORDER BY p.updated_at DESC";
         try (Connection conn = new DBContext().getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -106,6 +111,7 @@ public class BlogDao {
                 while (rs.next()) {
                     PostDto dto = new PostDto();
                     dto.setPostId(rs.getInt("post_id"));
+                    dto.setAuthor(rs.getString("author"));
                     dto.setTitle(rs.getString("title"));
                     dto.setSummary(rs.getString("summary"));
                     dto.setDayUpdate(rs.getString("dayUpdate"));
