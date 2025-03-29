@@ -70,7 +70,7 @@
     </head>
     <body>
         <h1>Welcome to Home Page</h1>
-        <p>This is a test page after login.</p>
+       
 
         <div class="container">
             <!-- Left Sidebar -->

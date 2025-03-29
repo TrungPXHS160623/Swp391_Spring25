@@ -104,129 +104,101 @@ public class ProductDao {
         }
         return products;
     }
-public List<ProductDto> getFilteredProducts(String keyword, String[] categories, double minPrice, double maxPrice, String rating, String[] status, String[] discount) {
-    StringBuilder sql = new StringBuilder(
-        "SELECT p.*, pi.image_url FROM Products p " +
-        "LEFT JOIN ProductImages pi ON p.product_id = pi.product_id AND pi.is_primary = 1 " +
-        "WHERE 1=1"
-    );
 
-    List<Object> params = new ArrayList<>();
+    private List<ProductDto> executeProductQuery(String sql, List<Object> params) {
+        List<ProductDto> products = new ArrayList<>();
+        try (Connection conn = new DBContext().getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-    if (keyword != null && !keyword.trim().isEmpty()) {
-        sql.append(" AND p.product_name LIKE ?");
-        params.add("%" + keyword + "%");
-    }
-
-    if (categories != null && categories.length > 0) {
-        sql.append(" AND p.subcategory_id IN (" + String.join(",", Collections.nCopies(categories.length, "?")) + ")");
-        params.addAll(Arrays.asList(categories));
-    }
-
-    if (minPrice > 0 && maxPrice > 0) { // Kiểm tra nếu giá hợp lệ
-    sql.append(" AND p.price BETWEEN ? AND ?");
-    params.add(minPrice); // ✅ Truyền trực tiếp
-    params.add(maxPrice); // ✅ Truyền trực tiếp
-    }
-
-    if (rating != null) {
-        sql.append(" AND p.average_rating >= ?");
-        params.add(Integer.parseInt(rating));
-    }
-
-    if (status != null) {
-        sql.append(" AND p.stock_quantity > 0");
-    }
-
-    if (discount != null) {
-        sql.append(" AND p.discount_percentage > 0");
-    }
-
-    sql.append(" ORDER BY p.created_at DESC");
-
-    return executeProductQuery(sql.toString(), params);
-}
-
-private List<ProductDto> executeProductQuery(String sql, List<Object> params) {
-    List<ProductDto> products = new ArrayList<>();
-    try (Connection conn = new DBContext().getConnection();
-         PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-        for (int i = 0; i < params.size(); i++) {
-            stmt.setObject(i + 1, params.get(i));
-        }
-
-        try (ResultSet rs = stmt.executeQuery()) {
-            while (rs.next()) {
-                products.add(extractProduct(rs));
+            for (int i = 0; i < params.size(); i++) {
+                stmt.setObject(i + 1, params.get(i));
             }
-        }
-    } catch (SQLException e) {
-        LOGGER.log(Level.SEVERE, "Lỗi SQL khi lấy danh sách sản phẩm", e);
-    }catch (Exception e) {
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    products.add(extractProduct(rs));
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Lỗi SQL khi lấy danh sách sản phẩm", e);
+        } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Lỗi kết nối CSDL", e);
         }
-    return products;
-}
+        return products;
+    }
+
+    public List<ProductDto> filterProducts(String keyword, List<Integer> categoryIds, Double minPrice, Double maxPrice, Integer rating, boolean inStock, boolean outOfStock, boolean isDiscounted, boolean isBestseller) {
+        StringBuilder sql = new StringBuilder("SELECT p.*, pi.image_url FROM Products p");
+        sql.append(" LEFT JOIN ProductImages pi ON p.product_id = pi.product_id AND pi.is_primary = 1 WHERE 1=1");
+        List<Object> params = new ArrayList<>();
+
+        if (keyword != null && !keyword.isEmpty()) {
+            sql.append(" AND p.product_name LIKE ?");
+            params.add("%" + keyword + "%");
+        }
+        if (!categoryIds.isEmpty()) {
+            sql.append(" AND p.subcategory_id IN (").append("?,".repeat(categoryIds.size() - 1)).append("?)");
+            params.addAll(categoryIds);
+        }
+        if (minPrice != null) {
+            sql.append(" AND p.price >= ?");
+            params.add(minPrice);
+        }
+        if (maxPrice != null) {
+            sql.append(" AND p.price <= ?");
+            params.add(maxPrice);
+        }
+        if (rating != null) {
+            sql.append(" AND p.average_rating >= ?");
+            params.add(rating);
+        }
+        if (inStock) {
+            sql.append(" AND p.stock_quantity > 0");
+        }
+        if (outOfStock) {
+            sql.append(" AND p.stock_quantity = 0");
+        }
+        if (isDiscounted) {
+            sql.append(" AND p.discount_price IS NOT NULL");
+        }
+        if (isBestseller) {
+            sql.append(" ORDER BY p.sold_quantity DESC");
+        }
+
+        return executeProductQuery(sql.toString(), params);
+    }
 
     // Test DAO với hàm main
     public static void main(String[] args) {
-//        ProductDao dao = new ProductDao();
-//
-////        System.out.println("🆕 Sản phẩm mới nhất:");
-////        printProduct(dao.getNewestProduct());
-////
-////        System.out.println("\n💰 Sản phẩm giảm giá sâu nhất:");
-////        printProduct(dao.getBestDiscountedProduct());
-////
-////        System.out.println("\n🔥 Sản phẩm bán chạy nhất:");
-////        printProduct(dao.getBestSellingProduct());
-////
-////        System.out.println("\n⭐ Sản phẩm được đánh giá cao nhất:");
-////        printProduct(dao.getTopRatedProduct());
-//        
-//        List<ProductDto> products = dao.getAllProducts(); // Lấy danh sách sản phẩm
-//
-//        if (products.isEmpty()) {
-//            System.out.println("Không có sản phẩm nào trong database.");
-//        } else {
-//            System.out.println("Danh sách sản phẩm:");
-//            for (ProductDto product : products) {
-//                System.out.println(product);
-//            }
-//        }
         ProductDao productDao = new ProductDao();
 
-        // Dữ liệu test
-        String keyword = "Laptop";
-        String[] categories = {"1", "2"}; // ID của danh mục
-        double minPrice = 5000.00;
-        double maxPrice = 20000.00;
-        String rating = "4"; // Ít nhất 4 sao
-        String[] status = {"available"}; // Chỉ lấy sản phẩm còn hàng
-        String[] discount = {"onsale"}; // Chỉ lấy sản phẩm đang giảm giá
+        // Thiết lập các tiêu chí lọc
+        String keyword = "Laptop Dell XPS 15";
+//    List<Integer> categoryIds = List.of(1, 2, 3);  // Ví dụ: Lọc theo 3 danh mục
+//    Double minPrice = 10000.0;
+//    Double maxPrice = 50000.0;
+//    Integer rating = 4;
+//    boolean inStock = true;
+//    boolean outOfStock = false;
+//    boolean isDiscounted = true;
+//    boolean isBestseller = false;
 
-        // Gọi hàm lấy sản phẩm theo bộ lọc
-        List<ProductDto> filteredProducts = productDao.getFilteredProducts(keyword, categories, minPrice, maxPrice, rating, status, discount);
+        List<Integer> categoryIds = new ArrayList<>(); // Không lọc theo danh mục
+        Double minPrice = null; // Không giới hạn giá tối thiểu
+        Double maxPrice = null; // Không giới hạn giá tối đa
+        Integer rating = null; // Không lọc theo đánh giá
+        boolean inStock = false; // Không quan tâm hàng còn hay hết
+        boolean outOfStock = false;
+        boolean isDiscounted = false; // Không quan tâm có giảm giá hay không
+        boolean isBestseller = false; // Không quan tâm sản phẩm bán chạy hay không
 
-        // In kết quả
-        System.out.println("Số lượng sản phẩm tìm thấy: " + filteredProducts.size());
+        // Gọi phương thức lọc sản phẩm
+        List<ProductDto> filteredProducts = productDao.filterProducts(
+                keyword, categoryIds, minPrice, maxPrice, rating, inStock, outOfStock, isDiscounted, isBestseller
+        );
+
+        // In kết quả ra console để kiểm tra
         for (ProductDto product : filteredProducts) {
-            System.out.println("ID: " + product.getProductId() +
-                    " | Tên: " + product.getProductName() +
-                    " | Giá: " + product.getPrice() +
-                    " | Đánh giá: " + product.getAverageRating() +
-                    " | Ảnh: " + product.getImageUrl());
-        }
-    
-    }
-
-// Hàm hỗ trợ in thông tin sản phẩm
-    private static void printProduct(ProductDto product) {
-        if (product != null) {
             System.out.println(product);
-        } else {
-            System.out.println("⚠ Không tìm thấy sản phẩm nào.");
         }
     }
 }

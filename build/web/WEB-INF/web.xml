@@ -144,4 +144,8 @@
         <servlet-name>OrderListController</servlet-name>
         <url-pattern>/OrderListController</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>MyOrderController</servlet-name>
+        <servlet-class>Controller.MyOrderController</servlet-class>
+    </servlet>
 </web-app>

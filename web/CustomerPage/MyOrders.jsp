@@ -184,6 +184,11 @@
                                     <a href="OrderDetailsServlet?orderId=${order.orderId}">
                                         <button class="detail-btn">View Details</button>
                                     </a>
+                                    <c:if test="${order.status eq 'Completed'}">
+                                        <a href="CustomerSendFeedback?orderId=${order.orderId}">
+                                            <button class="detail-btn" style="background-color: #4CAF50;">Feedback</button>
+                                        </a>
+                                    </c:if>
                                 </td>
                             </tr>
                         </c:forEach>

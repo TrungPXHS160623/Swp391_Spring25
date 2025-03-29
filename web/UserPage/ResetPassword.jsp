@@ -106,20 +106,18 @@
 <body>
 
 <div class="forgot-password-container">
-    <!-- Logo của Nhà Thuốc HP -->
-    <img src="https://vectorseek.com/wp-content/uploads/2023/10/FPT-Retail-Nha-thuoc-Long-Chau-Logo-Vector.svg-.png" alt="Nhà Thuốc HP Logo">
     <h1>Forgot password</h1>
-    <p>Vui lòng nhập email để khôi phục mật khẩu</p>
+    <p style="color: black;">Please enter your email to recover your password</p>
     <form action="ForgotPasswordServlet" method="post">
         <div class="input-group">
             <i class="fas fa-envelope"></i>
-            <input type="email" name="email" placeholder="Nhập email của bạn" required>
+            <input type="email" name="email" placeholder="Enter your email" required>
         </div>
-        <input type="submit" value="Khôi phục mật khẩu">
+        <input type="submit" value="Recover password">
     </form>
-    <a href="Login.jsp">Quay lại đăng nhập</a>
+    <a href="Login.jsp">Back to login</a>
 </div>
-
 </body>
 </html>
+
 

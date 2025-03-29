@@ -4,6 +4,8 @@ import Dao.ProductDao;
 import Dto.ProductDto;
 import java.io.IOException;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -24,25 +26,33 @@ public class FilterProduct extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        // Nhận dữ liệu từ request
+        // ✅ 1. Lấy dữ liệu từ request
         String keyword = request.getParameter("keyword");
-        String[] categories = request.getParameterValues("category");
+        String[] categoryIds = request.getParameterValues("category");
         String minPriceStr = request.getParameter("minPrice");
         String maxPriceStr = request.getParameter("maxPrice");
-        double minPrice = (minPriceStr != null && !minPriceStr.isEmpty()) ? Double.parseDouble(minPriceStr) : 0.0;
-        double maxPrice = (maxPriceStr != null && !maxPriceStr.isEmpty()) ? Double.parseDouble(maxPriceStr) : Double.MAX_VALUE;
-        String rating = request.getParameter("rating");
-        String[] status = request.getParameterValues("status");
-        String[] discount = request.getParameterValues("discount");
+        String ratingStr = request.getParameter("rating");
+        String[] stockStatus = request.getParameterValues("stock");
+        String discounted = request.getParameter("discounted");
+        String bestseller = request.getParameter("bestseller");
 
-        // Gọi DAO để lấy danh sách sản phẩm theo bộ lọc
-        List<ProductDto> filteredProducts = productDao.getFilteredProducts(keyword, categories, minPrice, maxPrice, rating, status, discount);
+        // ✅ 2. Chuyển đổi dữ liệu
+        Double minPrice = (minPriceStr != null && !minPriceStr.isEmpty()) ? Double.parseDouble(minPriceStr) : null;
+        Double maxPrice = (maxPriceStr != null && !maxPriceStr.isEmpty()) ? Double.parseDouble(maxPriceStr) : null;
+        Integer rating = (ratingStr != null) ? Integer.parseInt(ratingStr) : null;
+        List<Integer> categoryList = (categoryIds != null) ? Arrays.stream(categoryIds).map(Integer::parseInt).toList() : new ArrayList<>();
+        boolean inStock = (stockStatus != null && Arrays.asList(stockStatus).contains("inStock"));
+        boolean outOfStock = (stockStatus != null && Arrays.asList(stockStatus).contains("outOfStock"));
+        boolean isDiscounted = (discounted != null);
+        boolean isBestseller = (bestseller != null);
 
-        // Đưa danh sách sản phẩm vào request
+        // ✅ 3. Gọi DAO để lấy danh sách sản phẩm phù hợp
+        List<ProductDto> filteredProducts = productDao.filterProducts(keyword, categoryList, minPrice, maxPrice, rating, inStock, outOfStock, isDiscounted, isBestseller);
+
+        // ✅ 4. Gửi danh sách sản phẩm về trang JSP
         request.setAttribute("filteredProducts", filteredProducts);
-
-        // Chuyển hướng đến trang hiển thị kết quả
         RequestDispatcher dispatcher = request.getRequestDispatcher("filteredProducts.jsp");
         dispatcher.forward(request, response);
     }
+    
 }

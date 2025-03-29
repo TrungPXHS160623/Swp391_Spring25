@@ -43,7 +43,7 @@
     <body>
         <div class="left-bar">
             <h3>Tìm kiếm</h3>
-            <form action="<%= request.getContextPath() %>/filterproduct" method="GET">
+            <form action="<%= request.getContextPath() %>/productinhomecontroller" method="GET">
                 <input type="text" name="keyword" placeholder="Nhập tên sản phẩm...">
                 <button type="submit">Tìm kiếm</button>
 
@@ -63,13 +63,15 @@
                 <input type="radio" name="rating" value="2"> ⭐⭐<br>
                 <input type="radio" name="rating" value="1"> ⭐<br>
 
-                <h3>Trạng thái</h3>
-                <input type="checkbox" name="status" value="available"> Còn hàng<br>
-                <input type="checkbox" name="status" value="preorder"> Đặt trước<br>
+                <h3>Tình trạng hàng</h3>
+                <input type="checkbox" name="stock" value="inStock"> Còn hàng<br>
+                <input type="checkbox" name="stock" value="outOfStock"> Hết hàng<br>
 
                 <h3>Giảm giá</h3>
-                <input type="checkbox" name="discount" value="onsale"> Đang giảm giá<br>
-                <input type="checkbox" name="discount" value="flashsale"> Flash Sale<br>
+                <input type="checkbox" name="discounted" value="true"> Sản phẩm có giảm giá<br>
+
+                <h3>Bán chạy</h3>
+                <input type="checkbox" name="bestseller" value="true"> Bán chạy<br>
 
                 <button type="submit">Áp dụng bộ lọc</button>
             </form>
