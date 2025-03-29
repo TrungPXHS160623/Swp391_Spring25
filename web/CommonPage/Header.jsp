@@ -128,19 +128,21 @@
                 box-shadow: 0px 6px 12px rgba(255, 0, 0, 0.5);
                 transform: scale(1.05);
             }
+            .logo img {
+                width: 120px; /* Điều chỉnh kích thước */
+                height: auto; /* Giữ tỷ lệ */
+            }
+
 
 
         </style>
     </head>
     <body>
         <div class="header">
-            <div class="logo">Page Logo</div>
 
-            <div class="search-bar">
-                <input type="text" placeholder="Search...">
-                <button>Search</button>
+            <div class="logo">
+                <img src="https://cdn-icons-png.flaticon.com/512/6134/6134346.png" alt="Page Logo">
             </div>
-
             <div class="nav-links">
 
                 <a href="${pageContext.request.contextPath}/cartdetailcontroller" class="cart-btn">

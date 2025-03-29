@@ -179,6 +179,40 @@
                 margin-bottom: 10px;
                 font-style: italic;
             }
+            header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px 20px;
+            }
+
+            .header-center {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                position: fixed;
+                top: 50px; /* Giữ cố định ở vị trí cao */
+                left: 50%;
+                transform: translateX(-50%);
+                background-color: white; /* Đảm bảo không bị che bởi nội dung khác */
+                z-index: 1000; /* Giữ phần header luôn trên cùng */
+                padding: 10px;
+                box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Tạo hiệu ứng nổi nhẹ */
+                border-radius: 10px;
+            }
+
+            .logo img {
+                width: 80px; /* Điều chỉnh kích thước logo */
+                height: auto;
+                margin-bottom: -5px; /* Giảm khoảng cách giữa logo và tiêu đề */
+            }
+
+            .page-title {
+                font-size: 22px;
+                font-weight: bold;
+                text-align: center;
+                margin-top: 0px; /* Giảm khoảng cách với logo */
+            }
         </style>
     </head>
     <body>
@@ -188,10 +222,12 @@
                 <button onclick="window.location.href = 'homecontroller'" class="btn btn-back">
                     ⬅ Back to Home
                 </button>
-                <div class="logo">Page Logo</div>
-                <button class="btn">Cart Detail</button>
-                <input type="text" class="search-box" placeholder="Search...">
-                <button class="btn">Search</button>
+                <div class="header-center">
+                    <div class="logo">
+                        <img src="https://cdn-icons-png.flaticon.com/512/6134/6134346.png" alt="Page Logo">
+                    </div>
+                    <div class="page-title">Cart Detail</div>
+                </div>
             </header>
             <%
 String message = (String) session.getAttribute("message");
@@ -295,19 +331,19 @@ if (message != null) {
                             <button type="submit" class="update-cart-btn">Refresh Cart Prices</button>
                         </div>
                     </form>
-                    
-                    <div class="pagination">
+
+<!--                    <div class="pagination">
                         <button>&lt;</button>
                         <button class="active">1</button>
                         <button>2</button>
                         <button>...</button>
                         <button>&gt;</button>
-                    </div>
-
-<!--                    <div class="promo-section" style="margin-top: 20px;">
-                        🎁 Promotion Code: <input type="text" id="promo-code"> 
-                        <button class="btn">✅ Apply</button>
                     </div>-->
+
+                    <!--                    <div class="promo-section" style="margin-top: 20px;">
+                                            🎁 Promotion Code: <input type="text" id="promo-code"> 
+                                            <button class="btn">✅ Apply</button>
+                                        </div>-->
 
                     <div class="price-summary">
                         <br>
@@ -332,7 +368,7 @@ if (message != null) {
                         🏷️ <b>Final Total Price:</b> <fmt:formatNumber value="${finalPrice}" type="number" groupingUsed="true"/> VND
                     </div>
 
-                    <button class="btn" onclick="window.location.href='homecontroller'">➕ Choose More Products</button>
+                    <button class="btn" onclick="window.location.href = 'homecontroller'">➕ Choose More Products</button>
                 </div>
 
                 <div class="discount-info">
@@ -364,7 +400,7 @@ if (message != null) {
 
 
             </div>
-            
+
             <!-- Place checkout form completely outside cart-wrapper -->
             <div style="margin-top: 20px; text-align: center;">
                 <form id="checkoutForm" action="cartcontactcontroller" method="get" style="display: inline-block; width: 50%;" onsubmit="return prepareCheckout()">
@@ -389,24 +425,24 @@ if (message != null) {
             checkboxes[i].checked = source.checked;
         }
     }
-    
+
     // Function to prepare the checkout form before submission
     function prepareCheckout() {
         // Get all selected product checkboxes
         const checkboxes = document.querySelectorAll('input[name="selectedProducts"]:checked');
-        
+
         if (checkboxes.length === 0) {
             alert('Please select at least one product before checkout');
             return false;
         }
-        
+
         // Get the checkout form
         const form = document.getElementById('checkoutForm');
-        
+
         // Remove any existing selectedProducts inputs to avoid duplicates
         const existingInputs = form.querySelectorAll('input[name="selectedProducts"]');
         existingInputs.forEach(input => input.remove());
-        
+
         // Create hidden inputs for each selected product
         checkboxes.forEach(checkbox => {
             const input = document.createElement('input');
@@ -415,10 +451,10 @@ if (message != null) {
             input.value = checkbox.value;
             form.appendChild(input);
         });
-        
+
         console.log('Form submitting to:', form.action);
         console.log('Selected products:', Array.from(checkboxes).map(cb => cb.value));
-        
+
         return true;
     }
 </script>
