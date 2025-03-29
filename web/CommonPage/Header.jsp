@@ -1,4 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<%@ page import="Entity.User" %>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <!DOCTYPE html>
 <html>
     <head>
@@ -45,6 +48,7 @@
             }
             .nav-links {
                 display: flex;
+                align-items: center; /* Căn giữa theo chiều dọc */
                 gap: 15px;
             }
             .nav-links a {
@@ -82,6 +86,50 @@
                 top: -5px;
                 right: -10px;
             }
+            .go-to-profile-btn {
+                background-color: #007bff; /* Màu xanh dương */
+                color: white !important; /* Giữ màu chữ trắng ngay cả khi không hover */
+                padding: 8px 15px 12px 5px;
+                border-radius: 5px;
+                text-decoration: none;
+                font-weight: bold;
+                transition: background-color 0.3s ease, color 0.3s ease;
+                border: none;
+                cursor: pointer;
+            }
+
+            .go-to-profile-btn:hover {
+                background-color: #0056b3; /* Màu xanh đậm hơn khi hover */
+                color: white !important; /* Đảm bảo màu chữ không đổi */
+            }
+            .logout-btn {
+                background-color: #ff4d4d; /* Màu đỏ */
+                color: white !important; /* Chữ trắng */
+                padding: 10px 18px;
+                border-radius: 25px;
+                text-decoration: none;
+                font-weight: bold;
+                display: flex;
+                align-items: center;
+                gap: 8px; /* Khoảng cách giữa icon và chữ */
+                transition: all 0.3s ease-in-out;
+                box-shadow: 0px 4px 8px rgba(255, 0, 0, 0.3);
+                border: 2px solid transparent;
+            }
+
+            .logout-btn i {
+                font-size: 16px; /* Cỡ icon */
+            }
+
+            .logout-btn:hover {
+                background-color: #ffe6e6; /* Nền hồng nhạt để chữ đỏ dễ nhìn hơn */
+                color: #ff4d4d; /* Chữ đỏ */
+                border: 2px solid #ff4d4d;
+                box-shadow: 0px 6px 12px rgba(255, 0, 0, 0.5);
+                transform: scale(1.05);
+            }
+
+
         </style>
     </head>
     <body>
@@ -100,9 +148,42 @@
                         <%= session.getAttribute("cartCount") != null ? session.getAttribute("cartCount") : 0 %>
                     </span>
                 </a>
-                <a href="#">Register/Login</a>
+                <% 
+            // Kiểm tra xem user đã đăng nhập hay chưa
+            User user = (User) session.getAttribute("user");
+            if (user != null) { 
+                %>
+                <!-- Nếu đã đăng nhập, hiển thị nút Profile + lời chào -->
+                <a href="<%= request.getContextPath() %>/userprofile" class="go-to-profile-btn">Go to Profile</a>
+                <form id="logoutForm" action="<%= request.getContextPath() %>/logoutcontroller" method="POST">
+                    <button type="button" class="logout-btn" onclick="confirmLogout()">
+                        <i class="fa-solid fa-right-from-bracket"></i> Logout
+                    </button>
+                </form>
+                <% } else { %>
+                <!-- Nếu chưa đăng nhập, hiển thị nút Register/Login -->
+                <a href="<%= request.getContextPath() %>/UserPage/Login.jsp">Register/Login</a>
+                <% } %>
                 <a href="#">Hotline</a>
             </div>
         </div>
     </body>
 </html>
+<script>
+    function confirmLogout() {
+        Swal.fire({
+            title: "Are you sure you want to log out?",
+            text: "You will need to log in again after logging out!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Log Out",
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById("logoutForm").submit();
+            }
+        });
+    }
+</script>

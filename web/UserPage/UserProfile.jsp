@@ -101,7 +101,14 @@
     <body>
 
         <div class="profile-container">
-            <% 
+            
+            <h1>User Profile</h1>
+            
+            
+            <form action="${pageContext.request.contextPath}/uploadavatarcontroller" method="post" enctype="multipart/form-data">
+                <div class="input-group">
+                    <label>Ảnh đại diện</label>
+                    <% 
         String updateMessage = (String) session.getAttribute("updateMessage");
         if (updateMessage != null) {
             %>
@@ -125,10 +132,6 @@
                 session.removeAttribute("updateMessage"); // Xóa thông báo sau khi hiển thị
                 }
             %>
-            <h1>User Profile</h1>
-            <form action="${pageContext.request.contextPath}/uploadavatarcontroller" method="post" enctype="multipart/form-data">
-                <div class="input-group">
-                    <label>Ảnh đại diện</label>
                     <input type="file" name="avatar" accept="image/*" required>
                 </div>
                 <button type="submit" style="background-color: #ff6600; color: white; font-size: 18px; padding: 12px 24px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; margin-bottom: 20px;">

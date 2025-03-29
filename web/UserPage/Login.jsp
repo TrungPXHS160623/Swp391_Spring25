@@ -118,7 +118,7 @@
                 color: #0072ff;
             }
             /* Popup container */
-            
+
             .popup-container {
                 position: fixed;
                 top: 0;
@@ -170,6 +170,26 @@
         </style>
     </head>
     <body>
+      <%
+    Cookie[] cookies = request.getCookies();
+    String rememberedEmail = "";
+    String rememberedPassword = "";
+    boolean rememberMeChecked = false;
+
+    if (cookies != null) {
+        for (Cookie cookie : cookies) {
+            if ("rememberedEmail".equals(cookie.getName())) {
+                rememberedEmail = cookie.getValue();
+            }
+            if ("rememberedPassword".equals(cookie.getName())) {
+                rememberedPassword = cookie.getValue();
+            }
+            if ("rememberMe".equals(cookie.getName()) && "true".equals(cookie.getValue())) {
+                rememberMeChecked = true;
+            }
+        }
+    }
+%>
         <% String errorMessage = (String) request.getAttribute("errorMessage"); %>
         <div id="errorPopup" class="popup-container" style="display: none;">
             <div class="popup">
@@ -184,19 +204,19 @@
             <form action="${pageContext.request.contextPath}/logincontroller" method="post">
                 <div class="input-group">
                     <i class="fas fa-user"></i>
-                    <input type="text" name="username" placeholder="Email" required>
+                    <input type="text" name="username" value="<%= rememberedEmail %>" placeholder="Email" required>
                 </div>
                 <div class="input-group">
                     <i class="fas fa-lock"></i>
-                    <input type="password" name="password" placeholder="Password" required>
+                    <input type="password" name="password" value="<%= rememberedPassword %>" placeholder="Password" required>
                 </div>
                 <div class="remember-me">
-                    <input type="checkbox" id="rememberMe" name="rememberMe">
-                    <label for="rememberMe">Remember Me</label>
+                    <input type="checkbox" name="rememberMe" <%= rememberMeChecked ? "checked" : "" %>> Remember Me
+                    
                 </div>
                 <input type="submit" value="Login">
             </form>
-            <a href="ResetPassword.jsp">Forgot password?</a>
+            <a href="${pageContext.request.contextPath}/UserPage/ResetPassword.jsp">Forgot password?</a>
             <a href="${pageContext.request.contextPath}/UserPage/Register.jsp">Register a new account</a>
 
         </div>

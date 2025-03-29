@@ -3,21 +3,32 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/web/CommonPage/CustomizeTable.jsp</file>
-            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/web/CommonPage/Footer.jsp</file>
-            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/src/java/Context/DBContext.java</file>
-            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/web/CommonPage/BlogInHome.jsp</file>
-            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/web/CommonPage/RightBar.jsp</file>
-            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/web/CommonPage/Header.jsp</file>
-            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/web/CommonPage/ProductInHome.jsp</file>
-            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/src/java/Controller/FilterProduct.java</file>
-            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/web/CommonPage/LeftBar.jsp</file>
-            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/src/java/Dao/ProductDao.java</file>
-            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/web/CommonPage/CategoryInHome.jsp</file>
+            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/src/java/Util/HashUtil.java</file>
+            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/src/java/Dao/UserDao.java</file>
+            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/src/java/Dto/OrderDto.java</file>
+            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/src/java/Controller/RightBarController.java</file>
+            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/src/java/Controller/UserProfile.java</file>
+            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/src/java/Dao/CartDetailDao.java</file>
+            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/src/java/Controller/LoginController.java</file>
+            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/src/java/Controller/CartDetailController.java</file>
+            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/src/java/Controller/LeftbarController.java</file>
+            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/src/java/Controller/ProductInHomeController.java</file>
+            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/src/java/Controller/SliderListController.java</file>
+            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/src/java/Dao/SliderDao.java</file>
             <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/src/java/Dto/CartDetailDto.java</file>
+            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/src/java/Entity/User.java</file>
+            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/src/java/Dao/OrderDao.java</file>
+            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/src/java/Controller/SliderInHomeController.java</file>
+            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/src/java/Controller/HomeController.java</file>
+            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/src/java/Entity/Cart.java</file>
+            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/src/java/Entity/Slider.java</file>
+            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/src/java/Controller/RegisterController.java</file>
+            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/src/java/Controller/ChangePasswordController.java</file>
+            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/src/java/Entity/CartItem.java</file>
+            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/src/java/Dao/ProductDao.java</file>
+            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/src/java/Controller/MyOrderController.java</file>
             <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/web/UserPage/Home.jsp</file>
-            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/web/CustomerPage/CartDetail.jsp</file>
-            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/web/CommonPage/SliderInHome.jsp</file>
+            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/Swp391_Spring25/src/java/Dto/ProductDto.java</file>
         </group>
     </open-files>
 </project-private>

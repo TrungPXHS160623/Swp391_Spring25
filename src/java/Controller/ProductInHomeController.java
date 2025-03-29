@@ -15,6 +15,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -67,41 +68,87 @@ public class ProductInHomeController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        int productsPerPage = 6; // Số sản phẩm mỗi trang
-        int currentPage = 1;
+//        int productsPerPage = 6; // Số sản phẩm mỗi trang
+//        int currentPage = 1;
+//
+//        // Lấy trang hiện tại từ request (mặc định là 1)
+//        String pageParam = request.getParameter("page");
+//        if (pageParam != null) {
+//            try {
+//                currentPage = Integer.parseInt(pageParam);
+//            } catch (NumberFormatException e) {
+//                currentPage = 1;
+//            }
+//        }
+//
+//        // Lấy danh sách sản phẩm từ ProductDao
+//        List<ProductDto> allProducts = productDao.getAllProducts();
+//        int totalProducts = allProducts.size();
+//        int totalPages = (int) Math.ceil((double) totalProducts / productsPerPage);
+//
+//        // Xác định phạm vi sản phẩm cần hiển thị trên trang hiện tại
+//        int startIndex = (currentPage - 1) * productsPerPage;
+//        int endIndex = Math.min(startIndex + productsPerPage, totalProducts);
+//        List<ProductDto> productsOnPage = allProducts.subList(startIndex, endIndex);
+//
+//        // Đẩy dữ liệu lên request để truyền vào JSP
+//        request.setAttribute("productList", productsOnPage);
+//        request.setAttribute("currentPage", currentPage);
+//        request.setAttribute("totalPages", totalPages);
+//
+//        
+//        //Thay forward() bằng include(), vì include() chỉ chèn nội dung mà không ghi đè trang chính.
+//        RequestDispatcher rd = request.getRequestDispatcher("/CommonPage/ProductInHome.jsp");
+//        rd.include(request, response);
+        // Lấy tham số từ request (nếu có)
+        String keyword = request.getParameter("keyword");
+        String[] categoryIdsArr = request.getParameterValues("categoryIds");
+        Double minPrice = parseDouble(request.getParameter("minPrice"));
+        Double maxPrice = parseDouble(request.getParameter("maxPrice"));
+        Integer rating = parseInt(request.getParameter("rating"));
+        boolean inStock = "true".equals(request.getParameter("inStock"));
+        boolean outOfStock = "true".equals(request.getParameter("outOfStock"));
+        boolean isDiscounted = "true".equals(request.getParameter("isDiscounted"));
+        boolean isBestseller = "true".equals(request.getParameter("isBestseller"));
 
-        // Lấy trang hiện tại từ request (mặc định là 1)
-        String pageParam = request.getParameter("page");
-        if (pageParam != null) {
-            try {
-                currentPage = Integer.parseInt(pageParam);
-            } catch (NumberFormatException e) {
-                currentPage = 1;
+        // Chuyển categoryIds từ String[] thành List<Integer>
+        List<Integer> categoryIds = new ArrayList<>();
+        if (categoryIdsArr != null) {
+            for (String id : categoryIdsArr) {
+                categoryIds.add(Integer.parseInt(id));
             }
         }
 
-        // Lấy danh sách sản phẩm từ ProductDao
-        List<ProductDto> allProducts = productDao.getAllProducts();
-        int totalProducts = allProducts.size();
-        int totalPages = (int) Math.ceil((double) totalProducts / productsPerPage);
+        List<ProductDto> products;
+        if (keyword != null || categoryIds.size() > 0 || minPrice != null || maxPrice != null || rating != null ||
+                inStock || outOfStock || isDiscounted || isBestseller) {
+            // Nếu có bộ lọc, gọi phương thức filterProducts()
+            products = productDao.filterProducts(keyword, categoryIds, minPrice, maxPrice, rating, inStock, outOfStock, isDiscounted, isBestseller);
+        } else {
+            // Nếu không có bộ lọc, lấy tất cả sản phẩm
+            products = productDao.getAllProducts();
+        }
 
-        // Xác định phạm vi sản phẩm cần hiển thị trên trang hiện tại
-        int startIndex = (currentPage - 1) * productsPerPage;
-        int endIndex = Math.min(startIndex + productsPerPage, totalProducts);
-        List<ProductDto> productsOnPage = allProducts.subList(startIndex, endIndex);
-
-        // Đẩy dữ liệu lên request để truyền vào JSP
-        request.setAttribute("productList", productsOnPage);
-        request.setAttribute("currentPage", currentPage);
-        request.setAttribute("totalPages", totalPages);
-
-        
-        //Thay forward() bằng include(), vì include() chỉ chèn nội dung mà không ghi đè trang chính.
+        request.setAttribute("productList", products);
         RequestDispatcher rd = request.getRequestDispatcher("/CommonPage/ProductInHome.jsp");
         rd.include(request, response);
-        
-    } 
+    }
 
+    private Double parseDouble(String value) {
+        try {
+            return (value != null && !value.isEmpty()) ? Double.parseDouble(value) : null;
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    private Integer parseInt(String value) {
+        try {
+            return (value != null && !value.isEmpty()) ? Integer.parseInt(value) : null;
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
     /** 
      * Handles the HTTP <code>POST</code> method.
      * @param request servlet request

@@ -309,10 +309,10 @@ if (message != null) {
                         <button>&gt;</button>
                     </div>
 
-                    <div class="promo-section" style="margin-top: 20px;">
+<!--                    <div class="promo-section" style="margin-top: 20px;">
                         🎁 Promotion Code: <input type="text" id="promo-code"> 
                         <button class="btn">✅ Apply</button>
-                    </div>
+                    </div>-->
 
                     <div class="price-summary">
                         <br>

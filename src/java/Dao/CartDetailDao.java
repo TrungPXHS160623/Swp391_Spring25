@@ -71,31 +71,67 @@ public class CartDetailDao {
     }
     //thêm hoặc update cart
     public boolean addToCart(int userId, int productId) {
-        String checkSql = "SELECT cart_item_id, quantity FROM Cart_Items WHERE cart_id = (SELECT cart_id FROM Cart WHERE user_id = ?) AND product_id = ?";
-        String insertSql = "INSERT INTO Cart_Items (cart_id, product_id, quantity) VALUES ((SELECT cart_id FROM Cart WHERE user_id = ?), ?, 1)";
-        String updateSql = "UPDATE Cart_Items SET quantity = quantity + 1 WHERE cart_item_id = ?";
+    String checkCartSql = "SELECT cart_id FROM Cart WHERE user_id = ?";
+    String createCartSql = "INSERT INTO Cart (user_id, created_at, updated_at, status) VALUES (?, GETDATE(), GETDATE(), 'active')";
+    String checkItemSql = "SELECT cart_item_id, quantity FROM Cart_Items WHERE cart_id = ? AND product_id = ?";
+    String insertItemSql = "INSERT INTO Cart_Items (cart_id, product_id, quantity) VALUES (?, ?, 1)";
+    String updateItemSql = "UPDATE Cart_Items SET quantity = quantity + 1 WHERE cart_item_id = ?";
 
-        try (Connection conn = new DBContext().getConnection(); PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
+    try (Connection conn = new DBContext().getConnection()) {
+        int cartId = -1;
 
-            checkStmt.setInt(1, userId);
-            checkStmt.setInt(2, productId);
-
-            try (ResultSet rs = checkStmt.executeQuery()) {
+        // Kiểm tra giỏ hàng của user
+        try (PreparedStatement checkCartStmt = conn.prepareStatement(checkCartSql)) {
+            checkCartStmt.setInt(1, userId);
+            try (ResultSet rs = checkCartStmt.executeQuery()) {
                 if (rs.next()) {
+                    cartId = rs.getInt("cart_id");
+                }
+            }
+        }
+
+        // Nếu user chưa có giỏ hàng, tạo mới
+        if (cartId == -1) {
+            try (PreparedStatement createCartStmt = conn.prepareStatement(createCartSql, Statement.RETURN_GENERATED_KEYS)) {
+                createCartStmt.setInt(1, userId);
+                createCartStmt.executeUpdate();
+
+                try (ResultSet generatedKeys = createCartStmt.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        cartId = generatedKeys.getInt(1);
+                    }
+                }
+            }
+        }
+
+        if (cartId == -1) {
+            LOGGER.log(Level.SEVERE, "Không thể tạo giỏ hàng cho user " + userId);
+            return false;
+        }
+
+        // Kiểm tra sản phẩm đã có trong giỏ hàng chưa
+        try (PreparedStatement checkItemStmt = conn.prepareStatement(checkItemSql)) {
+            checkItemStmt.setInt(1, cartId);
+            checkItemStmt.setInt(2, productId);
+            try (ResultSet rs = checkItemStmt.executeQuery()) {
+                if (rs.next()) {
+                    // Nếu sản phẩm đã có, tăng số lượng
                     int cartItemId = rs.getInt("cart_item_id");
-                    try (PreparedStatement updateStmt = conn.prepareStatement(updateSql)) {
+                    try (PreparedStatement updateStmt = conn.prepareStatement(updateItemSql)) {
                         updateStmt.setInt(1, cartItemId);
                         updateStmt.executeUpdate();
                     }
                 } else {
-                    try (PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {
-                        insertStmt.setInt(1, userId);
+                    // Nếu chưa có, thêm sản phẩm mới vào giỏ hàng
+                    try (PreparedStatement insertStmt = conn.prepareStatement(insertItemSql)) {
+                        insertStmt.setInt(1, cartId);
                         insertStmt.setInt(2, productId);
                         insertStmt.executeUpdate();
                     }
                 }
             }
-            return true;
+        }
+        return true;
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Lỗi SQL khi lấy chi tiết giỏ hàng", e);
             return false;

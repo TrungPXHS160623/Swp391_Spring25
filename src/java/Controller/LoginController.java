@@ -79,6 +79,8 @@ public class LoginController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
+        //lấy thông tin bên view từ trang home
         String email = request.getParameter("username");
         String password = request.getParameter("password");
         String rememberMe = request.getParameter("rememberMe");
@@ -101,7 +103,7 @@ public class LoginController extends HttpServlet {
         //User user = userDAO.login(email, password);
         User user = userDAO.getUserByEmail(email); // 🔥 Lấy user bằng email, không truyền password nữa
 
-        // Kiểm tra user có tồn tại không
+        // Kiểm tra user có tồn tại không và kiểm tra mật khẩu đã hash
         if (user != null && HashUtil.checkPassword(password, user.getPassword_hash())) { // 🔥 Dùng checkpw() để kiểm tra mật khẩu
         HttpSession session = request.getSession();
         session.setAttribute("user", user);
@@ -112,15 +114,40 @@ public class LoginController extends HttpServlet {
         int cartCount = cartDao.getCartItemCount(user.getUser_id());
         session.setAttribute("cartCount", cartCount);
 
-        // Remember Me (lưu email vào cookie)
+        // 🔥 Nếu Remember Me được chọn, lưu email + password + rememberMe vào cookie
         if ("on".equals(rememberMe)) {
-            Cookie cookie = new Cookie("rememberedEmail", email);
-            cookie.setMaxAge(7 * 24 * 60 * 60);
-            response.addCookie(cookie);
+            Cookie emailCookie = new Cookie("rememberedEmail", email);
+            Cookie passwordCookie = new Cookie("rememberedPassword", password);
+            Cookie rememberCookie = new Cookie("rememberMe", "true");
+            
+            emailCookie.setMaxAge(60 * 60 * 24 * 30); // Lưu trong 30 ngày
+            passwordCookie.setMaxAge(60 * 60 * 24 * 30);
+            rememberCookie.setMaxAge(60 * 60 * 24 * 30);
+            
+            emailCookie.setPath("/"); // Áp dụng cho toàn bộ ứng dụng
+            passwordCookie.setPath("/");
+            rememberCookie.setPath("/");
+            
+            response.addCookie(emailCookie);
+            response.addCookie(passwordCookie);
+            response.addCookie(rememberCookie);
         } else {
-            Cookie cookie = new Cookie("rememberedEmail", "");
-            cookie.setMaxAge(0);
-            response.addCookie(cookie);
+            // 🔥 Nếu không chọn Remember Me, xóa cookie cũ nếu có
+            Cookie emailCookie = new Cookie("rememberedEmail", "");
+            Cookie passwordCookie = new Cookie("rememberedPassword", "");
+            Cookie rememberCookie = new Cookie("rememberMe", "");
+
+            emailCookie.setMaxAge(0);
+            passwordCookie.setMaxAge(0);
+            rememberCookie.setMaxAge(0);
+            
+            emailCookie.setPath("/"); // Áp dụng cho toàn bộ ứng dụng
+            passwordCookie.setPath("/");
+            rememberCookie.setPath("/");
+
+            response.addCookie(emailCookie);
+            response.addCookie(passwordCookie);
+            response.addCookie(rememberCookie);
         }
 
         response.sendRedirect(request.getContextPath() + "/UserPage/Home.jsp");
