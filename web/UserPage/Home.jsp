@@ -106,6 +106,11 @@
                 <a href="<%= request.getContextPath() %>/userprofile" class="btn">Go to Profile</a>
                 <a href="<%= request.getContextPath() %>/sliderlistcontroller" class="btn">Go to Management Slider</a>
                 <a href="<%= request.getContextPath() %>/myordercontroller" class="btn">My Orders</a>
+                <a href="<%= request.getContextPath() %>/AdminUserListController" class="btn">My User Management</a>
+                <a href="<%= request.getContextPath() %>/AdminProductListController" class="btn">My Product Management</a>
+                <a href="<%= request.getContextPath() %>/BlogListController" class="btn">Blog List</a>
+                <a href="<%= request.getContextPath() %>/OrderListController" class="btn">My Orders Management</a>
+
                 <jsp:include page="/CommonPage/Footer.jsp" />
             </div>
 
