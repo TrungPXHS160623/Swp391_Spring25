@@ -179,19 +179,15 @@
                 margin-bottom: 10px;
                 font-style: italic;
             }
-            .vip-icon {
-                width: 100px; /* Điều chỉnh kích thước icon */
-                height: auto;
-                margin-right: 10px; /* Khoảng cách giữa icon và chữ */
-                vertical-align: middle;
-            }
         </style>
     </head>
     <body>
 
         <div class="cart-container">
             <header>
-
+                <button onclick="window.location.href = 'homecontroller'" class="btn btn-back">
+                    ⬅ Back to Home
+                </button>
                 <div class="logo">Page Logo</div>
                 <button class="btn">Cart Detail</button>
                 <input type="text" class="search-box" placeholder="Search...">
@@ -220,7 +216,7 @@ if (message != null) {
             %>
             <div class="cart-wrapper">
                 <div class="cart-content">
-                    <form action="cartdetailcontroller" method="post">
+                    <form action="cartdetailcontroller" method="post" id="cartUpdateForm">
                         <table class="cart-table">
                             <thead>
                                 <tr>
@@ -298,9 +294,8 @@ if (message != null) {
                             <p class="update-cart-reminder">⚠️ Remember to update your cart to apply the latest discounts!</p>
                             <button type="submit" class="update-cart-btn">Refresh Cart Prices</button>
                         </div>
-
                     </form>
-
+                    
                     <div class="pagination">
                         <button>&lt;</button>
                         <button class="active">1</button>
@@ -321,18 +316,12 @@ if (message != null) {
 
                         <%-- Hiển thị mức giảm giá nếu có --%>
                         <c:if test="${discountRate > 0}">
-                            <br>🎯 <b>You have reached a discount level!</b> 
+                            <br>🎯 <b>You have reached a discount level!</b>
+                            <br> Your total is over 
                             <c:choose>
-                                <c:when test="${beforePrice > 100000000}">
-                                    <img src="https://th.bing.com/th/id/R.c9384077736ad81156c7565b6654b050?rik=6Bdpt%2bUO70Pijg&pid=ImgRaw&r=0" alt="Gold VIP" class="vip-icon"> <br> Your total is over 100 million VND
-                                </c:when>
-                                <c:when test="${beforePrice > 50000000}">
-                                    <img src="https://th.bing.com/th/id/OIP.cUqwovu6XOuHoqd_lHGrTgHaHa?rs=1&pid=ImgDetMain" alt="Silver VIP" class="vip-icon"> <br> Your total is over 50 million VND
-                                </c:when>
-                                <c:when test="${beforePrice > 10000000}">
-                                    <img src="https://cdn5.vectorstock.com/i/1000x1000/78/79/bronze-vip-symbol-set-3-vector-14037879.jpg" alt="Bronze VIP" class="vip-icon"> <br> Your total is over 10 million VND
-
-                                </c:when>
+                                <c:when test="${beforePrice > 100000000}">100 million VND</c:when>
+                                <c:when test="${beforePrice > 50000000}">50 million VND</c:when>
+                                <c:when test="${beforePrice > 10000000}">10 million VND</c:when>
                             </c:choose>
                             → <b><fmt:formatNumber value="${discountRate}" type="number" maxFractionDigits="2"/>% Discount</b>
 
@@ -343,47 +332,53 @@ if (message != null) {
                         🏷️ <b>Final Total Price:</b> <fmt:formatNumber value="${finalPrice}" type="number" groupingUsed="true"/> VND
                     </div>
 
-
-                    <a href="<%= request.getContextPath() %>/homecontroller" class="btn btn-back">
-                        ➕ Choose More Products
-                    </a>
-
-
-                    <a href="<%= request.getContextPath() %>/checkout" class="btn btn-back checkout-btn" style="background-color: blue; color: white;">
-                        ✅ Check Out
-                    </a>
-</div>
-
-                    <div class="discount-info">
-                        <h3>DISCOUNTS FOR PURCHASES</h3>
-                        <ul>
-                            <li class="green">
-                                🟢 From 10 million VND → 5% Discount 
-                                <c:if test="${beforePrice >= 10000000 && beforePrice < 50000000}">✅ (You are here!)</c:if>
-                                <c:if test="${beforePrice < 10000000}">
-                                    (Add <fmt:formatNumber value="${10000000 - beforePrice}" type="number" groupingUsed="true"/> VND more to reach! 🚀)
-                                </c:if>
-                            </li>
-                            <li class="blue">
-                                🔵 From 50 million VND → 7% Discount  
-                                <c:if test="${beforePrice >= 50000000 && beforePrice < 100000000}">✅ (You are here!)</c:if>
-                                <c:if test="${beforePrice < 50000000}">
-                                    (Add <fmt:formatNumber value="${50000000 - beforePrice}" type="number" groupingUsed="true"/> VND more to reach! 🚀)
-                                </c:if>
-                            </li>
-                            <li class="red">
-                                🔴 From 100 million VND → 10% Discount  
-                                <c:if test="${beforePrice >= 100000000}">✅ (You are here!)</c:if>
-                                <c:if test="${beforePrice < 100000000}">
-                                    (Add <fmt:formatNumber value="${100000000 - beforePrice}" type="number" groupingUsed="true"/> VND more to reach! 🚀)
-                                </c:if>
-                            </li>
-                        </ul>
-                    </div>
-
-
+                    <button class="btn" onclick="window.location.href='homecontroller'">➕ Choose More Products</button>
                 </div>
+
+                <div class="discount-info">
+                    <h3>DISCOUNTS FOR PURCHASES</h3>
+                    <ul>
+                        <li class="green">
+                            🟢 From 10 million VND → 5% Discount 
+                            <c:if test="${beforePrice >= 10000000 && beforePrice < 50000000}">✅ (You are here!)</c:if>
+                            <c:if test="${beforePrice < 10000000}">
+                                (Add <fmt:formatNumber value="${10000000 - beforePrice}" type="number" groupingUsed="true"/> VND more to reach! 🚀)
+                            </c:if>
+                        </li>
+                        <li class="blue">
+                            🔵 From 50 million VND → 7% Discount  
+                            <c:if test="${beforePrice >= 50000000 && beforePrice < 100000000}">✅ (You are here!)</c:if>
+                            <c:if test="${beforePrice < 50000000}">
+                                (Add <fmt:formatNumber value="${50000000 - beforePrice}" type="number" groupingUsed="true"/> VND more to reach! 🚀)
+                            </c:if>
+                        </li>
+                        <li class="red">
+                            🔴 From 100 million VND → 10% Discount  
+                            <c:if test="${beforePrice >= 100000000}">✅ (You are here!)</c:if>
+                            <c:if test="${beforePrice < 100000000}">
+                                (Add <fmt:formatNumber value="${100000000 - beforePrice}" type="number" groupingUsed="true"/> VND more to reach! 🚀)
+                            </c:if>
+                        </li>
+                    </ul>
+                </div>
+
+
             </div>
+            
+            <!-- Place checkout form completely outside cart-wrapper -->
+            <div style="margin-top: 20px; text-align: center;">
+                <form id="checkoutForm" action="cartcontactcontroller" method="get" style="display: inline-block; width: 50%;" onsubmit="return prepareCheckout()">
+                    <!-- The selected products will be added by JavaScript before form submission -->
+                    <input type="hidden" name="beforePrice" value="${beforePrice}">
+                    <input type="hidden" name="discountRate" value="${discountRate}">
+                    <input type="hidden" name="discountAmount" value="${discountAmount}">
+                    <input type="hidden" name="finalPrice" value="${finalPrice}">
+                    <button type="submit" class="btn" style="background-color: #28a745; padding: 12px 25px; font-size: 18px; width: 100%;">
+                        ✅ Proceed to Checkout
+                    </button>
+                </form>
+            </div>
+        </div>
 
     </body>
 </html>
@@ -393,5 +388,37 @@ if (message != null) {
         for (let i = 0; i < checkboxes.length; i++) {
             checkboxes[i].checked = source.checked;
         }
+    }
+    
+    // Function to prepare the checkout form before submission
+    function prepareCheckout() {
+        // Get all selected product checkboxes
+        const checkboxes = document.querySelectorAll('input[name="selectedProducts"]:checked');
+        
+        if (checkboxes.length === 0) {
+            alert('Please select at least one product before checkout');
+            return false;
+        }
+        
+        // Get the checkout form
+        const form = document.getElementById('checkoutForm');
+        
+        // Remove any existing selectedProducts inputs to avoid duplicates
+        const existingInputs = form.querySelectorAll('input[name="selectedProducts"]');
+        existingInputs.forEach(input => input.remove());
+        
+        // Create hidden inputs for each selected product
+        checkboxes.forEach(checkbox => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'selectedProducts';
+            input.value = checkbox.value;
+            form.appendChild(input);
+        });
+        
+        console.log('Form submitting to:', form.action);
+        console.log('Selected products:', Array.from(checkboxes).map(cb => cb.value));
+        
+        return true;
     }
 </script>

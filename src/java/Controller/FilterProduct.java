@@ -54,4 +54,5 @@ public class FilterProduct extends HttpServlet {
         RequestDispatcher dispatcher = request.getRequestDispatcher("filteredProducts.jsp");
         dispatcher.forward(request, response);
     }
+    
 }

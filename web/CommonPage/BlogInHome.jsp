@@ -1,115 +1,79 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Blog Section</title>
+        <meta charset="UTF-8">
+        <title>Blog Home</title>
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <style>
-            .blog-container {
-                width: 100%;
-                max-width: 1300px;
-                margin: auto;
-                overflow: hidden;
-                position: relative;
-                border-radius: 10px;
-                box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-            }
-
-            .blog-list {
-                display: flex;
-                white-space: nowrap;
-                transition: transform 0.5s ease-in-out;
-            }
-
             .blog-item {
-                flex: 0 0 calc(100% / 3);
-                text-align: center;
-                margin-right: 10px;
-                border: 2px solid #000;
-                padding: 10px;
-                border-radius: 5px;
+                margin-bottom: 30px;
             }
-
-            .blog-item img {
-                width: 100%;
-                border-radius: 10px;
-                border-bottom: 2px solid #000;
+            .blog-thumbnail {
+                max-width: 100%;
+                height: auto;
             }
-            
             .blog-title {
-                margin-top: 10px;
-                font-size: 18px;
+                font-size: 1.5rem;
                 font-weight: bold;
-                color: #000;
-                text-shadow: 2px 2px 5px rgba(150, 150, 150, 0.3);
             }
-
-            .prev, .next {
-                position: absolute;
-                top: 50%;
-                transform: translateY(-50%);
-                background-color: rgba(0, 0, 0, 0.5);
-                color: white;
-                border: none;
-                padding: 10px;
-                cursor: pointer;
-                border-radius: 5px;
+            .blog-summary {
+                font-size: 1rem;
             }
-
-            .prev {
-                left: 10px;
-            }
-            .next {
-                right: 10px;
+            .blog-meta {
+                font-size: 0.9rem;
+                color: #666;
             }
         </style>
     </head>
     <body>
-        <div class="blog-container">
-            <h2>Blog Section</h2>
-            <div class="blog-list">
-                <c:forEach var="blog" items="${blogs}">
-                    <div class="blog-item">
-                        <img src="${blog.imageUrl}" alt="Blog Image">
-                        <p class="blog-title">${blog.title}</p>
+        <div class="container mt-5">
+            <h1 class="mb-4">Blog Home</h1>
+            <div class="row">
+                <!-- Cột trái: Danh sách blog -->
+                <div class="col-md-8">
+                    <div class="row">
+                        <c:if test="${not empty blogList}">
+                            <c:forEach var="blog" items="${blogList}">
+                                <div class="col-md-6 blog-item">
+                                    <div class="card h-100">
+                                        <c:if test="${not empty blog.mediaUrl}">
+                                            <img src="${blog.mediaUrl}" class="card-img-top blog-thumbnail" alt="${blog.title}">
+                                        </c:if>
+                                        <div class="card-body">
+                                            <h5 class="card-title blog-title">
+                                                <a href="BlogDetailController?postId=${blog.postId}" class="text-decoration-none text-dark">
+                                                    ${blog.title}
+                                                </a>
+                                            </h5>
+                                            <p class="card-text blog-summary">${blog.summary}</p>
+                                        </div>
+                                        <div class="card-footer">
+                                            <small class="text-muted blog-meta">
+                                                Updated on ${blog.dayUpdate} | Category: ${blog.category}
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </c:forEach>
+                        </c:if>
+                        <c:if test="${empty blogList}">
+                            <div class="col-12">
+                                <p>No blog posts available.</p>
+                            </div>
+                        </c:if>
                     </div>
-                </c:forEach>
+                </div>
+                <!-- Cột phải: Sidebar -->
+                <div class="col-md-4">
+                    <jsp:include page="BlogSideBar.jsp" />
+                </div>
             </div>
-
-            <button class="prev" onclick="prevBlog()">❮</button>
-            <button class="next" onclick="nextBlog()">❯</button>
         </div>
+
+        <!-- Bootstrap Bundle JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        let currentIndex = 0;
-        const blogContainer = document.querySelector('.blog-list');
-        const blogs = document.querySelectorAll('.blog-item');
-        const totalBlogs = blogs.length;
-        const visibleBlogs = 3;
-        const blogWidth = blogs[0].offsetWidth;
-
-        function updateBlogSlider() {
-            blogContainer.style.transform = `translateX(${-currentIndex * blogWidth}px)`;
-        }
-
-        document.querySelector('.next').addEventListener("click", function () {
-            if (currentIndex < totalBlogs - visibleBlogs) {
-                currentIndex++;
-                updateBlogSlider();
-            }
-        });
-
-        document.querySelector('.prev').addEventListener("click", function () {
-            if (currentIndex > 0) {
-                currentIndex--;
-                updateBlogSlider();
-            }
-        });
-
-        updateBlogSlider();
-    });
-</script>

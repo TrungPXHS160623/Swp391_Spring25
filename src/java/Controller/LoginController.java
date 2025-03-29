@@ -105,14 +105,17 @@ public class LoginController extends HttpServlet {
 
         // Kiểm tra user có tồn tại không và kiểm tra mật khẩu đã hash
         if (user != null && HashUtil.checkPassword(password, user.getPassword_hash())) { // 🔥 Dùng checkpw() để kiểm tra mật khẩu
+
         HttpSession session = request.getSession();
         session.setAttribute("user", user);
         session.setAttribute("userId", user.getUser_id());
+        
 
         // Lấy số lượng sản phẩm trong giỏ hàng
         CartDetailDao cartDao = new CartDetailDao();
         int cartCount = cartDao.getCartItemCount(user.getUser_id());
         session.setAttribute("cartCount", cartCount);
+
 
         // 🔥 Nếu Remember Me được chọn, lưu email + password + rememberMe vào cookie
         if ("on".equals(rememberMe)) {
@@ -150,7 +153,33 @@ public class LoginController extends HttpServlet {
             response.addCookie(rememberCookie);
         }
 
-        response.sendRedirect(request.getContextPath() + "/UserPage/Home.jsp");
+            int roleId = user.getRole_id();
+            
+            if (roleId == 2) { // Customer role
+                response.sendRedirect(request.getContextPath() + "/UserPage/Home.jsp");
+                return;
+            } else if (roleId == 1 || roleId == 4) { // Admin or Marketing role
+                response.sendRedirect(request.getContextPath() + "/admin/customers");
+                return;
+            } else {
+                // Default redirect for any other role
+                response.sendRedirect(request.getContextPath() + "/UserPage/Home.jsp");
+                return;
+            }
+
+//        // Remember Me (lưu email vào cookie)
+//        if ("on".equals(rememberMe)) {
+//            Cookie cookie = new Cookie("rememberedEmail", email);
+//            cookie.setMaxAge(7 * 24 * 60 * 60);
+//            response.addCookie(cookie);
+//
+//        } else {
+//            Cookie cookie = new Cookie("rememberedEmail", "");
+//            cookie.setMaxAge(0);
+//            response.addCookie(cookie);
+//        }
+
+       // response.sendRedirect(request.getContextPath() + "/UserPage/Home.jsp");
     } else {
         request.setAttribute("errorMessage", "Invalid email or password.");
         request.getRequestDispatcher("/UserPage/Login.jsp").forward(request, response);

@@ -1,6 +1,8 @@
 package Dao;
 
 import Context.DBContext;
+import Entity.OrderItems;
+import Entity.Orders;
 import java.sql.*;
 import java.util.*;
 import java.util.logging.Level;
@@ -197,6 +199,103 @@ public class OrderDao {
 
         // Tính tổng số trang
         return (int) Math.ceil((double) totalOrders / pageSize);
+    }
+
+    /**
+     * Gets an Order entity by order ID
+     * Used for the feedback feature
+     * @param orderId The order ID to retrieve
+     * @return Order entity or null if not found
+     */
+    public Orders getOrderByIdd(int orderId) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        Orders order = null;
+        
+        try {
+            conn = new DBContext().getConnection();
+            String sql = "SELECT [order_id], [user_id], [order_status], [total_amount], "
+                       + "[created_at], [updated_at] "
+                       + "FROM [dbo].[Orders] "
+                       + "WHERE [order_id] = ?";
+            
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, orderId);
+            
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                order = new Orders();
+                order.setOrderId(rs.getInt("order_id"));
+                order.setUserId(rs.getInt("user_id"));
+                order.setOrderStatus(rs.getString("order_status"));
+                order.setTotalAmount(rs.getDouble("total_amount"));
+                order.setCreatedAt(rs.getTimestamp("created_at"));
+                order.setUpdatedAt(rs.getTimestamp("updated_at"));
+            }
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error getting order by ID: " + e.getMessage(), e);
+        } finally {
+            closeResources(conn, ps, rs);
+        }
+        
+        return order;
+    }
+
+    /**
+     * Gets order items for an order
+     * Used for the feedback feature
+     * @param orderId The order ID
+     * @return List of order items
+     */
+    public List<OrderItems> getOrderItems(int orderId) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        List<OrderItems> items = new ArrayList<>();
+        
+        try {
+            conn = new DBContext().getConnection();
+            String sql = "SELECT [order_item_id], [order_id], [product_id], "
+                       + "[quantity], [price], [subtotal] "
+                       + "FROM [dbo].[Order_Items] "
+                       + "WHERE [order_id] = ?";
+            
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, orderId);
+            
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                OrderItems item = new OrderItems();
+                item.setOrderItemId(rs.getInt("order_item_id"));
+                item.setOrderId(rs.getInt("order_id"));
+                item.setProductId(rs.getInt("product_id"));
+                item.setQuantity(rs.getInt("quantity"));
+                item.setPrice(rs.getDouble("price"));
+                item.setSubtotal(rs.getDouble("subtotal"));
+                
+                items.add(item);
+            }
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error getting order items: " + e.getMessage(), e);
+        } finally {
+            closeResources(conn, ps, rs);
+        }
+        
+        return items;
+    }
+    
+    /**
+     * Helper method to close database resources
+     */
+    private void closeResources(Connection conn, PreparedStatement ps, ResultSet rs) {
+        try {
+            if (rs != null) rs.close();
+            if (ps != null) ps.close();
+            if (conn != null) conn.close();
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error closing resources: " + e.getMessage(), e);
+        }
     }
 
     public static void main(String[] args) {

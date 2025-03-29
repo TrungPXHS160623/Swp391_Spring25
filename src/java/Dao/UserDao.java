@@ -278,6 +278,7 @@ public class UserDao {
                 user.setUser_id(rs.getInt("user_id"));
                 user.setEmail(rs.getString("email"));
                 user.setPassword_hash(rs.getString("password_hash")); // 🔥 Lấy mật khẩu đã hash từ DB
+                user.setRole_id(rs.getInt("role_id"));
             }
             conn.close();
         } catch (SQLException e) {
@@ -313,28 +314,27 @@ public class UserDao {
     }
 
     public static void main(String[] args) {
-//        // Tạo một đối tượng User để kiểm thử
-//        User testUser = new User();
-//        testUser.setFull_name("Nguyen Van A");
-//        testUser.setGender("Male");
-//        testUser.setEmail("testuser@example.com");
-//        testUser.setPassword_hash("hashedpassword123"); // Giả sử đã mã hóa
-//        testUser.setPhone_number("0123456789");
-//        testUser.setAddress("123 Đường ABC, TP.HCM");
-//        testUser.setRole_id(2); // Vai trò mặc định của user bình thường
-//
-//        // Khởi tạo đối tượng chứa phương thức register
-//        UserDao userService = new UserDao();
-//
-//        // Kiểm tra đăng ký
-//        boolean isRegistered = userService.register(testUser);
-//
-//        // In kết quả ra console
-//        if (isRegistered) {
-//            System.out.println("Đăng ký thành công!");
-//        } else {
-//            System.out.println("Đăng ký thất bại!");
-//        }
+        // Tạo một đối tượng User để kiểm thử
+        User testUser = new User();
+        testUser.setFull_name("Nguyen Van A");
+        testUser.setGender("Male");
+        testUser.setEmail("testuser@example.com");
+        testUser.setPassword_hash("hashedpassword123"); // Giả sử đã mã hóa
+        testUser.setPhone_number("0123456789");
+        testUser.setAddress("123 Đường ABC, TP.HCM");
+        testUser.setRole_id(2); // Vai trò mặc định của user bình thường
+
+        // Khởi tạo đối tượng chứa phương thức register
+        UserDao userService = new UserDao();
+        // Kiểm tra đăng ký
+        boolean isRegistered = userService.register(testUser);
+
+        // In kết quả ra console
+        if (isRegistered) {
+            System.out.println("Đăng ký thành công!");
+        } else {
+            System.out.println("Đăng ký thất bại!");
+        }
 
 //        //testupdate
 //        UserDao userDAO = new UserDao();
@@ -349,21 +349,21 @@ public class UserDao {
 //        } else {
 //            System.out.println("❌ Cập nhật thông tin thất bại!");
 //        }
-Scanner scanner = new Scanner(System.in);
-        UserDao userDao = new UserDao();
-
-        System.out.print("Nhập email để tìm kiếm: ");
-        String email = scanner.nextLine();
-
-        User user = userDao.getUserByEmail(email);
-        if (user != null) {
-            System.out.println("Người dùng tìm thấy: ");
-            System.out.println("ID: " + user.getUser_id());
-            System.out.println("Email: " + user.getEmail());
-            System.out.println("Password Hash: " + user.getPassword_hash());
-        } else {
-            System.out.println("Không tìm thấy người dùng với email này.");
-        }
-        scanner.close();
+//Scanner scanner = new Scanner(System.in);
+//        UserDao userDao = new UserDao();
+//
+//        System.out.print("Nhập email để tìm kiếm: ");
+//        String email = scanner.nextLine();
+//
+//        User user = userDao.getUserByEmail(email);
+//        if (user != null) {
+//            System.out.println("Người dùng tìm thấy: ");
+//            System.out.println("ID: " + user.getUser_id());
+//            System.out.println("Email: " + user.getEmail());
+//            System.out.println("Password Hash: " + user.getPassword_hash());
+//        } else {
+//            System.out.println("Không tìm thấy người dùng với email này.");
+//        }
+//        scanner.close();
     }
-}
+    }
