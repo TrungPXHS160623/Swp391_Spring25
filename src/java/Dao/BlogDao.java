@@ -61,7 +61,7 @@ public class BlogDao {
     public List<PostDto> searchBlog(String keyword) {
         List<PostDto> list = new ArrayList<>();
         String sql = "SELECT p.title, p.summary, CONVERT(varchar, p.updated_at, 103) as dayUpdate, "
-                + "pm.media_url, c.category_name "
+                + "pm.media_url, c.category_name, u.full_name as author "
                 + "FROM Posts p "
                 + "LEFT JOIN Post_Media pm ON p.post_id = pm.post_id AND pm.is_primary = 1 "
                 + "LEFT JOIN Categories c ON p.category_id = c.category_id "
@@ -97,7 +97,7 @@ public class BlogDao {
     public List<PostDto> filterBlogbyCategory(String category) {
         List<PostDto> list = new ArrayList<>();
         String sql = "SELECT p.post_id, p.title, p.summary, CONVERT(varchar, p.updated_at, 103) as dayUpdate, "
-                + "pm.media_url, c.category_name "
+                + "pm.media_url, c.category_name, u.full_name as author "
                 + "FROM Posts p "
                 + "LEFT JOIN Post_Media pm ON p.post_id = pm.post_id AND pm.is_primary = 1 "
                 + "LEFT JOIN Categories c ON p.category_id = c.category_id "
