@@ -7,6 +7,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -229,38 +230,46 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Thumbnail</th>
-                                    <th>
-                                        <a href="${pageContext.request.contextPath}/PostListController?sortBy=title&sortOrder=${sortBy == 'title' && sortOrder != 'desc' ? 'desc' : 'asc'}${not empty categoryId ? '&categoryId='.concat(categoryId) : ''}${not empty authorId ? '&authorId='.concat(authorId) : ''}${not empty status ? '&status='.concat(status) : ''}${not empty searchTitle ? '&searchTitle='.concat(searchTitle) : ''}">
-                                            Title
-                                            <c:if test="${sortBy == 'title'}">
-                                                <i class="fas fa-sort-${sortOrder == 'desc' ? 'down' : 'up'} sort-icon"></i>
-                                            </c:if>
-                                        </a>
-                                    </th>
-                                    <th>
-                                        <a href="${pageContext.request.contextPath}/PostListController?sortBy=category&sortOrder=${sortBy == 'category' && sortOrder != 'desc' ? 'desc' : 'asc'}${not empty categoryId ? '&categoryId='.concat(categoryId) : ''}${not empty authorId ? '&authorId='.concat(authorId) : ''}${not empty status ? '&status='.concat(status) : ''}${not empty searchTitle ? '&searchTitle='.concat(searchTitle) : ''}">
-                                            Category
-                                            <c:if test="${sortBy == 'category'}">
-                                                <i class="fas fa-sort-${sortOrder == 'desc' ? 'down' : 'up'} sort-icon"></i>
-                                            </c:if>
-                                        </a>
-                                    </th>
-                                    <th>
-                                        <a href="${pageContext.request.contextPath}/PostListController?sortBy=author&sortOrder=${sortBy == 'author' && sortOrder != 'desc' ? 'desc' : 'asc'}${not empty categoryId ? '&categoryId='.concat(categoryId) : ''}${not empty authorId ? '&authorId='.concat(authorId) : ''}${not empty status ? '&status='.concat(status) : ''}${not empty searchTitle ? '&searchTitle='.concat(searchTitle) : ''}">
+                                    <c:if test="${columns == null or fn:contains(columns, 'title')}">
+                                        <th>
+                                            <a href="${pageContext.request.contextPath}/PostListController?sortBy=title&sortOrder=${sortBy == 'title' && sortOrder != 'desc' ? 'desc' : 'asc'}${not empty categoryId ? '&categoryId='.concat(categoryId) : ''}${not empty authorId ? '&authorId='.concat(authorId) : ''}${not empty status ? '&status='.concat(status) : ''}${not empty searchTitle ? '&searchTitle='.concat(searchTitle) : ''}">
+                                                Title
+                                                <c:if test="${sortBy == 'title'}">
+                                                    <i class="fas fa-sort-${sortOrder == 'desc' ? 'down' : 'up'} sort-icon"></i>
+                                                </c:if>
+                                            </a>
+                                        </th>
+                                    </c:if>
+                                    <c:if test="${columns == null or fn:contains(columns, 'category')}">
+                                        <th>
+                                            <a href="${pageContext.request.contextPath}/PostListController?sortBy=category&sortOrder=${sortBy == 'category' && sortOrder != 'desc' ? 'desc' : 'asc'}${not empty categoryId ? '&categoryId='.concat(categoryId) : ''}${not empty authorId ? '&authorId='.concat(authorId) : ''}${not empty status ? '&status='.concat(status) : ''}${not empty searchTitle ? '&searchTitle='.concat(searchTitle) : ''}">
+                                                Category
+                                                <c:if test="${sortBy == 'category'}">
+                                                    <i class="fas fa-sort-${sortOrder == 'desc' ? 'down' : 'up'} sort-icon"></i>
+                                                </c:if>
+                                            </a>
+                                        </th>
+                                    </c:if>
+                                    <c:if test="${columns == null or fn:contains(columns, 'author')}">
+                                        <th>
+                                            <a href="${pageContext.request.contextPath}/PostListController?sortBy=author&sortOrder=${sortBy == 'author' && sortOrder != 'desc' ? 'desc' : 'asc'}${not empty categoryId ? '&categoryId='.concat(categoryId) : ''}${not empty authorId ? '&authorId='.concat(authorId) : ''}${not empty status ? '&status='.concat(status) : ''}${not empty searchTitle ? '&searchTitle='.concat(searchTitle) : ''}">
                                             Author
                                             <c:if test="${sortBy == 'author'}">
                                                 <i class="fas fa-sort-${sortOrder == 'desc' ? 'down' : 'up'} sort-icon"></i>
                                             </c:if>
-                                        </a>
-                                    </th>
-                                    <th>
-                                        <a href="${pageContext.request.contextPath}/PostListController?sortBy=status&sortOrder=${sortBy == 'status' && sortOrder != 'desc' ? 'desc' : 'asc'}${not empty categoryId ? '&categoryId='.concat(categoryId) : ''}${not empty authorId ? '&authorId='.concat(authorId) : ''}${not empty status ? '&status='.concat(status) : ''}${not empty searchTitle ? '&searchTitle='.concat(searchTitle) : ''}">
-                                            Status
-                                            <c:if test="${sortBy == 'status'}">
-                                                <i class="fas fa-sort-${sortOrder == 'desc' ? 'down' : 'up'} sort-icon"></i>
-                                            </c:if>
-                                        </a>
-                                    </th>
+                                            </a>
+                                        </th>
+                                    </c:if>
+                                    <c:if test="${columns == null or fn:contains(columns, 'status')}">
+                                        <th>
+                                            <a href="${pageContext.request.contextPath}/PostListController?sortBy=status&sortOrder=${sortBy == 'status' && sortOrder != 'desc' ? 'desc' : 'asc'}${not empty categoryId ? '&categoryId='.concat(categoryId) : ''}${not empty authorId ? '&authorId='.concat(authorId) : ''}${not empty status ? '&status='.concat(status) : ''}${not empty searchTitle ? '&searchTitle='.concat(searchTitle) : ''}">
+                                                Status
+                                                <c:if test="${sortBy == 'status'}">
+                                                    <i class="fas fa-sort-${sortOrder == 'desc' ? 'down' : 'up'} sort-icon"></i>
+                                                </c:if>
+                                            </a>
+                                        </th>
+                                    </c:if>
                                     <th>Created Date</th>
                                     <th>Actions</th>
                                 </tr>
@@ -283,15 +292,22 @@
                                                 <span class="text-muted">No image</span>
                                             </c:if>
                                         </td>
-                                        <td>${post.title}</td>
-                                        <td>${post.categoryName}</td>
-                                        <td>${post.authorName}</td>
-                                        
-                                        <td>
+                                        <c:if test="${columns == null or fn:contains(columns, 'title')}">
+                                            <td>${post.title}</td>
+                                        </c:if>
+                                        <c:if test="${columns == null or fn:contains(columns, 'category')}">
+                                            <td>${post.categoryName}</td>
+                                        </c:if>
+                                        <c:if test="${columns == null or fn:contains(columns, 'author')}">
+                                            <td>${post.authorName}</td>
+                                        </c:if>
+                                        <c:if test="${columns == null or fn:contains(columns, 'status')}">
+                                            <td>
                                             <span class="status-badge ${post.status ? 'status-active' : 'status-inactive'}">
                                                 ${post.status ? 'Active' : 'Inactive'}
                                             </span>
                                         </td>
+                                        </c:if>
                                         <td><fmt:formatDate value="${post.createdAt}" pattern="dd-MM-yyyy HH:mm" /></td>
                                         <td class="action-buttons">
                                             <!-- View button -->
@@ -393,7 +409,7 @@
                 </div>
             </div>
         </div>
-        <!-- Button to open popup -->
+                                            <!-- Button to open popup -->
         <button onclick="openPopup()">Customize Table</button>
 
         <!-- Popup overlay -->
@@ -405,11 +421,14 @@
             <h3>Customize Table</h3>
 
             <form action="customizetablecontroller" method="post">
+                <label>Rows per Table:</label><br>
+                <input type="number" name="rowsPerPage" value="${sessionScope.rowsPerPage}" min="1"/><br><br>
+
                 <label>Select Columns:</label><br>
                 <input type="checkbox" name="columns" value="title"
                     <c:if test="${sessionScope.columns.contains('title')}">checked</c:if>> Title<br>
-                <input type="checkbox" name="columns" value="price"
-                    <c:if test="${sessionScope.columns.contains('category')}">checked</c:if>> Price<br>
+                <input type="checkbox" name="columns" value="category"
+                    <c:if test="${sessionScope.columns.contains('category')}">checked</c:if>> Category<br>
                 <input type="checkbox" name="columns" value="author"
                     <c:if test="${sessionScope.columns.contains('author')}">checked</c:if>> Author<br>
                 <input type="checkbox" name="columns" value="status"
@@ -431,6 +450,7 @@
             }
         </script>
 
+        
         <!-- Bootstrap JS with Popper -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     </body>

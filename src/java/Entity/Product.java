@@ -40,6 +40,7 @@ public class Product {
         this.discountPercentage = discountPercentage;
         this.soldQuantity = soldQuantity;
         this.averageRating = averageRating;
+        
     }
 
     public int getProductId() {

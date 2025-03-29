@@ -265,7 +265,7 @@
                 
                 <!-- Filters Section -->
                 <div class="filter-section">
-                    <form id="filterForm" action="${pageContext.request.contextPath}/admin/feedbacks" method="GET" class="row g-3">
+                    <form id="filterForm" action="${pageContext.request.contextPath}/FeedbackList" method="GET" class="row g-3">
                         <div class="col-md-3">
                             <label for="search" class="form-label"><i class="fas fa-search me-2"></i>Search:</label>
                             <input type="text" class="form-control" id="search" name="search" 
@@ -303,7 +303,7 @@
                         </div>
                         <div class="col-md-2 d-flex align-items-end">
                             <button type="submit" class="btn btn-primary me-2"><i class="fas fa-filter me-2"></i>Filter</button>
-                            <a href="${pageContext.request.contextPath}/admin/feedbacks" class="btn btn-secondary"><i class="fas fa-undo me-2"></i>Reset</a>
+                            <a href="${pageContext.request.contextPath}FeedbackList" class="btn btn-secondary"><i class="fas fa-undo me-2"></i>Reset</a>
                         </div>
                     </form>
                 </div>
@@ -315,7 +315,7 @@
                             <tr>
                                 <th>#</th>
                                 <th>
-                                    <a href="${pageContext.request.contextPath}/admin/feedbacks?sortBy=fullName&sortOrder=${sortBy eq 'fullName' && sortOrder eq 'asc' ? 'desc' : 'asc'}&search=${searchKeyword}&productId=${selectedProductId}&rating=${selectedRating}&status=${selectedStatus}" class="text-decoration-none text-dark">
+                                    <a href="${pageContext.request.contextPath}/FeedbackList?sortBy=fullName&sortOrder=${sortBy eq 'fullName' && sortOrder eq 'asc' ? 'desc' : 'asc'}&search=${searchKeyword}&productId=${selectedProductId}&rating=${selectedRating}&status=${selectedStatus}" class="text-decoration-none text-dark">
                                         <i class="fas fa-user me-1"></i> Customer Name
                                         <span class="sort-icon">
                                             <c:choose>
@@ -333,7 +333,7 @@
                                     </a>
                                 </th>
                                 <th>
-                                    <a href="${pageContext.request.contextPath}/admin/feedbacks?sortBy=productName&sortOrder=${sortBy eq 'productName' && sortOrder eq 'asc' ? 'desc' : 'asc'}&search=${searchKeyword}&productId=${selectedProductId}&rating=${selectedRating}&status=${selectedStatus}" class="text-decoration-none text-dark">
+                                    <a href="${pageContext.request.contextPath}/FeedbackList?sortBy=productName&sortOrder=${sortBy eq 'productName' && sortOrder eq 'asc' ? 'desc' : 'asc'}&search=${searchKeyword}&productId=${selectedProductId}&rating=${selectedRating}&status=${selectedStatus}" class="text-decoration-none text-dark">
                                         <i class="fas fa-box me-1"></i> Product
                                         <span class="sort-icon">
                                             <c:choose>
@@ -351,7 +351,7 @@
                                     </a>
                                 </th>
                                 <th>
-                                    <a href="${pageContext.request.contextPath}/admin/feedbacks?sortBy=rating&sortOrder=${sortBy eq 'rating' && sortOrder eq 'asc' ? 'desc' : 'asc'}&search=${searchKeyword}&productId=${selectedProductId}&rating=${selectedRating}&status=${selectedStatus}" class="text-decoration-none text-dark">
+                                    <a href="${pageContext.request.contextPath}/FeedbackList?sortBy=rating&sortOrder=${sortBy eq 'rating' && sortOrder eq 'asc' ? 'desc' : 'asc'}&search=${searchKeyword}&productId=${selectedProductId}&rating=${selectedRating}&status=${selectedStatus}" class="text-decoration-none text-dark">
                                         <i class="fas fa-star me-1"></i> Rating
                                         <span class="sort-icon">
                                             <c:choose>
@@ -371,7 +371,7 @@
                                 <th><i class="fas fa-comment me-1"></i> Comment</th>
                                 <th><i class="fas fa-calendar me-1"></i> Date</th>
                                 <th>
-                                    <a href="${pageContext.request.contextPath}/admin/feedbacks?sortBy=status&sortOrder=${sortBy eq 'status' && sortOrder eq 'asc' ? 'desc' : 'asc'}&search=${searchKeyword}&productId=${selectedProductId}&rating=${selectedRating}&status=${selectedStatus}" class="text-decoration-none text-dark">
+                                    <a href="${pageContext.request.contextPath}/FeedbackList?sortBy=status&sortOrder=${sortBy eq 'status' && sortOrder eq 'asc' ? 'desc' : 'asc'}&search=${searchKeyword}&productId=${selectedProductId}&rating=${selectedRating}&status=${selectedStatus}" class="text-decoration-none text-dark">
                                         <i class="fas fa-toggle-on me-1"></i> Status
                                         <span class="sort-icon">
                                             <c:choose>
@@ -429,7 +429,7 @@
                                                    class="btn btn-sm btn-info me-1" data-bs-toggle="tooltip" title="View Details">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
-                                                <a href="${pageContext.request.contextPath}/admin/feedback?action=changeStatus&id=${feedback.reviewId}&status=${!feedback.status}&page=${currentPage}" 
+                                                <a href="${pageContext.request.contextPath}/FeedbackList?action=changeStatus&id=${feedback.reviewId}&status=${!feedback.status}&page=${currentPage}" 
                                                    class="btn btn-sm ${feedback.status ? 'btn-danger' : 'btn-success'}" 
                                                    onclick="return confirm('Are you sure you want to ${feedback.status ? 'deactivate' : 'activate'} this feedback?')"
                                                    data-bs-toggle="tooltip" title="${feedback.status ? 'Deactivate' : 'Activate'}">
@@ -449,21 +449,21 @@
                     <nav aria-label="Page navigation">
                         <ul class="pagination justify-content-center">
                             <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
-                                <a class="page-link" href="${pageContext.request.contextPath}/admin/feedbacks?page=${currentPage - 1}&search=${searchKeyword}&productId=${selectedProductId}&rating=${selectedRating}&status=${selectedStatus}&sortBy=${sortBy}&sortOrder=${sortOrder}">
+                                <a class="page-link" href="${pageContext.request.contextPath}/FeedbackList?page=${currentPage - 1}&search=${searchKeyword}&productId=${selectedProductId}&rating=${selectedRating}&status=${selectedStatus}&sortBy=${sortBy}&sortOrder=${sortOrder}">
                                     <i class="fas fa-chevron-left"></i> Previous
                                 </a>
                             </li>
                             
                             <c:forEach begin="1" end="${totalPages}" var="i">
                                 <li class="page-item ${currentPage == i ? 'active' : ''}">
-                                    <a class="page-link" href="${pageContext.request.contextPath}/admin/feedbacks?page=${i}&search=${searchKeyword}&productId=${selectedProductId}&rating=${selectedRating}&status=${selectedStatus}&sortBy=${sortBy}&sortOrder=${sortOrder}">
+                                    <a class="page-link" href="${pageContext.request.contextPath}/FeedbackList?page=${i}&search=${searchKeyword}&productId=${selectedProductId}&rating=${selectedRating}&status=${selectedStatus}&sortBy=${sortBy}&sortOrder=${sortOrder}">
                                         ${i}
                                     </a>
                                 </li>
                             </c:forEach>
                             
                             <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
-                                <a class="page-link" href="${pageContext.request.contextPath}/admin/feedbacks?page=${currentPage + 1}&search=${searchKeyword}&productId=${selectedProductId}&rating=${selectedRating}&status=${selectedStatus}&sortBy=${sortBy}&sortOrder=${sortOrder}">
+                                <a class="page-link" href="${pageContext.request.contextPath}/FeedbackList?page=${currentPage + 1}&search=${searchKeyword}&productId=${selectedProductId}&rating=${selectedRating}&status=${selectedStatus}&sortBy=${sortBy}&sortOrder=${sortOrder}">
                                     Next <i class="fas fa-chevron-right"></i>
                                 </a>
                             </li>

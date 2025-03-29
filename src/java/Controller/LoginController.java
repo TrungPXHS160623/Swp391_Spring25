@@ -103,6 +103,7 @@ public class LoginController extends HttpServlet {
 
         // Kiểm tra user có tồn tại không
         if (user != null && HashUtil.checkPassword(password, user.getPassword_hash())) { // 🔥 Dùng checkpw() để kiểm tra mật khẩu
+
         HttpSession session = request.getSession();
         session.setAttribute("user", user);
         session.setAttribute("userId", user.getUser_id());

@@ -121,7 +121,7 @@
             margin-top: 15px;
         }
 
-        .feedback-image-container {
+        .feedback-image-container, .feedback-video-container {
             position: relative;
             width: 200px;
             height: 200px;
@@ -132,16 +132,53 @@
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .feedback-image-container:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 12px 20px rgba(0,0,0,0.15);
+        .feedback-image-container.expanded, .feedback-video-container.expanded {
+            width: 100%;
+            height: auto;
+            max-height: 500px;
+            margin-bottom: 20px;
         }
 
-        .feedback-image {
+        .feedback-image, .feedback-video {
             width: 100%;
             height: 100%;
-            object-fit: contain;
+            object-fit: cover;
             background-color: #f8f9fa;
+        }
+
+        .feedback-image-container.expanded .feedback-image,
+        .feedback-video-container.expanded .feedback-video {
+            object-fit: contain;
+        }
+
+        .media-expand-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .media-expand-btn:hover {
+            background-color: var(--primary-color);
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .feedback-image-container.expanded .media-expand-btn,
+        .feedback-video-container.expanded .media-expand-btn {
+            display: none;
         }
 
         .image-loading {
@@ -162,43 +199,6 @@
             text-align: center;
             font-size: 12px;
             color: #721c24;
-        }
-
-        #imageModal .modal-content {
-            border: none;
-            border-radius: 15px;
-            overflow: hidden;
-        }
-
-        #imageModal .modal-header {
-            background-color: var(--primary-color);
-            color: white;
-            border-bottom: none;
-        }
-
-        #imageModal .modal-img-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 300px;
-            background-color: #f8f9fa;
-        }
-
-        #imageModal .modal-img {
-            max-width: 100%;
-            max-height: 70vh;
-            object-fit: contain;
-        }
-
-        #imageModal .btn-close {
-            background-color: white;
-            opacity: 1;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-
-        #imageModal .modal-footer {
-            border-top: none;
-            padding: 15px 20px;
         }
 
         .btn-primary {
@@ -229,67 +229,12 @@
             box-shadow: 0 5px 15px rgba(108, 117, 125, 0.3);
         }
 
-        .product-info {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-
-        .product-info h5 {
-            font-weight: 600;
-            color: var (--primary-color);
-            margin-bottom: 15px;
-        }
-
-        .product-link {
-            text-decoration: none;
-            color: var(--primary-color);
-            font-weight: 500;
-            display: inline-block;
-            padding: 8px 20px;
-            background-color: rgba(78, 115, 223, 0.1);
-            border-radius: 30px;
-            transition: all 0.3s;
-        }
-
-        .product-link:hover {
-            background-color: var(--primary-color);
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(78, 115, 223, 0.3);
-        }
-
-        .star-rating {
-            font-size: 1.2rem;
-            margin-bottom: 15px;
-        }
-
-        .comment-card {
-            background-color: #f8f9fc;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-left: 4px solid var(--primary-color);
-        }
-
-        .status-action-btn {
-            transition: all 0.3s;
-            border-radius: 30px;
-            padding: 8px 20px;
-            font-weight: 500;
-        }
-
-        .status-action-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
         @media (max-width: 768px) {
             .container {
                 padding: 15px;
             }
             
-            .feedback-image-container {
+            .feedback-image-container, .feedback-video-container {
                 width: 100%;
                 height: auto;
                 aspect-ratio: 1/1;
@@ -302,7 +247,7 @@
         <div class="row page-header">
             <div class="col-md-12 d-flex justify-content-between align-items-center">
                 <h2><i class="fas fa-comment-dots me-2"></i>Feedback Details</h2>
-                <a href="${pageContext.request.contextPath}/admin/feedbacks" class="btn btn-back btn-secondary">
+                <a href="${pageContext.request.contextPath}/FeedbackList" class="btn btn-back btn-secondary">
                     <i class="fas fa-arrow-left me-2"></i>Back to Feedbacks
                 </a>
             </div>
@@ -336,7 +281,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6 text-md-end mt-3 mt-md-0">
-                                    <a href="${pageContext.request.contextPath}/admin/feedback?action=changeStatus&id=${feedback.reviewId}&status=${!feedback.status}" 
+                                    <a href="${pageContext.request.contextPath}/FeedbackList?action=changeStatus&id=${feedback.reviewId}&status=${!feedback.status}" 
                                        class="status-action-btn btn ${feedback.status ? 'btn-danger' : 'btn-success'}"
                                        onclick="return confirm('Are you sure you want to ${feedback.status ? 'deactivate' : 'activate'} this feedback?')">
                                         <i class="fas ${feedback.status ? 'fa-ban' : 'fa-check'} me-2"></i>
@@ -354,21 +299,46 @@
                         <c:if test="${not empty feedback.imageUrls}">
                             <div class="card">
                                 <div class="card-header">
-                                    <i class="fas fa-images me-2"></i>Attached Images
+                                    <i class="fas fa-images me-2"></i>Attached Media
                                 </div>
                                 <div class="card-body">
                                     <div class="feedback-images">
-                                        <c:forEach items="${feedback.imageUrls}" var="imageUrl">
-                                            <div class="feedback-image-container" onclick="showImageInModal('${imageUrl}')">
-                                                <img src="${pageContext.request.contextPath}/${imageUrl}" alt="Feedback Image" class="feedback-image" 
-                                                     onload="this.parentNode.classList.add('loaded')"
-                                                     onerror="this.onerror=null; this.parentNode.innerHTML='<div class=\'image-error\'><i class=\'fas fa-exclamation-circle mb-2\'></i><br>Image not available</div>'">
-                                                <div class="image-loading">
-                                                    <div class="spinner-border text-primary" role="status">
-                                                        <span class="visually-hidden">Loading...</span>
+                                        <c:forEach items="${feedback.imageUrls}" var="mediaUrl">
+                                            <c:set var="isVideo" value="${mediaUrl.toLowerCase().endsWith('.mp4') || mediaUrl.toLowerCase().endsWith('.webm') || mediaUrl.toLowerCase().endsWith('.ogg') || mediaUrl.toLowerCase().endsWith('.mov')}"/>
+                                            
+                                            <c:choose>
+                                                <c:when test="${isVideo}">
+                                                    <div class="feedback-video-container" id="media-container-${mediaUrl.hashCode()}">
+                                                        <video class="feedback-video" id="video-${mediaUrl.hashCode()}" preload="metadata" controls>
+                                                            <source src="${pageContext.request.contextPath}/${mediaUrl}" type="video/${mediaUrl.substring(mediaUrl.lastIndexOf('.')+1)}">
+                                                            Your browser does not support the video tag.
+                                                        </video>
+                                                        <button class="media-expand-btn" onclick="toggleMedia('${mediaUrl.hashCode()}', true)">
+                                                            <i class="fas fa-play"></i>
+                                                        </button>
+                                                        <div class="image-loading">
+                                                            <div class="spinner-border text-primary" role="status">
+                                                                <span class="visually-hidden">Loading...</span>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </div>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <div class="feedback-image-container" id="media-container-${mediaUrl.hashCode()}">
+                                                        <img src="${pageContext.request.contextPath}/${mediaUrl}" alt="Feedback Image" class="feedback-image" 
+                                                            onload="this.parentNode.classList.add('loaded')"
+                                                            onerror="this.onerror=null; this.parentNode.innerHTML='<div class=\'image-error\'><i class=\'fas fa-exclamation-circle mb-2\'></i><br>Image not available</div>'">
+                                                        <button class="media-expand-btn" onclick="toggleMedia('${mediaUrl.hashCode()}', false)">
+                                                            <i class="fas fa-search-plus"></i>
+                                                        </button>
+                                                        <div class="image-loading">
+                                                            <div class="spinner-border text-primary" role="status">
+                                                                <span class="visually-hidden">Loading...</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </c:otherwise>
+                                            </c:choose>
                                         </c:forEach>
                                     </div>
                                 </div>
@@ -387,39 +357,10 @@
                         <div class="product-info flex-grow-1">
                             <h5>${feedback.productName}</h5>
                             <div class="mt-auto">
-                                <a href="${pageContext.request.contextPath}/product?id=${feedback.productId}" class="product-link" target="_blank">
-                                    <i class="fas fa-external-link-alt me-2"></i>View Product
-                                </a>
+                                
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Image Modal -->
-    <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="imageModalLabel">
-                        <i class="fas fa-image me-2"></i>Feedback Image
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body p-0">
-                    <div class="modal-img-container">
-                        <img src="" alt="Feedback Image" class="modal-img" id="modalImage">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <a href="" class="btn btn-primary" id="downloadImageBtn" download target="_blank">
-                        <i class="fas fa-download me-2"></i>Download Image
-                    </a>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        <i class="fas fa-times me-2"></i>Close
-                    </button>
                 </div>
             </div>
         </div>
@@ -429,14 +370,28 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Remove loading spinners for images that are already cached
-            document.querySelectorAll('.feedback-image').forEach(img => {
-                if (img.complete) {
-                    img.parentNode.classList.add('loaded');
-                    if (img.parentNode.querySelector('.image-loading')) {
-                        img.parentNode.querySelector('.image-loading').style.display = 'none';
+            // Remove loading spinners for images and videos that are already cached
+            document.querySelectorAll('.feedback-image, .feedback-video').forEach(media => {
+                if (media.complete || media.readyState >= 2) {
+                    media.parentNode.classList.add('loaded');
+                    if (media.parentNode.querySelector('.image-loading')) {
+                        media.parentNode.querySelector('.image-loading').style.display = 'none';
                     }
                 }
+            });
+            
+            // Handle video loading events
+            document.querySelectorAll('.feedback-video').forEach(video => {
+                video.addEventListener('loadeddata', function() {
+                    this.parentNode.classList.add('loaded');
+                    if (this.parentNode.querySelector('.image-loading')) {
+                        this.parentNode.querySelector('.image-loading').style.display = 'none';
+                    }
+                });
+                
+                video.addEventListener('error', function() {
+                    this.parentNode.innerHTML = '<div class="image-error"><i class="fas fa-exclamation-circle mb-2"></i><br>Video not available</div>';
+                });
             });
             
             // Apply fade-in animations to cards
@@ -447,35 +402,52 @@
             });
         });
 
-        function showImageInModal(imageUrl) {
-            const modalImage = document.getElementById('modalImage');
-            const downloadBtn = document.getElementById('downloadImageBtn');
+        // Universal function to toggle both images and videos
+        function toggleMedia(mediaId, isVideo) {
+            const mediaContainer = document.getElementById(`media-container-${mediaId}`);
             
-            // Show loading state in modal
-            modalImage.src = '';
-            modalImage.alt = 'Loading...';
-            
-            // Set the image source and download link
-            modalImage.src = imageUrl;
-            downloadBtn.href = imageUrl;
-            
-            // Handle image loading errors
-            modalImage.onerror = function() {
-                modalImage.onerror = null;
-                modalImage.src = 'https://placehold.co/600x400?text=Image+Not+Available';
-                modalImage.alt = 'Image not available';
-            };
-            
-            // Show the modal
-            const imageModal = new bootstrap.Modal(document.getElementById('imageModal'));
-            imageModal.show();
+            if (mediaContainer.classList.contains('expanded')) {
+                // If already expanded, collapse it
+                mediaContainer.classList.remove('expanded');
+                
+                // For videos, pause when collapsed
+                if (isVideo) {
+                    const video = document.getElementById(`video-${mediaId}`);
+                    if (video && !video.paused) {
+                        video.pause();
+                    }
+                }
+            } else {
+                // If not expanded, expand it
+                mediaContainer.classList.add('expanded');
+                
+                // For videos, play when expanded
+                if (isVideo) {
+                    const video = document.getElementById(`video-${mediaId}`);
+                    if (video && video.paused) {
+                        try {
+                            video.play();
+                        } catch (e) {
+                            console.error("Error playing video:", e);
+                        }
+                    }
+                }
+                
+                // Scroll to the expanded media
+                setTimeout(() => {
+                    mediaContainer.scrollIntoView({behavior: 'smooth', block: 'nearest'});
+                }, 100);
+            }
         }
         
-        // Hide loading spinner when image loads
-        document.querySelectorAll('.feedback-image').forEach(img => {
-            img.addEventListener('load', function() {
-                if (this.parentNode.querySelector('.image-loading')) {
-                    this.parentNode.querySelector('.image-loading').style.display = 'none';
+        // Video click event handler to toggle play/pause without affecting expansion
+        document.querySelectorAll('.feedback-video').forEach(video => {
+            video.addEventListener('click', function(e) {
+                e.stopPropagation(); // Prevent container click handler
+                if (this.paused) {
+                    this.play();
+                } else {
+                    this.pause();
                 }
             });
         });

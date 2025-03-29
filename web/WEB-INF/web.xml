@@ -128,4 +128,12 @@
         <servlet-name>AdminProductDetailController</servlet-name>
         <url-pattern>/AdminProductDetailController</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>MyOrderController</servlet-name>
+        <servlet-class>Controller.MyOrderController</servlet-class>
+    </servlet>
+    
+    
+    
+    
 </web-app>
