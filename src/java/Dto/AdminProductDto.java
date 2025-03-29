@@ -37,6 +37,17 @@ public class AdminProductDto {
     // Thêm trường Category để hiển thị tên subcategory
     private String category;
 
+    // Flag “featured” do admin bật/tắt
+    private boolean featuredFlag;
+
+    public boolean isFeaturedFlag() {
+        return featuredFlag;
+    }
+
+    public void setFeaturedFlag(boolean featuredFlag) {
+        this.featuredFlag = featuredFlag;
+    }
+
     // Constructor mặc định
     public AdminProductDto() {
     }

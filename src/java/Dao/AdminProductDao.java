@@ -6,6 +6,7 @@ package Dao;
 
 import Context.DBContext;
 import Dto.AdminProductDto;
+import Entity.ProductImage;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -251,47 +252,9 @@ public class AdminProductDao {
         return dto;
     }
 
-    // Cập nhật sản phẩm
-    public boolean updateProduct(AdminProductDto product) {
-        String sql = "UPDATE Products SET product_name = ?, description = ?, price = ?, stock_quantity = ?, "
-                + "subcategory_id = ?, updated_at = ?, discount_price = ?, discount_percentage = ?, sold_quantity = ?, average_rating = ? "
-                + "WHERE product_id = ?";
-        try (Connection conn = new DBContext().getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setString(1, product.getProductName());
-            stmt.setString(2, product.getDescription());
-            stmt.setDouble(3, product.getPrice());
-            stmt.setInt(4, product.getStockQuantity());
-            stmt.setInt(5, product.getSubcategoryId());
-            stmt.setTimestamp(6, new Timestamp(System.currentTimeMillis()));
-            stmt.setDouble(7, product.getDiscountPrice());
-            stmt.setDouble(8, product.getDiscountPercentage());
-            stmt.setInt(9, product.getSoldQuantity());
-            stmt.setDouble(10, product.getAverageRating());
-            stmt.setInt(11, product.getProductId());
-
-            double listPrice = product.getPrice();
-            double salePrice = product.getDiscountPrice();
-            double discountPercentage = 0;
-            if (listPrice > 0) {
-                discountPercentage = ((listPrice - salePrice) / listPrice) * 100;
-            }
-            product.setDiscountPercentage(discountPercentage);
-
-            int affected = stmt.executeUpdate();
-            return affected > 0;
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, "Lỗi SQL khi cập nhật sản phẩm", e);
-        } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Lỗi SQL khi cập nhật sản phẩm", e);
-        }
-        return false;
-    }
-
-    // Thêm mới sản phẩm
     public boolean addProduct(AdminProductDto product) {
         String sql = "INSERT INTO Products (product_name, description, price, stock_quantity, subcategory_id, created_at, discount_price, discount_percentage, sold_quantity, average_rating) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = new DBContext().getConnection(); PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             stmt.setString(1, product.getProductName());
@@ -309,21 +272,16 @@ public class AdminProductDao {
             if (affected == 0) {
                 return false;
             }
-            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    product.setProductId(generatedKeys.getInt(1));
-                } else {
-                    return false;
+            try (ResultSet rs = stmt.getGeneratedKeys()) {
+                if (rs.next()) {
+                    product.setProductId(rs.getInt(1));
                 }
             }
 
-            double listPrice = product.getPrice();
-            double salePrice = product.getDiscountPrice();
-            double discountPercentage = 0;
-            if (listPrice > 0) {
-                discountPercentage = ((listPrice - salePrice) / listPrice) * 100;
+            // Thêm nhiều ảnh/video vào bảng ProductImages
+            if (product.getMediaList() != null && !product.getMediaList().isEmpty()) {
+                insertMediaList(conn, product.getProductId(), product.getMediaList());
             }
-            product.setDiscountPercentage(discountPercentage);
 
             return true;
         } catch (SQLException e) {
@@ -332,6 +290,62 @@ public class AdminProductDao {
             LOGGER.log(Level.SEVERE, "Lỗi SQL khi thêm sản phẩm", e);
         }
         return false;
+    }
+
+    public boolean updateProduct(AdminProductDto product) {
+        String sql = "UPDATE Products SET product_name=?, description=?, price=?, stock_quantity=?, subcategory_id=?, updated_at=?, discount_price=?, discount_percentage=?, sold_quantity=?, average_rating=?"
+                + "WHERE product_id=?";
+        try (Connection conn = new DBContext().getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, product.getProductName());
+            stmt.setString(2, product.getDescription());
+            stmt.setDouble(3, product.getPrice());
+            stmt.setInt(4, product.getStockQuantity());
+            stmt.setInt(5, product.getSubcategoryId());
+            stmt.setTimestamp(6, new Timestamp(System.currentTimeMillis()));
+            stmt.setDouble(7, product.getDiscountPrice());
+            stmt.setDouble(8, product.getDiscountPercentage());
+            stmt.setInt(9, product.getSoldQuantity());
+            stmt.setDouble(10, product.getAverageRating());
+            stmt.setInt(12, product.getProductId());
+
+            int affected = stmt.executeUpdate();
+            if (affected == 0) {
+                return false;
+            }
+
+            // Xử lý cập nhật media (xóa cũ, thêm mới) tùy logic
+            if (product.getMediaList() != null && !product.getMediaList().isEmpty()) {
+                // Ví dụ xóa hết media cũ, sau đó insert lại
+                try (PreparedStatement stmtDel = conn.prepareStatement("DELETE FROM ProductImages WHERE product_id=?")) {
+                    stmtDel.setInt(1, product.getProductId());
+                    stmtDel.executeUpdate();
+                }
+                insertMediaList(conn, product.getProductId(), product.getMediaList());
+            }
+
+            return true;
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Lỗi SQL khi cập nhật sản phẩm", e);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Lỗi SQL khi cập nhật sản phẩm", e);
+        }
+        return false;
+    }
+
+// Hàm hỗ trợ chèn nhiều media
+    private void insertMediaList(Connection conn, int productId, List<ProductImage> mediaList) throws SQLException {
+        String sqlInsertMedia = "INSERT INTO ProductImages (product_id, image_url, created_at, is_primary) VALUES (?,?,?,?,?)";
+        try (PreparedStatement stmtMedia = conn.prepareStatement(sqlInsertMedia)) {
+            for (ProductImage pm : mediaList) {
+                stmtMedia.setInt(1, productId);
+                stmtMedia.setString(2, pm.getImage_url());
+                stmtMedia.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
+                stmtMedia.setBoolean(5, pm.isIs_primary());
+                stmtMedia.addBatch();
+            }
+            stmtMedia.executeBatch();
+        }
     }
 
     public static void main(String[] args) {
